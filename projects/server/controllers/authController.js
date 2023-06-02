@@ -4,18 +4,19 @@ const jwt = require("jsonwebtoken");
 
 module.exports = {
   register: async (req, res) => {
-    const { user_email, user_password, user_phone_number} = req.body;
+    
+    const { email, password, phoneNumber} = req.body;
 
-    let getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(user_email)}`;
+    let getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(email)}`;
     let isEmailExist = await query(getEmailQuery);
     if (isEmailExist.length > 0) {
       return res.status(200).send({ message: "Email has been used" });
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(user_password, salt);
+    const hashPassword = await bcrypt.hash(password, salt);
 
-    let addUserQuery = `INSERT INTO users VALUES (null, ${db.escape(user_email)}, ${db.escape(user_password)}, ${db.escape(user_phone_number)}, null, null, null, null, null, null)`;
+    let addUserQuery = `INSERT INTO users VALUES (null, ${db.escape(email)}, ${db.escape(hashPassword)}, ${db.escape(phoneNumber)}, null, null, null, null, null, null)`;
     let addUserResult = await query(addUserQuery);
     
     console.log(req.body)
