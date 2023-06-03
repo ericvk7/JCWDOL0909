@@ -11,6 +11,7 @@ import AddProduct from "./pages/Products/addProduct";
 import AddCategory from "./pages/Category/addCategory";
 import Sidebar from "./components/Sidebar";
 import Cart from "./pages/Cart/Cart";
+import Home from "./pages/Home/Home";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -29,8 +30,9 @@ function App() {
 
   return (
     <div>
-      {userGlobal.id > 0 ? <Sidebar /> : <Navbar />}
+      {/* {userGlobal.id > 0 ? <Sidebar /> : <Navbar />} */}
       <Routes>
+        <Route path="/home" element={<Home />} />
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
         <Route path="/product/addProduct" element={<AddProduct />} />
