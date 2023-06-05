@@ -5,14 +5,14 @@ import Navbar from "./components/Navbar";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
 import Login from "./pages/Login";
-import { checkLogin } from "./features/users/usersSlice";
+import { checkLogin } from "./features/users/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Home from "./pages/Home";
 import AddProduct from "./pages/addProduct";
 import AddCategory from "./pages/addCategory";
 import Sidebar from "./components/Sidebar";
-import Category from "./pages/category";
-import Cart from "./pages/cart";
+import Category from "./pages/Category";
+import Cart from "./pages/Cart";
 import CartCard from "./pages/cartCard";
 
 function App() {
