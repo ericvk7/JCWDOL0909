@@ -99,7 +99,7 @@ function RegisterForm({ handleRegisterUser }) {
         <span
           className="text-xs text-blue-900 font-semibold hover:text-blue-400"
           onClick={() => {
-            navigate("/user/register");
+            navigate("/user/login");
           }}
         >
           you have an account? sign in here
