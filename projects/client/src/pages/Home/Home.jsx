@@ -5,17 +5,20 @@ import SearchBar from "../../components/SearchBar";
 import SignIn from "../../components/SignIn";
 import SignUp from "../../components/SignUp";
 import Menu from "../../components/Menu";
+import Category from "../../components/Category";
+import { Footer } from "../../components/Footer";
+import ProductCard from "../../components/ProductCard";
 
 function Home() {
   return (
     <>
       {/* Navbar */}
-      <div className="flex flex-col gap-2 items-center justify-center bg-slate-500 sm:bg-red-400 lg:bg-orange-400 max-w-4xl mx-auto p-4">
-        <div className="h-10 w-full flex items-center justify-between border-b-2 pb-4">
-          <div>
+      <div className="flex flex-col gap-1 items-center justify-center border-solid max-w-6xl mx-auto w">
+        <div className="h-16 w-full flex items-center justify-between border-b-2 pb-4 bg-[#003F62] pt-4">
+          <div className="ml-3">
             <SearchBar />
           </div>
-          <div className="inline-flex rounded-md shadow-sm">
+          <div className="mr-1 md:mr-3 inline-flex rounded-md shadow-sm">
             <Menu />
             <SignIn />
             <SignUp />
@@ -25,17 +28,22 @@ function Home() {
           </div>
         </div>
         <Carousel />
-        <div className="Category bg-red-700 w-full flex items-center justify-center">
-          Box 4
+        <div className="Category bg-white w-full flex flex-col items-start px-4 py-4">
+          <div className=" mb-4 border-b-2 border-gray-200 w-full shadow-sm flex flex-row justify-between">
+            <h1 className="text-xs sm:text-base text-bold lg:text-lg text-bold uppercase">
+              Category
+            </h1>
+            <h1 className="text-xs sm:text-base text-bold lg:text-lg text-bold uppercase">
+              Lihat Semua
+            </h1>
+          </div>
+          <Category />
         </div>
-        <div className="Product bg-blue-800 w-full flex items-center justify-center">
-          Box 5
-        </div>
-        <div className="Footer bg-yellow-500 w-full flex items-center justify-center">
-          Box 6
+        <div className="w-full">
+          <ProductCard />
         </div>
         <div className="sm:text-center md:flex lg:grid bg-white w-full flex items-center justify-center">
-          Konten Anda
+          <Footer />
         </div>
       </div>
     </>
