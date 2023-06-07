@@ -8,10 +8,12 @@ import Menu from "../../components/Menu";
 import Category from "../../components/Category";
 import { Footer } from "../../components/Footer";
 import ProductCard from "../../components/ProductCard";
+import GeolocationComponent from "../../components/GeolocationComponent";
 
 function Home() {
   return (
     <>
+      <GeolocationComponent />
       {/* Navbar */}
       <div className="flex flex-col gap-1 items-center justify-center border-solid max-w-6xl mx-auto w">
         <div className="h-16 w-full flex items-center justify-between border-b-2 pb-4 bg-[#003F62] pt-4">
