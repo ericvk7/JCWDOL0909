@@ -115,4 +115,19 @@ module.exports = {
       res.status(error.status || 500).send(error);
     }
   },
+
+  resetPassword: async (req, res) => {
+    let getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(
+      email
+    )}`;
+
+    let isEmailExist = await query(getEmailQuery);
+    if (isEmailExist.length > 0) {
+      return res.status(200).send({ message: "Email has been used" });
+    } else {
+      return res
+        .status(400)
+        .send({ message: "Email does not exist, please register" });
+    }
+  },
 };

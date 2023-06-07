@@ -11,13 +11,12 @@ const registerSchema = Yup.object().shape({
   password: Yup.string()
     .required("Password cannot be empty")
     .min(3, "Password too short"),
-  phone_number: Yup.number()
-    .typeError("Phone number must be a number")
+  phone_number: Yup.number().typeError("Phone number must be a number"),
 });
 
 const registerUser = async (value) => {
-    let response = await axios.post("http://localhost:8001/auth/register", value)
-}
+  let response = await axios.post("http://localhost:8001/auth/register", value);
+};
 
 function RegisterForm({ handleRegisterUser }) {
   const navigate = useNavigate();
@@ -105,11 +104,16 @@ function RegisterForm({ handleRegisterUser }) {
           you have an account? sign in here
         </span>
       </button>
-      <p className="text-xs text-blue-900 mt-4 cursor-pointer -mb-4 hover:text-blue-400">
+      <p
+        className="text-xs text-blue-900 mt-4 cursor-pointer -mb-4 hover:text-blue-400"
+        onClick={() => {
+          navigate("/user/emailConfirmation");
+        }}
+      >
         Forgot password?
       </p>
-      </div>   
+    </div>
   );
-};
+}
 
 export default RegisterForm;
