@@ -107,7 +107,7 @@ function RegisterForm({ handleRegisterUser }) {
       <p
         className="text-xs text-blue-900 mt-4 cursor-pointer -mb-4 hover:text-blue-400"
         onClick={() => {
-          navigate("/user/emailConfirmation");
+          navigate("/user/confirmEmail");
         }}
       >
         Forgot password?
