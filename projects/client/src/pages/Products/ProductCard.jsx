@@ -4,8 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem, increaseQuantity } from "../../features/cart/cartSlice";
 import Axios from "axios";
 
-import { Button, ButtonGroup } from "@chakra-ui/react";
-
 function ProductCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,7 +16,7 @@ function ProductCard() {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(6);
+  const [itemsPerPage] = useState(12);
 
   useEffect(() => {
     Axios.get("http://localhost:8000/category")
@@ -111,7 +109,7 @@ function ProductCard() {
             <img
               src={`http://localhost:8000/${product.product_image}`}
               alt={product.product_name}
-              className="w-96 h-80  object-cover"
+              className="w-full h-60  object-cover"
             />
 
             <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
@@ -171,7 +169,7 @@ function ProductCard() {
           onClick={() => {
             navigate("/product/addproduct");
           }}
-          className="bg-white rounded-sm hover:bg-[#EDA415] text-slate-500 font-bold py-2 px-4"
+          className="bg-[#EDA415] rounded-sm font-medium hover:bg-slate-50 text-white hover:text-slate-800 py-2 px-4"
         >
           add new product
         </button>
@@ -233,18 +231,60 @@ function ProductCard() {
         </div>
       </div>
 
-      {Array.from({ length: totalPages }, (_, index) => (
-        <ButtonGroup variant="outline" spacing="3">
-          <Button
-            colorScheme="blue"
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
+      <ul className="inline-flex items-center justify-center mx-auto -space-x-px">
+        <li>
+          <a
+            href="#"
+            className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
           >
-            {" "}
-            {index + 1}
-          </Button>
-        </ButtonGroup>
-      ))}
+            <span className="sr-only">Previous</span>
+            <svg
+              aria-hidden="true"
+              className="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+          </a>
+        </li>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <li key={index}>
+            <a
+              href="#"
+              className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            >
+              {index + 1}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a
+            href="#"
+            className="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          >
+            <span className="sr-only">Next</span>
+            <svg
+              aria-hidden="true"
+              className="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+          </a>
+        </li>
+      </ul>
     </div>
   );
 }

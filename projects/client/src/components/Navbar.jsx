@@ -24,10 +24,10 @@ function Navbar() {
 
   return (
     <div>
-      <nav class="flex dark:bg-slate-900 items-center relative justify-between bg-[#003F62] px-5 py-6 w-full">
+      <nav class="flex dark:bg-slate-900 items-center relative justify-between bg-[#EDA415] px-5 py-2 w-full">
         <div>
           <div>
-            <img src={logo} alt="Logo" className="w-32 h-28 ml-5" />
+            <img src={logo} alt="Logo" className="w-24 h-20 ml-5" />
           </div>
         </div>
         <ul
@@ -61,19 +61,19 @@ function Navbar() {
               />
             </svg>
           </div>
-          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#fcae14] hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent text-primary">
+          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#003F62] hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent text-primary">
             <button href="#" className="dark:text-white">
               <FaHome className="inline-block align-middle mr-2" />
               Home
             </button>
           </li>
-          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#fcae14] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
+          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#003F62] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
             <button href="#" className="dark:text-white">
               <FaCube className="inline-block align-middle mr-2" />
               Product
             </button>
           </li>
-          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#fcae14] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
+          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#003F62] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
             <button href="#" className="dark:text-white">
               <FaShoppingCart className="inline-block align-middle mr-2" />
               My Order

@@ -34,23 +34,21 @@ function Cart() {
 
   return (
     <div className="flex flex-col h-10 mx-auto max-w-2xl my-20">
-      <p className="text-lg font-bold text-cyan-300 text-center">
-        Shopping Cart
-      </p>
+      <p className="text-lg font-bold text-white text-center">Shopping Cart</p>
 
       {cartItems.length === 0 ? (
-        <p className="text-lg text-gray-600">Your cart is empty.</p>
+        <p className="text-lg text-white">Your cart is empty.</p>
       ) : (
-        <ul className="divide-y divide-gray-200">
+        <ul className="divide-y divide-[#EDA415]">
           {cartItems.map((item) => (
             <li key={item.id_product} className="py-4 flex">
               <div className="ml-6 flex-1 flex flex-col justify-between">
                 <div className="flex">
                   <div className="flex-1">
-                    <h2 className="text-lg font-medium text-gray-900">
+                    <h2 className="text-lg font-medium text-white">
                       {item.product_name}
                     </h2>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-white-500">
                       {item.product_description}
                     </p>
                   </div>
@@ -67,7 +65,7 @@ function Cart() {
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex">
                     <div className="flex-shrink-0">
-                      <p className="text-lg font-medium text-gray-900">
+                      <p className="text-lg font-medium text-white">
                         {item.product_price.toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
@@ -98,8 +96,8 @@ function Cart() {
             </li>
           ))}
           <div class="mt-6 flex items-center justify-between">
-            <p class="text-sm font-medium text-gray-900">Total</p>
-            <p class="text-2xl font-semibold text-gray-900">
+            <p class="text-sm font-medium text-white">Total</p>
+            <p class="text-2xl font-semibold text-white">
               {" "}
               {totalPrice.toLocaleString("id-ID", {
                 style: "currency",
@@ -110,7 +108,7 @@ function Cart() {
           <div class="mt-6 text-center">
             <button
               type="button"
-              class="group inline-flex w-full items-center justify-center rounded-md bg-cyan-300 px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+              class="group inline-flex w-full items-center justify-center rounded-md bg-[#EDA415] px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
             >
               Checkout
               <svg

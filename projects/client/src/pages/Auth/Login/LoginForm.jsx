@@ -57,7 +57,7 @@ function LoginForm({ handleLoginUser }) {
             </div>
             <button
               type="submit"
-              className="text-xl text-center bg-cyan-300 text-white py-1 rounded font-medium hover:text-slate-500"
+              className="text-xl text-center bg-[#EDA415] text-white py-1 rounded font-medium hover:bg-[#003F62]"
             >
               Sign In
             </button>
