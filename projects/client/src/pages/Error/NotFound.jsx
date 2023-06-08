@@ -2,7 +2,7 @@ import React from "react";
 
 function NotFound() {
   return (
-    <div className="bg-indigo-900 relative overflow-hidden min-h-screen">
+    <div className="bg-sky-950 relative overflow-hidden min-h-screen">
       <img
         src="https://c4.wallpaperflare.com/wallpaper/12/998/379/blue-neon-pastel-blur-wallpaper-thumb.jpg"
         alt=""
