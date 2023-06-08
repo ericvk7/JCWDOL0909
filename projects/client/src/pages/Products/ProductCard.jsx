@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem, increaseQuantity } from "../../features/cart/cartSlice";
 import Axios from "axios";
 
-import { Select, Button, ButtonGroup } from "@chakra-ui/react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 function ProductCard() {
   const dispatch = useDispatch();
@@ -13,6 +13,9 @@ function ProductCard() {
 
   const [products, setProductList] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [sort, setSort] = useState(`lowPrice`);
+
+  const [selectedCategory, setSelectedCategory] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(6);
@@ -44,13 +47,11 @@ function ProductCard() {
     alert("berhasil menambahkan ke keranjang");
   };
 
-  const [sort, setSort] = useState(`newest`);
-  const [selectedCategory, setSelectedCategory] = useState(0);
-
   const handleCategoryChange = (e) => {
     setSelectedCategory(parseInt(e.target.value));
     setCurrentPage(1);
   };
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1);
@@ -74,44 +75,13 @@ function ProductCard() {
   const totalPages = Math.ceil(
     filteredProductsBySearchTerm.length / itemsPerPage
   );
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  const renderList = () => {
-    return productsOnPage.map((product) => {
-      return (
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div>
-            <img
-              src={`http://localhost:8000/${product.product_image}`}
-              alt={product.product_name}
-              className="w-full h-48 object-cover"
-            />
-          </div>
-
-          <div key={product.id_product} className="p-4">
-            <h2 className="text-lg font-medium">{product.product_name}</h2>
-            <p className="text-lg font-medium text-gray-800">
-              {product.product_price.toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-              })}
-            </p>
-            <p className="text-gray-600 text-sm mt-2">
-              {product.product_description}
-            </p>
-
-            <button
-              onClick={() => handleAddToCart(product)}
-              className="bg-cyan-300 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded"
-            >
-              Buy
-            </button>
-          </div>
-        </div>
-      );
-    });
+  const handleSort = (value) => {
+    setSort(value);
   };
 
   useEffect(() => {
@@ -119,11 +89,7 @@ function ProductCard() {
   }, []);
 
   useEffect(() => {
-    if (sort === "newest") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => b.id_product - a.id_product)
-      );
-    } else if (sort === "lowPrice") {
+    if (sort === "lowPrice") {
       setProductList((prev) =>
         [...prev].sort((a, b) => a.product_price - b.product_price)
       );
@@ -131,23 +97,58 @@ function ProductCard() {
       setProductList((prev) =>
         [...prev].sort((a, b) => b.product_price - a.product_price)
       );
-    } else if (sort === "asc") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => a.product_name.localeCompare(b.product_name))
-      );
-    } else if (sort === "desc") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => b.product_name.localeCompare(a.product_name))
-      );
     }
   }, [sort]);
+
+  const renderList = () => {
+    return productsOnPage.map((product) => {
+      return (
+        <div
+          className="bg-white shadow-lg overflow-hidden grid-cols-4 sm:grid-cols-2 h-auto"
+          key={product.id_product}
+        >
+          <div className="relative flex flex-col overflow-hidden rounded-lg border">
+            <img
+              src={`http://localhost:8000/${product.product_image}`}
+              alt={product.product_name}
+              className="w-96 h-80  object-cover"
+            />
+
+            <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
+              <div className="mb-2 flex">
+                <p className="mr-3 text-sm font-semibold">
+                  {product.product_price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  })}
+                </p>
+              </div>
+              <p className="text-lg font-medium">{product.product_name}</p>
+            </div>
+
+            <button
+              onClick={() => handleAddToCart(product)}
+              className="group mx-auto mb-2 flex h-8 md:h-10 w-10/12 items-stretch overflow-hidden rounded-md text-gray-600"
+            >
+              <div className="flex w-full items-center justify-center bg-gray-100 text-xs uppercase transition group-hover:bg-[#fcae14] group-hover:text-white">
+                Add
+              </div>
+              <div className="flex items-center justify-center bg-gray-200 px-5 transition group-hover:bg-[#EDA415] group-hover:text-white">
+                +
+              </div>
+            </button>
+          </div>
+        </div>
+      );
+    });
+  };
 
   return (
     <div className="w-full mx-auto">
       <div className="flex items-center justify-center py-4 md:py-8 flex-wrap">
         <button
           type="button"
-          className="text-white hover:text-white border  bg-cyan-300 hover:bg-slate-600 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center mr-3 mb-3 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:bg-gray-900 dark:focus:ring-blue-800"
+          className="text-slate-700 hover:text-white border-[#EDA415]  bg-white hover:bg-[#EDA415] focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center mr-3 mb-3 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:bg-gray-900 dark:focus:ring-blue-800"
           onClick={handleCategoryChange}
           value="0"
         >
@@ -157,7 +158,7 @@ function ProductCard() {
           <button
             key={category.id_category}
             type="button"
-            className="text-white hover:text-white border  bg-cyan-300 hover:bg-slate-600 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center mr-3 mb-3 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:bg-gray-900 dark:focus:ring-blue-800"
+            className="text-slate-700 hover:text-white border-[#EDA415]  bg-white hover:bg-[#EDA415] focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center mr-3 mb-3 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:bg-gray-900 dark:focus:ring-blue-800"
             onClick={handleCategoryChange}
             value={category.id_category}
           >
@@ -170,16 +171,16 @@ function ProductCard() {
           onClick={() => {
             navigate("/product/addproduct");
           }}
-          className="bg-cyan-300 rounded-lg hover:bg-slate-500 text-white font-bold py-2 px-4"
+          className="bg-white rounded-sm hover:bg-[#EDA415] text-slate-500 font-bold py-2 px-4"
         >
           add new product
         </button>
       </div>
-      <div class="mb-3">
-        <div class="relative mb-4 flex w-1/2 flex-wrap items-stretch">
+      <div className="mb-3">
+        <div className="relative mb-4 flex w-1/2 flex-wrap items-stretch">
           <input
             type="search"
-            class="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-lg border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+            className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-lg border border-solid border-neutral-300 bg-white bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
             placeholder="Search"
             onChange={handleSearchChange}
             aria-label="Search"
@@ -187,24 +188,49 @@ function ProductCard() {
           />
 
           <button
-            className="bg-cyan-300 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded-2xl"
-            type="button"
-            id="button-addon3"
-            data-te-ripple-init
+            type="submit"
+            class="p-2.5 ml-2 text-sm font-medium hover:bg-slate-300 text-white bg-[#EDA415] rounded-lg border border-[#EDA415] focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Search
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+            <span class="sr-only">Search</span>
           </button>
         </div>
       </div>
-      <Select placeholder="Sorted By" onChange={(e) => setSort(e.target.value)}>
-        <option value="newest">Newest</option>
-        <option value="lowPrice">Lowest Price</option>
-        <option value="highPrice">Highest Price</option>
-        <option value="asc">A-Z</option>
-        <option value="desc">Z-A</option>
-      </Select>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {renderList()}
+      <div className="mb-4 mt-5">
+        <div className="flex mb-5">
+          <button
+            className={`mr-2 py-2 px-4 rounded hover:bg-yellow-200 ${
+              sort === "lowPrice" ? "bg-[#EDA415]  text-white" : "bg-gray-200"
+            }`}
+            onClick={() => handleSort("lowPrice")}
+          >
+            <span>&#x2191;</span>
+          </button>
+          <button
+            className={`py-2 px-4 rounded hover:bg-yellow-200 ${
+              sort === "highPrice" ? "bg-[#EDA415] text-white" : "bg-gray-200"
+            }`}
+            onClick={() => handleSort("highPrice")}
+          >
+            <span>&#x2193;</span>
+          </button>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-4">
+          {renderList()}
+        </div>
       </div>
 
       {Array.from({ length: totalPages }, (_, index) => (

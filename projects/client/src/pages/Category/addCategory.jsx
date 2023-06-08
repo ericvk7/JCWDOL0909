@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 const userToken = localStorage.getItem("user_token");
 
 function AddCategory() {
@@ -23,9 +24,14 @@ function AddCategory() {
 
       .then((response) => {
         console.log(response.data);
+        Swal.fire(response.data.message, "success");
       })
       .catch((error) => {
         console.log(error);
+        Swal.fire({
+          icon: "error",
+          text: "category already exist!",
+        });
       });
   };
 

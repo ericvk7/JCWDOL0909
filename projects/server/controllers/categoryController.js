@@ -5,11 +5,13 @@ module.exports = {
   addCategory: async (req, res) => {
     const { categoryName } = req.body;
 
-    let categoryExist = `SELECT * FROM categories WHERE category_name = ${db.escape(
+    let getCategoryQuery = `SELECT * FROM categories WHERE category_name = ${db.escape(
       categoryName
     )}`;
+    let categoryExist = await query(getCategoryQuery);
+
     if (categoryExist.length > 0) {
-      return res.status(200).send("category is already exist!");
+      return res.status(400).send("category is already exist!");
     }
     let addCategoryQuery = `INSERT INTO categories VALUES (null, ${db.escape(
       categoryName

@@ -11,6 +11,7 @@ import AddCategory from "./pages/Category/addCategory";
 import Cart from "./pages/Cart/Cart";
 import NotFound from "./pages/Error/NotFound";
 import Navbar from "./components/Navbar";
+import ProductCard from "./pages/Products/ProductCard";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -36,6 +37,7 @@ function App() {
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
+        <Route path="/productcard" element={<ProductCard />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/navbar" element={<Navbar />} />
       </Routes>
