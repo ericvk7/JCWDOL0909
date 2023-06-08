@@ -1,6 +1,6 @@
 // import './App.css';
 import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Register from "./pages/Auth/Register/Register";
 import Products from "./pages/Products/Product";
 import Login from "./pages/Auth/Login/Login";
@@ -10,12 +10,20 @@ import AddProduct from "./pages/Products/addProduct";
 import AddCategory from "./pages/Category/addCategory";
 import Cart from "./pages/Cart/Cart";
 import NotFound from "./pages/Error/NotFound";
+import Navbar from "./components/Navbar";
+import ProductCard from "./pages/Products/ProductCard";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("user_token");
   // const userGlobal = useSelector((state) => state.users.user);
+  const location = useLocation();
+
+  const shouldShowNavbar =
+    location.pathname !== "/user/register" &&
+    location.pathname !== "/user/login" &&
+    location.pathname !== "*";
 
   useEffect(() => {
     if (userToken) {
@@ -28,6 +36,8 @@ function App() {
 
   return (
     <div>
+      {shouldShowNavbar && <Navbar />}
+
       <Routes>
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
@@ -35,6 +45,7 @@ function App() {
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
+        <Route path="/productcard" element={<ProductCard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

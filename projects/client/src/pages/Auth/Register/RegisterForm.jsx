@@ -11,13 +11,13 @@ const registerSchema = Yup.object().shape({
   password: Yup.string()
     .required("Password cannot be empty")
     .min(3, "Password too short"),
-  phone_number: Yup.number()
-    .typeError("Phone number must be a number")
+  phoneNumber: Yup.string()
+    .matches(/^(?:\+62|0)[2-9]{1}[0-9]{7,11}$/, "invalid phone number")
+    .required("phone number cannot be empty"),
 });
-
 const registerUser = async (value) => {
-    let response = await axios.post("http://localhost:8001/auth/register", value)
-}
+  let response = await axios.post("http://localhost:8000/auth/register", value);
+};
 
 function RegisterForm({ handleRegisterUser }) {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function RegisterForm({ handleRegisterUser }) {
   return (
     <div className="flex flex-col items-center">
       <Formik
-        initialValues={{ email: "", password: "", phone_number: "" }}
+        initialValues={{ email: "", password: "", phoneNumber: "" }}
         validationSchema={registerSchema}
         onSubmit={handleRegisterUser}
       >
@@ -37,7 +37,6 @@ function RegisterForm({ handleRegisterUser }) {
                 name="email"
                 type="text"
                 autoComplete="email"
-                autoFocus
                 className="text-xl w-full mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400 active:outline-none"
                 placeholder="Email-address"
               />
@@ -65,22 +64,22 @@ function RegisterForm({ handleRegisterUser }) {
             </div>
             <div className="mb-5">
               <Field
-                id="phone_number"
-                name="phone_number"
+                id="phoneNumber"
+                name="phoneNumber"
                 type="text"
-                autoComplete="phone_number"
+                autoComplete="phoneNumber"
                 className="text-xl w-full mb-4 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400 active:outline-none"
                 placeholder="Phone Number"
               />
               <ErrorMessage
-                name="phone_number"
+                name="phoneNumber"
                 component="div"
                 className="text-xs text-left text-red-500 mb-2"
               />
             </div>
             <button
               type="submit"
-              className="text-xl text-center bg-cyan-300 text-white py-1 rounded font-medium hover:text-slate-500"
+              className="text-xl text-center bg-[#EDA415] text-white py-1 rounded font-medium hover:bg-[#003F62]"
             >
               Register
             </button>
@@ -102,14 +101,11 @@ function RegisterForm({ handleRegisterUser }) {
             navigate("/user/login");
           }}
         >
-          you have an account? sign in here
+          already have an account? login here
         </span>
       </button>
-      <p className="text-xs text-blue-900 mt-4 cursor-pointer -mb-4 hover:text-blue-400">
-        Forgot password?
-      </p>
-      </div>   
+    </div>
   );
-};
+}
 
 export default RegisterForm;

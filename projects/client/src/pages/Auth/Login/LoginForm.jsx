@@ -30,7 +30,6 @@ function LoginForm({ handleLoginUser }) {
                 name="email"
                 type="text"
                 autoComplete="email"
-                autoFocus
                 className="text-xl w-full mb-2 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400 active:outline-none"
                 placeholder="Email-address"
               />
@@ -58,7 +57,7 @@ function LoginForm({ handleLoginUser }) {
             </div>
             <button
               type="submit"
-              className="text-xl text-center bg-cyan-300 text-white py-1 rounded font-medium hover:text-slate-500"
+              className="text-xl text-center bg-[#EDA415] text-white py-1 rounded font-medium hover:bg-[#003F62]"
             >
               Sign In
             </button>
