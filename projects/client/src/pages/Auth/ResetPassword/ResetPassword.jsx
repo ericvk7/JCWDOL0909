@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ConfirmEmailForm from "./ConfirmEmailForm";
-import { confirmEmail } from "../../../features/users/userSlice";
+import ConfirmEmailForm from "./ResetPasswordForm";
+import { resetPassword } from "../../../features/users/userSlice";
 
 function ConfirmEmail() {
   const dispatch = useDispatch();

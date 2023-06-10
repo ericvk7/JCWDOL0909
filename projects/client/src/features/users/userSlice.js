@@ -50,7 +50,7 @@ export function registerUser(data) {
     );
     console.log(response);
     if (response) {
-      Swal.fire(response.data.message, "please use another email");
+      Swal.fire(response.data.message, "Register Success");
     }
   };
 }
@@ -125,6 +125,26 @@ export function confirmEmail(data) {
       } else {
         Swal.fire(
           "Masukkan email yang Anda gunakan ketika melakukan registrasi."
+        );
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
+  };
+}
+
+export function verifyEmail(data) {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.post(
+        "http://localhost:8000/auth/verifyEmail",
+        { data }
+      );
+      if (response.data.success) {
+        Swal.fire(
+          "Kami telah mengirim link untuk aktivasi akun Anda.",
+          "success"
         );
       }
     } catch (error) {
