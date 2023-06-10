@@ -16,8 +16,12 @@ function Login() {
 
   useEffect(() => {
     if (userGlobal.id > 0) {
-      navigate("/product");
-    }
+      console.log(userGlobal.role)
+      if (userGlobal.role == 1 || userGlobal.role == 2){
+        navigate("/dashboardadmin")
+      } else {
+      navigate("/product")};
+    } 
   }, [userGlobal, navigate]);
 
   return (

@@ -104,7 +104,7 @@ module.exports = {
       let isEmailExist = await query(
         `SELECT * FROM users WHERE user_email=${db.escape(email)}`
       );
-      console.log(isEmailExist);
+      // console.log(isEmailExist);
 
       if (isEmailExist.length == 0) {
         return res
@@ -120,8 +120,11 @@ module.exports = {
           .status(200)
           .send({ message: "Email or Password is incorrect", success: false });
       }
+      console.log(`${isEmailExist[0].id_user}, `, isEmailExist[0].role_id);
+
       let payload = {
         id: isEmailExist[0].id_user,
+        role: isEmailExist[0].role_id,
       };
       const token = jwt.sign(payload, "six6", { expiresIn: "2h" });
       return res.status(200).send({
@@ -131,6 +134,7 @@ module.exports = {
           id: isEmailExist[0].id_user,
           email: isEmailExist[0].user_email,
           phone: isEmailExist[0].user_phone_number,
+          role: isEmailExist[0].role_id,
         },
         success: true,
       });

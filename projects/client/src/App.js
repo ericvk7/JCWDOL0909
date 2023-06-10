@@ -12,6 +12,7 @@ import Cart from "./pages/Cart/Cart";
 import Home from "./pages/Home/Home";
 import ProductCard from "./pages/Products/ProductCard";
 import VerifyEmail from "./pages/Auth/Activation/VerifyEmail";
+import DashboardAdmin from "./pages/DashboardAdmin/DashboardAdmin";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -48,6 +49,7 @@ function App() {
         <Route path="/product" element={<Products />} />
         <Route path="/productcard" element={<ProductCard />} />
         <Route path="/verifyemail" element={<VerifyEmail />} />
+        <Route path="/dashboardadmin" element={<DashboardAdmin />} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
