@@ -10,6 +10,7 @@ import AddProduct from "./pages/Products/addProduct";
 import AddCategory from "./pages/Category/addCategory";
 import Cart from "./pages/Cart/Cart";
 import Home from "./pages/Home/Home";
+import ProductCard from "./pages/Products/ProductCard";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -39,13 +40,13 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
-        <Route path="/user/emailConfirmation" element={<ConfirmEmail />} />
+        {/* // <Route path="/user/emailConfirmation" element={<ConfirmEmail />} /> */}
         <Route path="/product/addProduct" element={<AddProduct />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
         <Route path="/productcard" element={<ProductCard />} />
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
     </div>
   );
