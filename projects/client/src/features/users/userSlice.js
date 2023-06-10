@@ -109,3 +109,27 @@ export function loginUser1(data) {
     }
   };
 }
+
+export function confirmEmail(data) {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.post(
+        "http://localhost:8000/auth/confirmEmail",
+        { data }
+      );
+      if (response.data.success) {
+        Swal.fire(
+          "Kami telah mengirim link untuk me-reset password Anda.",
+          "success"
+        );
+      } else {
+        Swal.fire(
+          "Masukkan email yang Anda gunakan ketika melakukan registrasi."
+        );
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
+  };
+}

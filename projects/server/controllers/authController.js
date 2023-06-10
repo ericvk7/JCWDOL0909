@@ -1,6 +1,8 @@
 const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("../helpers/nodemailer");
+const { log } = require("util");
 
 module.exports = {
   register: async (req, res) => {
@@ -113,6 +115,72 @@ module.exports = {
       });
     } catch (error) {
       res.status(error.status || 500).send(error);
+    }
+  },
+
+  confirmEmail: async (req, res) => {
+    const { email } = req.body;
+
+    try {
+      let getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(
+        email
+      )}`;
+      console.log(getEmailQuery);
+      let isEmailExist = await query(getEmailQuery);
+
+      if (isEmailExist.length > 0) {
+        // const token = generateToken(); // Fungsi untuk menghasilkan token
+
+        let mail = {
+          from: `Admin <your_email@gmail.com>`,
+          to: email,
+          subject: "Reset Password",
+          html: `
+          <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+          <div style="margin:50px auto;width:70%;padding:20px 0">
+            <div style="border-bottom:1px solid #eee">
+              <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">E-Grocery</a>
+            </div>
+            <p>Thank you for using E-Grocery. Use the following Link to complete your Password Recovery Procedure. <br/>
+            Link is valid for 10 minutes</p>
+            <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;"></h2>
+            <p style="font-size:0.9em;">Regards,<br />Alexa</p>
+            <hr style="border:none;border-top:1px solid #eee" />
+            <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+              <p>E-Grocery Admin</p>
+              <p>1600 Amphitheatre Parkway</p>
+              <p>California</p>
+            </div>
+          </div>
+        </div>
+          `,
+        };
+
+        try {
+          await nodemailer.sendMail(mail);
+          return res.status(200).json({
+            success: true,
+            message: "Link to reset your password has been sent to your email",
+          });
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({
+            success: false,
+            message: "Failed to send email",
+          });
+        }
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Email does not exist, please register",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: "Server Error",
+      });
     }
   },
 };

@@ -11,9 +11,7 @@ const registerSchema = Yup.object().shape({
   password: Yup.string()
     .required("Password cannot be empty")
     .min(3, "Password too short"),
-  phoneNumber: Yup.string()
-    .matches(/^(?:\+62|0)[2-9]{1}[0-9]{7,11}$/, "invalid phone number")
-    .required("phone number cannot be empty"),
+  phone_number: Yup.number().typeError("Phone number must be a number"),
 });
 const registerUser = async (value) => {
   let response = await axios.post("http://localhost:8000/auth/register", value);
@@ -104,6 +102,14 @@ function RegisterForm({ handleRegisterUser }) {
           already have an account? login here
         </span>
       </button>
+      <p
+        className="text-xs text-blue-900 mt-4 cursor-pointer -mb-4 hover:text-blue-400"
+        onClick={() => {
+          navigate("/user/confirmEmail");
+        }}
+      >
+        Forgot password?
+      </p>
     </div>
   );
 }
