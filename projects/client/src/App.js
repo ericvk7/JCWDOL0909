@@ -9,10 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AddProduct from "./pages/Products/addProduct";
 import AddCategory from "./pages/Category/addCategory";
 import Cart from "./pages/Cart/Cart";
-import NotFound from "./pages/Error/NotFound";
-import Navbar from "./components/Navbar";
-import ProductCard from "./pages/Products/ProductCard";
-import ConfirmEmail from "./pages/Auth/ResetPassword/ConfirmEmail";
+import Home from "./pages/Home/Home";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -37,9 +34,9 @@ function App() {
 
   return (
     <div>
-      {shouldShowNavbar && <Navbar />}
-
+      {/* {userGlobal.id > 0 ? <Sidebar /> : <Navbar />} */}
       <Routes>
+        <Route path="/home" element={<Home />} />
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/emailConfirmation" element={<ConfirmEmail />} />
