@@ -1,6 +1,5 @@
-// import './App.css';
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Register from "./pages/Auth/Register/Register";
 import Products from "./pages/Products/Product";
 import Login from "./pages/Auth/Login/Login";
@@ -14,6 +13,7 @@ import Navbar from "./components/Navbar";
 import ProductCard from "./pages/Products/ProductCard";
 
 function App() {
+  const navigate = useNavigate();
   const userGlobal = useSelector((state) => state.users.user);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("user_token");
@@ -23,7 +23,7 @@ function App() {
   const shouldShowNavbar =
     location.pathname !== "/user/register" &&
     location.pathname !== "/user/login" &&
-    location.pathname !== "*";
+    location.pathname.toLowerCase() === "*";
 
   useEffect(() => {
     if (userToken) {
@@ -41,12 +41,14 @@ function App() {
       <Routes>
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/notfound" element={<NotFound />} />
         <Route path="/product/addProduct" element={<AddProduct />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
         <Route path="/productcard" element={<ProductCard />} />
-        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
