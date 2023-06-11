@@ -109,7 +109,7 @@ function ProductCard() {
             <img
               src={`http://localhost:8000/${product.product_image}`}
               alt={product.product_name}
-              className="w-full h-60  object-cover"
+              className="w-50 h-48  object-cover"
             />
 
             <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
