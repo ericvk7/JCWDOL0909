@@ -126,7 +126,7 @@ function ProductCard() {
 
             <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
               <div className="mb-2 flex">
-                <p className="mr-3 text-sm font-semibold">
+                <p className="mr-3 text-sm font-bold text-[#EDA415]">
                   {product.product_price.toLocaleString("id-ID", {
                     style: "currency",
                     currency: "IDR",
