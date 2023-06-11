@@ -125,7 +125,7 @@ function Navbar() {
             {isOpen && (
               <div className="userDropdown w-48 overflow-hidden bg-white rounded-md shadow absolute top-12 right-3">
                 <ul>
-                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                  <li className="px-4 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@ function Navbar() {
                     </span>
                     <button>Setting</button>
                   </li>
-                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400 mr-1">
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -169,13 +169,13 @@ function Navbar() {
                     </span>
                     <button>Wishlist</button>
                   </li>
-                  <li className="px-5 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
-                    <span className="dark:text-white">
-                      <FaUser className="inline-block align-middle mr-2" />
+                  <li className="pl-4 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                    <button>
+                      <FaUser className="inline-block align-middle mr-3.5" />
                       Profile
-                    </span>
+                    </button>
                   </li>
-                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400 mr-1">
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
