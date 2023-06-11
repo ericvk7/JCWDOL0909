@@ -23,7 +23,7 @@ function App() {
   const shouldShowNavbar =
     location.pathname !== "/user/register" &&
     location.pathname !== "/user/login" &&
-    location.pathname.toLowerCase() === "*";
+    location.pathname.toLowerCase() !== "/notfound";
 
   useEffect(() => {
     if (userToken) {

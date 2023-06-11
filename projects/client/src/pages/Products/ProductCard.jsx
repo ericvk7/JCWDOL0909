@@ -78,6 +78,18 @@ function ProductCard() {
     setCurrentPage(pageNumber);
   };
 
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
   const handleSort = (value) => {
     setSort(value);
   };
@@ -142,8 +154,8 @@ function ProductCard() {
   };
 
   return (
-    <div className="w-full mx-auto">
-      <div className="flex items-center justify-center py-4 md:py-8 flex-wrap">
+    <div className="w-full mx-auto md:w-full sm:w-full">
+      <div className="flex items-center justify-center py-4 md:py-2 sm:py-0 sm:text-xs flex-wrap">
         <button
           type="button"
           className="text-slate-700 hover:text-white border-[#EDA415]  bg-white hover:bg-[#EDA415] focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-full text-base font-medium px-5 py-2.5 text-center mr-3 mb-3 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:bg-gray-900 dark:focus:ring-blue-800"
@@ -164,16 +176,7 @@ function ProductCard() {
           </button>
         ))}
       </div>
-      <div className="items-center hidden space-x-8 lg:flex my-5">
-        <button
-          onClick={() => {
-            navigate("/product/addproduct");
-          }}
-          className="bg-[#EDA415] rounded-sm font-medium hover:bg-slate-50 text-white hover:text-slate-800 py-2 px-4"
-        >
-          add new product
-        </button>
-      </div>
+
       <div className="mb-3">
         <div className="relative mb-4 flex w-1/2 flex-wrap items-stretch">
           <input
@@ -226,69 +229,70 @@ function ProductCard() {
             <span>&#x2193;</span>
           </button>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-2">
           {renderList()}
         </div>
       </div>
-
-      <ul className="inline-flex items-center justify-center mx-auto -space-x-px">
-        <li>
-          <a
-            href="#"
-            className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >
-            <span className="sr-only">Previous</span>
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </a>
-        </li>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <li key={index}>
+      <div className="place-items-center">
+        <ul className="inline-flex items-center justify-center mx-auto -space-x-px my-8">
+          <li>
             <button
-              onClick={() => handlePageChange(index + 1)}
-              className={`block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
-                currentPage === index + 1
-                  ? "bg-gray-200 text-gray-700 pointer-events-none"
-                  : ""
-              }`}
+              onClick={handlePreviousPage}
+              className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             >
-              {index + 1}
+              <span className="sr-only">Previous</span>
+              <svg
+                aria-hidden="true"
+                className="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
             </button>
           </li>
-        ))}
-        <li>
-          <a
-            href="#"
-            className="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >
-            <span className="sr-only">Next</span>
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
+          {Array.from({ length: totalPages }, (_, index) => (
+            <li key={index}>
+              <button
+                onClick={() => handlePageChange(index + 1)}
+                className={`block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+                  currentPage === index + 1
+                    ? "bg-gray-200 text-gray-700 pointer-events-none"
+                    : ""
+                }`}
+              >
+                {index + 1}
+              </button>
+            </li>
+          ))}
+          <li>
+            <button
+              onClick={handleNextPage}
+              className="block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
             >
-              <path
-                fillRule="evenodd"
-                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </a>
-        </li>
-      </ul>
+              <span className="sr-only">Next</span>
+              <svg
+                aria-hidden="true"
+                className="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }
