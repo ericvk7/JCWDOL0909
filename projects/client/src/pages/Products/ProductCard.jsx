@@ -121,7 +121,7 @@ function ProductCard() {
             <img
               src={`http://localhost:8000/${product.product_image}`}
               alt={product.product_name}
-              className="w-50 h-48  object-cover"
+              className="w-50 h-80 object-cover"
             />
 
             <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
@@ -154,7 +154,7 @@ function ProductCard() {
   };
 
   return (
-    <div className="w-full mx-auto md:w-full sm:w-full">
+    <div className="w-full mx-auto md:w-full">
       <div className="flex items-center justify-center py-4 md:py-2 sm:py-0 sm:text-xs flex-wrap">
         <button
           type="button"
@@ -229,7 +229,7 @@ function ProductCard() {
             <span>&#x2193;</span>
           </button>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-2">
           {renderList()}
         </div>
       </div>
