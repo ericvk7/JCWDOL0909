@@ -47,7 +47,7 @@ function Navbar() {
       <nav class="flex dark:bg-slate-900 items-center relative justify-between bg-[#EDA415] px-5 py-2 w-full">
         <div>
           <div>
-            <img src={logo} alt="Logo" className="w-24 h-20 ml-5" />
+            <img src={logo} alt="Logo" className="w-20 h-16 ml-5" />
           </div>
         </div>
         <ul
@@ -124,7 +124,7 @@ function Navbar() {
 
           <div className="relative mr-5">
             <div
-              className="h-10 w-10 hover:ring-4 user cursor-pointer relative ring-blue-700/30 rounded-full bg-cover bg-center bg-[url('https://i.pinimg.com/474x/c6/e9/ed/c6e9ed167165ca99c4d428426e256fae.jpg')]"
+              className="h-7 w-7 hover:ring-4 user cursor-pointer relative ring-blue-700/30 rounded-full bg-cover bg-center bg-[url('https://i.pinimg.com/474x/c6/e9/ed/c6e9ed167165ca99c4d428426e256fae.jpg')]"
               onClick={toggleDropdown}
             ></div>
             {isOpen && (
