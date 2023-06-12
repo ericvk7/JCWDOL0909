@@ -11,6 +11,7 @@ import AddCategory from "./pages/Category/addCategory";
 import Cart from "./pages/Cart/Cart";
 import NotFound from "./pages/Error/NotFound";
 import ConfirmEmail from "./pages/Auth/ResetPassword/ConfirmEmail";
+import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -32,7 +33,8 @@ function App() {
       <Routes>
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
-        <Route path="/user/emailConfirmation" element={<ConfirmEmail />} />
+        <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
+        <Route path="/user/resetPassword" element={<ResetPassword />} />
         <Route path="/product/addProduct" element={<AddProduct />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />

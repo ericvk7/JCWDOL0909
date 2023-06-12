@@ -133,3 +133,7 @@ export function confirmEmail(data) {
     }
   };
 }
+
+export function resetPassword() {
+  return;
+}

@@ -46,7 +46,7 @@ function LoginForm({ handleLoginUser }) {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="currennt-password"
+                autoComplete="current-password"
                 className="text-xl w-full mb-4 rounded border bg-gray-100 border-gray-300 px-2 py-2 focus:outline-none focus:border-gray-400 active:outline-none"
                 placeholder="Password"
               />
