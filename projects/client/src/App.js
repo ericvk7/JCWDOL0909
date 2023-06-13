@@ -14,7 +14,6 @@ import VerifyEmail from "./pages/Auth/Activation/VerifyEmail";
 import DashboardAdmin from "./pages/DashboardAdmin/DashboardAdmin";
 import NotFound from "./pages/Error/NotFound";
 import Navbar from "./components/Navbar";
-import ProductCard from "./pages/Products/ProductCard";
 
 function App() {
   const navigate = useNavigate();
@@ -45,7 +44,6 @@ function App() {
       <Routes>
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/notfound" element={<NotFound />} />
         <Route path="/product/addProduct" element={<AddProduct />} />
