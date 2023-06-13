@@ -87,7 +87,8 @@ function LoginForm({ handleLoginUser }) {
         onClick={() => {
           navigate("/user/emailConfirmation");
         }}
-      >
+      ></p>
+      <p className="text-xs text-blue-900 mt-4 cursor-pointer -mb-4 hover:text-blue-400">
         Forgot password?
       </p>
     </div>

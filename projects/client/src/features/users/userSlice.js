@@ -50,7 +50,7 @@ export function registerUser(data) {
     );
     console.log(response);
     if (response) {
-      Swal.fire(response.data.message, "Register Success");
+      Swal.fire(response.data.message, "success");
     }
   };
 }

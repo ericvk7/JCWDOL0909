@@ -1,6 +1,5 @@
-// import './App.css';
 import React, { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Register from "./pages/Auth/Register/Register";
 import Products from "./pages/Products/Product";
 import Login from "./pages/Auth/Login/Login";
@@ -13,8 +12,12 @@ import Home from "./pages/Home/Home";
 import ProductCard from "./pages/Products/ProductCard";
 import VerifyEmail from "./pages/Auth/Activation/VerifyEmail";
 import DashboardAdmin from "./pages/DashboardAdmin/DashboardAdmin";
+import NotFound from "./pages/Error/NotFound";
+import Navbar from "./components/Navbar";
+import ProductCard from "./pages/Products/ProductCard";
 
 function App() {
+  const navigate = useNavigate();
   const userGlobal = useSelector((state) => state.users.user);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("user_token");
@@ -24,7 +27,7 @@ function App() {
   const shouldShowNavbar =
     location.pathname !== "/user/register" &&
     location.pathname !== "/user/login" &&
-    location.pathname !== "*";
+    location.pathname.toLowerCase() !== "/notfound";
 
   useEffect(() => {
     if (userToken) {
@@ -37,12 +40,14 @@ function App() {
 
   return (
     <div>
-      {/* {userGlobal.id > 0 ? <Sidebar /> : <Navbar />} */}
+      {shouldShowNavbar && <Navbar />}
+
       <Routes>
-        <Route path="/home" element={<Home />} />
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
-        {/* // <Route path="/user/emailConfirmation" element={<ConfirmEmail />} /> */}
+        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/notfound" element={<NotFound />} />
         <Route path="/product/addProduct" element={<AddProduct />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />

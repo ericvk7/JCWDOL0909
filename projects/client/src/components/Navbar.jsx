@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetUser } from "../features/users/userSlice";
 import { useState } from "react";
 import { FaHome, FaCube, FaShoppingCart, FaUser } from "react-icons/fa";
+import Swal from "sweetalert2";
 import logo from "../img/e-grocery-low-resolution-logo-white-on-transparent-background (1).png";
 
 function Navbar() {
@@ -20,6 +21,27 @@ function Navbar() {
   const handleLogout = () => {
     dispatch(resetUser());
     navigate("/user/login");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, log me out!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("user_token");
+        dispatch(resetUser());
+        Swal.fire(
+          "Logged Out!",
+          "You have been successfully logged out.",
+          "success"
+        ).then(() => {
+          navigate("/user/login");
+        });
+      }
+    });
   };
 
   return (
@@ -61,20 +83,25 @@ function Navbar() {
               />
             </svg>
           </div>
-          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#003F62] hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent text-primary">
-            <button href="#" className="dark:text-white">
+          <li className="font-medium text-lg p-3 mr-5 text-white hover:text-[#003F62] hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent text-primary">
+            <button className="dark:text-white">
               <FaHome className="inline-block align-middle mr-2" />
               Home
             </button>
           </li>
-          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#003F62] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
-            <button href="#" className="dark:text-white">
+          <li className="font-medium text-lg p-3 mr-5 text-white hover:text-[#003F62] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
+            <button
+              onClick={() => {
+                navigate("/product");
+              }}
+              className="dark:text-white"
+            >
               <FaCube className="inline-block align-middle mr-2" />
               Product
             </button>
           </li>
-          <li className="font-medium text-lg p-3 mx-10 text-white hover:text-[#003F62] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
-            <button href="#" className="dark:text-white">
+          <li className="font-medium text-lg p-3 mr-5 text-white hover:text-[#003F62] cursor-pointer hover:bg-slate-300 dark:hover:bg-slate-800 sm:p-0 sm:hover:bg-transparent  hover:text-primary transition-colors">
+            <button className="dark:text-white">
               <FaShoppingCart className="inline-block align-middle mr-2" />
               My Order
             </button>
@@ -99,13 +126,13 @@ function Navbar() {
 
           <div className="relative mr-5">
             <div
-              className="h-10 w-10 hover:ring-4 user cursor-pointer relative ring-blue-700/30 rounded-full bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80')]"
+              className="h-10 w-10 hover:ring-4 user cursor-pointer relative ring-blue-700/30 rounded-full bg-cover bg-center bg-[url('https://i.pinimg.com/474x/c6/e9/ed/c6e9ed167165ca99c4d428426e256fae.jpg')]"
               onClick={toggleDropdown}
             ></div>
             {isOpen && (
               <div className="userDropdown w-48 overflow-hidden bg-white rounded-md shadow absolute top-12 right-3">
                 <ul>
-                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                  <li className="px-4 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -130,7 +157,7 @@ function Navbar() {
                     </span>
                     <button>Setting</button>
                   </li>
-                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400 mr-1">
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -149,13 +176,13 @@ function Navbar() {
                     </span>
                     <button>Wishlist</button>
                   </li>
-                  <li className="px-5 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
-                    <span className="dark:text-white">
-                      <FaUser className="inline-block align-middle mr-2" />
+                  <li className="pl-4 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                    <button>
+                      <FaUser className="inline-block align-middle mr-3.5" />
                       Profile
-                    </span>
+                    </button>
                   </li>
-                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400">
+                  <li className="px-3 py-3 text-sm font-medium flex items-center space-x-2 hover:bg-slate-400 mr-1">
                     <span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

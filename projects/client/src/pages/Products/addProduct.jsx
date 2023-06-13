@@ -60,9 +60,9 @@ const AddProduct = () => {
   }, []);
 
   return (
-    <section className=" dark:bg-gray-900">
+    <section className=" dark:bg-gray-900 bg-sky-800">
       <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
-        <h2 className="mb-4 text-xl font-bold text-cyan-500 dark:text-white">
+        <h2 className="mb-4 text-xl font-bold text-[#EDA415] dark:text-white">
           Add a new product
         </h2>
         <form onSubmit={HandleSubmit}>
@@ -70,7 +70,7 @@ const AddProduct = () => {
             <div className="sm:col-span-2">
               <label
                 htmlFor="name"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-white dark:text-white"
               >
                 Product Name
               </label>
@@ -88,7 +88,7 @@ const AddProduct = () => {
             <div className="w-full">
               <label
                 htmlFor="price"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-white dark:text-white"
               >
                 Price
               </label>
@@ -96,7 +96,7 @@ const AddProduct = () => {
                 type="number"
                 name="price"
                 id="price"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                className="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="RP 10.000,00"
                 value={price}
                 onChange={(event) => setPrice(event.target.value)}
@@ -106,7 +106,7 @@ const AddProduct = () => {
             <div className="w-full">
               <label
                 htmlFor="stock"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-white dark:text-white"
               >
                 Stock
               </label>
@@ -125,7 +125,7 @@ const AddProduct = () => {
             <div className="w-full">
               <label
                 htmlFor="category"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-white dark:text-white"
               >
                 Category
               </label>
@@ -150,7 +150,7 @@ const AddProduct = () => {
             <div className="sm:col-span-2">
               <label
                 htmlFor="description"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-white dark:text-white"
               >
                 Description
               </label>
@@ -168,7 +168,7 @@ const AddProduct = () => {
             <div className="sm:col-span-2">
               <label
                 htmlFor="image"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-white dark:text-white"
               >
                 Product Image
               </label>
@@ -186,7 +186,7 @@ const AddProduct = () => {
           <div className="mt-8 text-right sm:mt-6">
             <button
               type="submit"
-              className="inline-flex items-center justify-center px-4 py-2 hover:text-white border border-transparent text-sm font-medium rounded-md text-black bg-cyan-300 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              className="inline-flex items-center justify-center px-4 py-2 hover:text-white border border-transparent text-sm font-medium rounded-md text-white bg-[#EDA415] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             >
               Add Product
             </button>
