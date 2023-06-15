@@ -51,7 +51,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
         <Route path="/productcard" element={<ProductCard />} />
-        <Route path="/verifyemail" element={<VerifyEmail />} />
+        <Route path="/user/verifyemail/:token" element={<VerifyEmail />} />
         <Route path="/dashboardadmin" element={<DashboardAdmin />} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
