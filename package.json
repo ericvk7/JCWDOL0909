@@ -18,6 +18,7 @@
     "lerna": "^5.4.0"
   },
   "workspaces": [
-    "projects/*"
+    "projects/*",
+    "packages/*"
   ]
 }

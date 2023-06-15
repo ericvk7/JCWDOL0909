@@ -42,18 +42,47 @@ export function fetchUsersData() {
   };
 }
 
+// export function registerUser(data) {
+//   return async (dispatch) => {
+//     let response = await Axios.post(
+//       "http://localhost:8000/auth/register",
+//       data
+//     );
+//     if (response) {
+//       Swal.fire(response.data.message, "success");
+//     }
+//   };
+// }
+
 export function registerUser(data) {
   return async (dispatch) => {
-    let response = await Axios.post(
-      "http://localhost:8000/auth/register",
-      data
-    );
-    console.log(response);
-    if (response) {
-      Swal.fire(response.data.message, "success");
+    try {
+      let response = await Axios.post(
+        "http://localhost:8000/auth/register",
+        data
+      );
+      if (response) {
+        Swal.fire(response.data.message, "success");
+      }
+    } catch (error) {
+      // You can add error handling here
+      console.log(error);
+      // if (error.response) {
+      //   // The request was made and the server responded with a status code
+      //   console.log(error.response.data);
+      //   console.log(error.response.status);
+      //   console.log(error.response.headers);
+      // } else if (error.request) {
+      //   // The request was made but no response was received
+      //   console.log(error.request);
+      // } else {
+      //   // Something happened in setting up the request that triggered an Error
+      //   console.log('Error', error.message);
+      // }
     }
   };
 }
+
 
 export function loginUser(data) {
   return async (dispatch) => {
