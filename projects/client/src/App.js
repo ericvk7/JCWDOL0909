@@ -11,6 +11,7 @@ import Cart from "./pages/Cart/Cart";
 import NotFound from "./pages/Error/NotFound";
 import Navbar from "./components/Navbar";
 import ProductCard from "./pages/Products/ProductCard";
+import ChangePassword from "./pages/Auth/ChangePassword/ChangePassword";
 
 function App() {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
         <Route path="/productcard" element={<ProductCard />} />
+        <Route path="/user/changePassword" element={<ChangePassword />} />
       </Routes>
     </div>
   );
