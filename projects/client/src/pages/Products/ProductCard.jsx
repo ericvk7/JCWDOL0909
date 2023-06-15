@@ -17,6 +17,8 @@ function ProductCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     Axios.get("http://localhost:8000/category")
@@ -94,6 +96,23 @@ function ProductCard() {
     setSort(value);
   };
 
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const handleProductClick = async (product) => {
+    try {
+      const response = await Axios.get(
+        `http://localhost:8000/products/${product.id_product}`
+      );
+      const selectedProduct = response.data;
+      setSelectedProduct(selectedProduct);
+      toggleModal();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchProductsData();
   }, []);
@@ -122,6 +141,7 @@ function ProductCard() {
               src={`http://localhost:8000/${product.product_image}`}
               alt={product.product_name}
               className="w-50 h-80 object-cover"
+              onClick={() => handleProductClick(product)}
             />
 
             <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
@@ -293,6 +313,37 @@ function ProductCard() {
           </li>
         </ul>
       </div>
+      {showModal && selectedProduct && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
+            <img
+              src={`http://localhost:8000/${selectedProduct.product_image}`}
+              className="w-full h-48 object-cover mb-4"
+            />
+            <h3 className="text-xl font-semibold mb-2">
+              {selectedProduct.product_name}
+            </h3>
+            <p className="text-gray-700 mb-2">
+              {selectedProduct.product_price}
+            </p>
+            <p className="text-gray-700 mb-4">
+              {selectedProduct.product_description}
+            </p>
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md"
+              onClick={() => handleAddToCart(selectedProduct)}
+            >
+              Add to Cart
+            </button>
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md"
+              onClick={toggleModal}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
