@@ -10,6 +10,6 @@ router.post("/check-login", verifyToken, authController.checkLogin);
 router.get("/user", verifyToken, authController.fetchAllUser);
 router.get("/user/:id", verifyToken, authController.fetchUser);
 router.post("/confirmEmail", authController.confirmEmail);
-router.post("/verification", authController.verification);
+router.post("/verification", verifyToken, authController.verification);
 
 module.exports = router;

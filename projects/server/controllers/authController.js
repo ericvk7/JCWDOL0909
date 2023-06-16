@@ -6,50 +6,6 @@ const { log } = require("util");
 
 module.exports = {
   register: async (req, res) => {
-    const { username, email, name, password } = req.body;
-    // ASYNC AWAIT
-    //ambil data dari databse yang email = email dari body
-    let getEmailQuery = `SELECT * FROM users WHERE email=${db.escape(email)}`;
-    let isEmailExist = await query(getEmailQuery);
-    if (isEmailExist.length > 0) {
-      return res.status(200).send({ message: "Email has been used" });
-    }
-
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-
-    let addUserQuery = `INSERT INTO users VALUES (null, ${db.escape(
-      username
-    )}, ${db.escape(email)}, ${db.escape(hashPassword)}, ${db.escape(
-      name
-    )}, false, null, false)`;
-    let addUserResult = await query(addUserQuery);
-
-    let payload = { id: addUserResult.insertId };
-    const token = jwt.sign(payload, "joe", { expiresIn: "5m" });
-
-    let mail = {
-      from: `Admin <diywithicha@gmail.com>`,
-      to: `${email}`,
-      subject: `Verfied your account`,
-      html: `
-        <div>
-        <p>Thanks for register, you need to activate your account,</p>
-        <a href="http://localhost:3000/user/verification/${token}">Click Here</a>
-        <span>to activate</span>
-        </div>
-        `,
-    };
-    let response = await nodemailer.sendMail(mail);
-    console.log(response);
-
-    return res.status(200).send({
-      data: addUserResult,
-      message:
-        "Register success! please check your email to verify your account in 5 minutes",
-    });
-  },
-  register: async (req, res) => {
     try {
       const { email, password, phoneNumber } = req.body;
 
@@ -113,7 +69,7 @@ module.exports = {
 
       // Periksa apakah akun sudah aktif sebelumnya
       if (result.length > 0 && result[0].isVerified) {
-        return res.status(200).send({
+        return res.status(400).send({
           success: false,
           message: "link is invalid or expired!",
         });
@@ -155,7 +111,6 @@ module.exports = {
 
       let payload = {
         id: isEmailExist[0].id_user,
-        role: isEmailExist[0].role_id,
       };
       const token = jwt.sign(payload, "six6", { expiresIn: "2h" });
       return res.status(200).send({
@@ -165,7 +120,6 @@ module.exports = {
           id: isEmailExist[0].id_user,
           email: isEmailExist[0].user_email,
           phone: isEmailExist[0].user_phone_number,
-          role: isEmailExist[0].role_id,
         },
         success: true,
       });

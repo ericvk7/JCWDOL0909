@@ -83,7 +83,6 @@ export function registerUser(data) {
   };
 }
 
-
 export function loginUser(data) {
   return async (dispatch) => {
     console.log(data);

@@ -16,18 +16,9 @@ function Login() {
 
   useEffect(() => {
     if (userGlobal.id > 0) {
-      console.log(userGlobal.role);
-      if (userGlobal.role === 1 || userGlobal.role === 2) {
-        navigate("/dashboardadmin");
-        return; // Exit the function early
-      } else {
-        navigate("/product");
-        return; // Exit the function early
-      }
+      navigate("/product");
     }
-    navigate("/product");
   }, [userGlobal, navigate]);
-  
 
   return (
     <div class="flex h-screen bg-[#003F62]">
@@ -57,7 +48,6 @@ function Login() {
       </div>
     </div>
   );
-
 }
 
 export default Login;
