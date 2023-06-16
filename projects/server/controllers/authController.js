@@ -47,8 +47,7 @@ module.exports = {
 
       return res.status(200).send({
         data: addUserResult,
-        message:
-          "Registration success! Please check your email to verify your account within 5 minutes",
+        message: `Registration success! Please check your email to verify your account within 5 minutes `,
       });
     } catch (error) {
       console.error(error);
