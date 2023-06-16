@@ -18,7 +18,7 @@ function Verification() {
           },
         }
       );
-
+      debugger;
       if (response.data.success) {
         Swal.fire({
           text: response.data.message,
