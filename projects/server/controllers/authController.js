@@ -85,7 +85,7 @@ module.exports = {
       );
 
       if (user.length === 0) {
-        return res.status(404).send("User not found");
+        return res.status(400).send("User does not exist");
       }
 
       // Validasi input password baru dan konfirmasi password

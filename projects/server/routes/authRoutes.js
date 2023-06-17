@@ -9,6 +9,6 @@ router.post("/login", authController.login);
 router.post("/check-login", verifyToken, authController.checkLogin);
 router.get("/user", verifyToken, authController.fetchAllUser);
 router.get("/user/:id", verifyToken, authController.fetchUser);
-router.post("/changePassword", verifyToken, authController.changePassword);
+router.post("/changePassword", authController.changePassword);
 
 module.exports = router;
