@@ -2,6 +2,7 @@ const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("../helpers/nodemailer");
+const { createTokenF } = require("../helpers/forgotPassword/createTokenF");
 const { log } = require("util");
 
 module.exports = {
@@ -122,40 +123,45 @@ module.exports = {
     const { email } = req.body;
 
     try {
-      let getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(
+      const getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(
         email
       )}`;
-      console.log(getEmailQuery);
+      // console.log(getEmailQuery);
       let isEmailExist = await query(getEmailQuery);
+      console.log(isEmailExist);
 
       if (isEmailExist.length > 0) {
-        // const token = generateToken(); // Fungsi untuk menghasilkan token
+        let { id_user, user_email: existingEmail } = isEmailExist[0];
+        let Token = createTokenF({
+          id_user,
+          email: existingEmail,
+        });
 
         let mail = {
-          from: `Admin <your_email@gmail.com>`,
-          to: email,
+          from: `Admin <lelouchjr@gmail.com>`,
+          to: `${existingEmail}`,
           subject: "Reset Password",
           html: `
-          <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-          <div style="margin:50px auto;width:70%;padding:20px 0">
-            <div style="border-bottom:1px solid #eee">
-              <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">E-Grocery</a>
+            <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+              <div style="margin:50px auto;width:70%;padding:20px 0">
+                <div style="border-bottom:1px solid #eee">
+                  <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">E-Grocery</a>
+                </div>
+                <p>Thank you for using E-Grocery. Use the following Link to complete your Password Recovery Procedure. <br/>
+                  Link is valid for 10 minutes</p>
+                <a href="http://localhost:3000/user/resetPassword/${Token}" style="background: #00466a;margin: 0 auto;width: max-content;padding: 10px;color: #fff;border-radius: 4px;">Reset Password</a>
+                <p style="font-size:0.9em;">Regards,<br />Alexa</p>
+                <hr style="border:none;border-top:1px solid #eee" />
+                <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+                  <p>E-Grocery Admin</p>
+                  <p>1600 Amphitheatre Parkway</p>
+                  <p>California</p>
+                </div>
+              </div>
             </div>
-            <p>Thank you for using E-Grocery. Use the following Link to complete your Password Recovery Procedure. <br/>
-            Link is valid for 10 minutes</p>
-            <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;"></h2>
-            <p style="font-size:0.9em;">Regards,<br />Alexa</p>
-            <hr style="border:none;border-top:1px solid #eee" />
-            <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-              <p>E-Grocery Admin</p>
-              <p>1600 Amphitheatre Parkway</p>
-              <p>California</p>
-            </div>
-          </div>
-        </div>
           `,
         };
-
+        console.log(Token);
         try {
           await nodemailer.sendMail(mail);
           return res.status(200).json({
@@ -181,6 +187,32 @@ module.exports = {
         success: false,
         message: "Server Error",
       });
+    }
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { newPassword, confirmPassword } = req.body;
+
+      // Validasi input password baru dan konfirmasi password
+      if (newPassword !== confirmPassword) {
+        return res.status(400).send("Passwords do not match");
+      }
+
+      // Hash password baru
+      const salt = await bcrypt.genSalt(10);
+      const hashPassword = await bcrypt.hash(newPassword, salt);
+
+      // Update password di database
+      await query(
+        `UPDATE users SET user_password = ${db.escape(
+          hashPassword
+        )} WHERE user_email = ${db.escape(email)}`
+      );
+
+      return res.status(200).send("Password updated successfully");
+    } catch (error) {
+      res.status(error.status || 500).send(error);
     }
   },
 };

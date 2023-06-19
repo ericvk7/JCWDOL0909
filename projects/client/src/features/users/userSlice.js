@@ -117,6 +117,7 @@ export function confirmEmail(data) {
         "http://localhost:8000/auth/confirmEmail",
         { data }
       );
+      console.log("error");
       if (response.data.success) {
         Swal.fire(
           "Kami telah mengirim link untuk me-reset password Anda.",
