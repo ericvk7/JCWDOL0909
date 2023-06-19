@@ -115,14 +115,11 @@ export function confirmEmail(data) {
     try {
       const response = await Axios.post(
         "http://localhost:8000/auth/confirmEmail",
-        { data }
+        data
       );
-      console.log("error");
+      console.log(data);
       if (response.data.success) {
-        Swal.fire(
-          "Kami telah mengirim link untuk me-reset password Anda.",
-          "success"
-        );
+        Swal.fire("Kami telah mengirim link untuk me-reset password Anda.");
       } else {
         Swal.fire(
           "Masukkan email yang Anda gunakan ketika melakukan registrasi."
@@ -131,6 +128,7 @@ export function confirmEmail(data) {
     } catch (error) {
       alert(error);
       console.error(error);
+      Swal.fire("Terjadi kesalahan. Silakan coba lagi nanti.");
     }
   };
 }
