@@ -108,7 +108,6 @@ function ProductCard() {
       );
       const selectedProduct = response.data;
       setSelectedProduct(selectedProduct);
-      debugger;
 
       const adminResponse = await Axios.get(
         `http://localhost:8000/auth/user/${selectedProduct.id_admin}`
@@ -371,7 +370,9 @@ function ProductCard() {
               )}
 
               {adminData && (
-                <div className="text-gray-700">{adminData.user_name}</div>
+                <div className="text-gray-700 ml-3 my-7">
+                  {adminData.user_name}
+                </div>
               )}
             </div>
             <button
