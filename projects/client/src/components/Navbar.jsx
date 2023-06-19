@@ -6,11 +6,17 @@ import { useState } from "react";
 import { FaHome, FaCube, FaShoppingCart, FaUser } from "react-icons/fa";
 import Swal from "sweetalert2";
 import logo from "../img/e-grocery-low-resolution-logo-white-on-transparent-background (1).png";
+import Cart from "./Cart"
+
 
 function Navbar() {
   const userGlobal = useSelector((state) => state.users.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => {
+  setIsModalOpen(true);
+};
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -104,6 +110,15 @@ function Navbar() {
               My Order
             </button>
           </li>
+          <li role="menuitem" className="flex items-center justify-center">
+    <button
+      className="flex items-center justify-center text-2xl w-12 h-12 text-white rounded-full bg-blue-500 hover:bg-blue-600"
+      onClick={handleOpenModal}
+    >
+      <FaShoppingCart onClick={handleOpenModal} />
+{isModalOpen && <Cart />}
+    </button>
+  </li>
         </ul>
         <div class="flex gap-3 items-center">
           <svg

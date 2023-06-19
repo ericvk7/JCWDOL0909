@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem, increaseQuantity } from "../../features/cart/cartSlice";
 import Axios from "axios";
 
+
 function ProductCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
