@@ -19,6 +19,7 @@ function ProductCard() {
   const [itemsPerPage] = useState(12);
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [adminData, setAdminData] = useState(null);
 
   useEffect(() => {
     Axios.get("http://localhost:8000/category")
@@ -31,7 +32,7 @@ function ProductCard() {
   }, []);
 
   const fetchProductsData = async () => {
-    let response = await Axios.get(`http://localhost:8000/products/product`);
+    let response = await Axios.get(`http://localhost:8000/products`);
     setProductList(response.data);
   };
 
@@ -107,6 +108,15 @@ function ProductCard() {
       );
       const selectedProduct = response.data;
       setSelectedProduct(selectedProduct);
+      debugger;
+
+      const adminResponse = await Axios.get(
+        `http://localhost:8000/auth/user/${selectedProduct.id_admin}`
+      );
+      const adminData = adminResponse.data;
+
+      setAdminData(adminData[0]);
+      alert(JSON.stringify(adminData));
       toggleModal();
     } catch (error) {
       console.log(error);
@@ -198,7 +208,7 @@ function ProductCard() {
       </div>
 
       <div className="mb-3">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
+        <div className="relative mb-4 flex w-1/2 flex-wrap items-stretch">
           <input
             type="search"
             className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-lg border border-solid border-neutral-300 bg-white bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
@@ -314,29 +324,64 @@ function ProductCard() {
         </ul>
       </div>
       {showModal && selectedProduct && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg overflow-hidden shadow-md p-4">
-            <img
-              src={`http://localhost:8000/${selectedProduct.product_image}`}
-              className="w-full h-48 object-cover mb-4"
-            />
+        <div className="fixed inset-0 flex items-center justify-center z-50 w-auto bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg overflow-hidden shadow-md p-4 max-w-xs">
+            {selectedProduct.product_image && (
+              <img
+                src={`http://localhost:8000/${selectedProduct.product_image}`}
+                className="w-72 h-60 object-cover mb-4"
+                alt={selectedProduct.product_name}
+              />
+            )}
             <h3 className="text-xl font-semibold mb-2">
               {selectedProduct.product_name}
             </h3>
             <p className="text-gray-700 mb-2">
-              {selectedProduct.product_price}
+              {selectedProduct.product_price.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+              })}
             </p>
-            <p className="text-gray-700 mb-4">
+            <p className="text-gray-700 mb-4 text-justify">
               {selectedProduct.product_description}
             </p>
+
+            <div className="flex items-center">
+              {adminData && adminData.user_prodile_picture ? (
+                <img
+                  src={adminData.user_prodile_picture}
+                  alt="Avatar Admin"
+                  className="w-10 h-10 rounded-full mr-2"
+                />
+              ) : (
+                <div className="w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+                  <svg
+                    className="w-12 h-12 text-gray-400 -left-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+              )}
+
+              {adminData && (
+                <div className="text-gray-700">{adminData.user_name}</div>
+              )}
+            </div>
             <button
-              className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md"
+              className="bg-sky-900 hover:bg-yellow-600 text-white py-1 px-6 mr-10 rounded-md"
               onClick={() => handleAddToCart(selectedProduct)}
             >
               Add to Cart
             </button>
             <button
-              className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md"
+              className="bg-sky-900 hover:bg-yellow-600 text-white py-1 px-6 rounded-md"
               onClick={toggleModal}
             >
               Close

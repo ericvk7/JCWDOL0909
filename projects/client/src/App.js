@@ -42,7 +42,6 @@ function App() {
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/notfound" element={<NotFound />} />
         <Route path="/product/addProduct" element={<AddProduct />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
