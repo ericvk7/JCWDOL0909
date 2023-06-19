@@ -17,7 +17,7 @@ function ProductCard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [adminData, setAdminData] = useState(null);
 
@@ -97,9 +97,9 @@ function ProductCard() {
     setSort(value);
   };
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  // const toggleModal = () => {
+  //   setShowModal(!showModal);
+  // };
 
   const handleProductClick = async (product) => {
     try {
@@ -109,14 +109,16 @@ function ProductCard() {
       const selectedProduct = response.data;
       setSelectedProduct(selectedProduct);
 
-      const adminResponse = await Axios.get(
-        `http://localhost:8000/auth/user/${selectedProduct.id_admin}`
-      );
-      const adminData = adminResponse.data;
+      navigate(`/product/${product.id_product}`);
 
-      setAdminData(adminData[0]);
-      alert(JSON.stringify(adminData));
-      toggleModal();
+      // const adminResponse = await Axios.get(
+      //   `http://localhost:8000/auth/user/${selectedProduct.id_admin}`
+      // );
+      // const adminData = adminResponse.data;
+
+      // setAdminData(adminData[0]);
+      // // alert(JSON.stringify(adminData));
+      // toggleModal();
     } catch (error) {
       console.log(error);
     }
@@ -322,7 +324,7 @@ function ProductCard() {
           </li>
         </ul>
       </div>
-      {showModal && selectedProduct && (
+      {/* {showModal && selectedProduct && (
         <div className="fixed inset-0 flex items-center justify-center z-50 w-auto bg-black bg-opacity-50">
           <div className="bg-white rounded-lg overflow-hidden shadow-md p-4 max-w-xs">
             {selectedProduct.product_image && (
@@ -341,6 +343,11 @@ function ProductCard() {
                 currency: "IDR",
               })}
             </p>
+
+            <p className="text-[#EDA415] mb-2 ">
+              Stock: {selectedProduct.product_stock}
+            </p>
+
             <p className="text-gray-700 mb-4 text-justify">
               {selectedProduct.product_description}
             </p>
@@ -370,7 +377,7 @@ function ProductCard() {
               )}
 
               {adminData && (
-                <div className="text-gray-700 ml-3 my-7">
+                <div className="text-[#EDA415] ml-3 my-7">
                   {adminData.user_name}
                 </div>
               )}
@@ -389,7 +396,7 @@ function ProductCard() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
