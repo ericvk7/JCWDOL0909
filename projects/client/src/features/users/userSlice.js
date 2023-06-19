@@ -117,22 +117,17 @@ export function confirmEmail(data) {
         "http://localhost:8000/auth/confirmEmail",
         data
       );
-      console.log(data);
       if (response.data.success) {
         Swal.fire("Kami telah mengirim link untuk me-reset password Anda.");
-      } else {
-        Swal.fire(
-          "Masukkan email yang Anda gunakan ketika melakukan registrasi."
-        );
       }
     } catch (error) {
-      alert(error);
-      console.error(error);
-      Swal.fire("Terjadi kesalahan. Silakan coba lagi nanti.");
+      Swal.fire(
+        "Masukkan email yang Anda gunakan ketika melakukan registrasi."
+      );
     }
   };
 }
 
-export function resetPassword() {
-  return;
+export function resetPassword(data) {
+  return async (dispatch) => {};
 }

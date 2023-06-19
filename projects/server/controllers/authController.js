@@ -138,7 +138,7 @@ module.exports = {
         });
 
         let mail = {
-          from: `Admin <lelouchjr@gmail.com>`,
+          from: `Admin <eric.vianto.k7@gmail.com>`,
           to: `${existingEmail}`,
           subject: "Reset Password",
           html: `

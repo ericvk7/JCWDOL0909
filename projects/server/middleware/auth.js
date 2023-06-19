@@ -11,7 +11,7 @@ const verifyToken = (token) => {
   }
 
   try {
-    let verifiedUser = jwt.verify(token, "six6"); // Change the secret key to match your desired key
+    let verifiedUser = jwt.verify(token, "six6");
     if (!verifiedUser) {
       throw new Error("Access Denied");
     }
@@ -22,23 +22,26 @@ const verifyToken = (token) => {
   }
 };
 
-const verifyTokenF = async (token) => {
+const verifyTokenF = async (req, res, next) => {
+  const token = req.headers.authorization;
+
   if (!token) {
-    throw new Error("Access Denied");
+    return res.status(401).json({ error: "Access Denied" });
   }
 
   try {
     let verifiedUser = await jwt.verify(token, "forgotPass123");
     if (!verifiedUser) {
-      throw new Error("Access Denied");
+      return res.status(401).json({ error: "Access Denied" });
     }
 
-    return verifiedUser;
+    req.user = verifiedUser;
+    next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
-      throw new Error("Token has been expired");
+      return res.status(401).json({ error: "Token has expired" });
     }
-    throw new Error("Invalid Token");
+    return res.status(401).json({ error: "Invalid Token" });
   }
 };
 

@@ -34,7 +34,7 @@ function App() {
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
-        <Route path="/user/resetPassword" element={<ResetPassword />} />
+        <Route path="/user/resetPassword/:token" element={<ResetPassword />} />
         <Route path="/product/addProduct" element={<AddProduct />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />

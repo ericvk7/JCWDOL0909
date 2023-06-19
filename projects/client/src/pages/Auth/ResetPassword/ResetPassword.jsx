@@ -9,6 +9,7 @@ function ResetPassword() {
   const handleResetPassword = async (value) => {
     dispatch(resetPassword(value));
   };
+
   return (
     <div>
       <ResetPasswordForm handleResetPassword={handleResetPassword} />
