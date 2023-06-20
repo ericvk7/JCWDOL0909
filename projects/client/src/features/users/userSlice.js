@@ -141,8 +141,9 @@ export function resetPassword(data, token) {
         }
       );
 
-      if (response.data.success) {
-        Swal.fire("Password Anda berhasil diganti.", "success");
+      if (response) {
+        // alert(response.data.message);
+        Swal.fire("Password Anda berhasil diganti.");
       }
     } catch (error) {
       Swal.fire(error.message);
