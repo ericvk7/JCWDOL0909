@@ -109,3 +109,20 @@ export function loginUser1(data) {
     }
   };
 }
+
+export function verifyEmail(data) {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.post(
+        "http://localhost:8000/auth/verifyEmail",
+        { data }
+      );
+      if (response.data.success) {
+        Swal.fire("Kami telah mengirim link untuk aktivasi akun Anda.");
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
+  };
+}
