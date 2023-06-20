@@ -142,10 +142,10 @@ export function resetPassword(data, token) {
       );
 
       if (response.data.success) {
-        Swal.fire("Password Anda berhasil diganti.");
+        Swal.fire("Password Anda berhasil diganti.", "success");
       }
     } catch (error) {
-      Swal.fire(error.response.data.message);
+      Swal.fire(error.message);
     }
   };
 }
