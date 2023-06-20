@@ -7,11 +7,8 @@ export const usersSlice = createSlice({
   initialState: {
     user: {
       id: "",
-      name: "",
       email: "",
-      username: "",
-      imagePath: "",
-      isAdmin: false,
+      phoneNumber: "",
     },
   },
   reducers: {
@@ -22,10 +19,8 @@ export const usersSlice = createSlice({
     resetUser: (state) => {
       state.user = {
         id: "",
-        name: "",
         email: "",
-        username: "",
-        isAdmin: false,
+        phoneNumber: "",
       };
     },
   },
