@@ -128,18 +128,24 @@ export function confirmEmail(data) {
   };
 }
 
-export function resetPassword(data) {
+export function resetPassword(data, token) {
   return async (dispatch) => {
     try {
       const response = await Axios.post(
         "http://localhost:8000/auth/resetPassword",
-        data
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+
       if (response.data.success) {
-        Swal.fire("Password Anda berhasil di ganti.");
+        Swal.fire("Password Anda berhasil diganti.");
       }
     } catch (error) {
-      Swal.fire(error.message);
+      Swal.fire(error.response.data.message);
     }
   };
 }

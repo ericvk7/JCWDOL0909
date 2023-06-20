@@ -216,7 +216,7 @@ module.exports = {
 
       return res.status(200).send("Password updated successfully");
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   },
 };
