@@ -19,7 +19,6 @@ function ProductCard() {
   const [itemsPerPage] = useState(12);
   // const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [adminData, setAdminData] = useState(null);
 
   useEffect(() => {
     Axios.get("http://localhost:8000/category")
@@ -110,15 +109,6 @@ function ProductCard() {
       setSelectedProduct(selectedProduct);
 
       navigate(`/product/${product.id_product}`);
-
-      // const adminResponse = await Axios.get(
-      //   `http://localhost:8000/auth/user/${selectedProduct.id_admin}`
-      // );
-      // const adminData = adminResponse.data;
-
-      // setAdminData(adminData[0]);
-      // // alert(JSON.stringify(adminData));
-      // toggleModal();
     } catch (error) {
       console.log(error);
     }
