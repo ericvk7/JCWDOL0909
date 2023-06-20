@@ -10,6 +10,6 @@ router.post("/check-login", verifyToken, authController.checkLogin);
 router.get("/user", verifyToken, authController.fetchAllUser);
 router.get("/user/:id", verifyToken, authController.fetchUser);
 router.post("/confirmEmail", authController.confirmEmail);
-router.patch("/resetPassword", verifyTokenF, authController.resetPassword);
+router.post("/resetPassword", authController.resetPassword);
 
 module.exports = router;

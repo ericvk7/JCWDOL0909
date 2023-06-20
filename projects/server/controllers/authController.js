@@ -131,15 +131,15 @@ module.exports = {
       console.log(isEmailExist);
 
       if (isEmailExist.length > 0) {
-        let { id_user, user_email: existingEmail } = isEmailExist[0];
-        let Token = createTokenF({
-          id_user,
-          email: existingEmail,
-        });
+        payload = {
+          id: isEmailExist[0].id_user,
+          email: isEmailExist[0].user_email,
+        };
+        const token = jwt.sign(payload, "six6", { expiresIn: "10m" });
 
         let mail = {
           from: `Admin <eric.vianto.k7@gmail.com>`,
-          to: `${existingEmail}`,
+          to: `${email}`,
           subject: "Reset Password",
           html: `
             <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
@@ -149,7 +149,7 @@ module.exports = {
                 </div>
                 <p>Thank you for using E-Grocery. Use the following Link to complete your Password Recovery Procedure. <br/>
                   Link is valid for 10 minutes</p>
-                <a href="http://localhost:3000/user/resetPassword/${Token}" style="background: #00466a;margin: 0 auto;width: max-content;padding: 10px;color: #fff;border-radius: 4px;">Reset Password</a>
+                <a href="http://localhost:3000/user/resetPassword/${token}" style="background: #00466a;margin: 0 auto;width: max-content;padding: 10px;color: #fff;border-radius: 4px;">Reset Password</a>
                 <p style="font-size:0.9em;">Regards,<br />Alexa</p>
                 <hr style="border:none;border-top:1px solid #eee" />
                 <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
@@ -161,12 +161,13 @@ module.exports = {
             </div>
           `,
         };
-        console.log(Token);
+        console.log(token);
         try {
           await nodemailer.sendMail(mail);
           return res.status(200).json({
             success: true,
             message: "Link to reset your password has been sent to your email",
+            token,
           });
         } catch (error) {
           console.error(error);
@@ -199,20 +200,24 @@ module.exports = {
         return res.status(400).send("Passwords do not match");
       }
 
+      // Dapatkan userId dari req
+      const userId = req.user.id;
+      console.log(userId);
+
       // Hash password baru
-      const salt = await bcrypt.genSalt(10);
-      const hashPassword = await bcrypt.hash(newPassword, salt);
+      const saltRounds = 10;
+      const hashPassword = await bcrypt.hash(newPassword, saltRounds);
 
       // Update password di database
-      await query(
-        `UPDATE users SET user_password = ${db.escape(
-          hashPassword
-        )} WHERE user_email = ${db.escape(email)}`
-      );
+      await query("UPDATE users SET user_password = ? WHERE id_user = ?", [
+        hashPassword,
+        userId,
+      ]);
 
       return res.status(200).send("Password updated successfully");
     } catch (error) {
-      res.status(error.status || 500).send(error);
+      console.error(error);
+      res.status(500).send("An error occurred while updating the password");
     }
   },
 };

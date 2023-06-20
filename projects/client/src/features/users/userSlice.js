@@ -129,5 +129,17 @@ export function confirmEmail(data) {
 }
 
 export function resetPassword(data) {
-  return async (dispatch) => {};
+  return async (dispatch) => {
+    try {
+      const response = await Axios.post(
+        "http://localhost:8000/auth/resetPassword",
+        data
+      );
+      if (response.data.success) {
+        Swal.fire("Password Anda berhasil di ganti.");
+      }
+    } catch (error) {
+      Swal.fire(error.message);
+    }
+  };
 }

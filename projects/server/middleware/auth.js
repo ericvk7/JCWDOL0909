@@ -22,29 +22,6 @@ const verifyToken = (token) => {
   }
 };
 
-const verifyTokenF = async (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(401).json({ error: "Access Denied" });
-  }
-
-  try {
-    let verifiedUser = await jwt.verify(token, "forgotPass123");
-    if (!verifiedUser) {
-      return res.status(401).json({ error: "Access Denied" });
-    }
-
-    req.user = verifiedUser;
-    next();
-  } catch (error) {
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ error: "Token has expired" });
-    }
-    return res.status(401).json({ error: "Invalid Token" });
-  }
-};
-
 const checkRole = async (req, res, next) => {
   try {
     let token = req.headers.authorization;
@@ -58,4 +35,4 @@ const checkRole = async (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken, verifyTokenF, checkRole };
+module.exports = { verifyToken, checkRole };
