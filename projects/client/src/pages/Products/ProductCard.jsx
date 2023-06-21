@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, increaseQuantity } from "../../features/cart/cartSlice";
 import Axios from "axios";
+import Swal from "sweetalert2";
 
 function ProductCard() {
   const dispatch = useDispatch();
@@ -43,7 +44,11 @@ function ProductCard() {
     } else {
       dispatch(addItem({ ...product, quantity: 1 }));
     }
-    alert("berhasil menambahkan ke keranjang");
+    Swal.fire({
+      icon: "success",
+      title: "Success",
+      text: "Added to your cart",
+    });
   };
 
   const handleCategoryChange = (e) => {
