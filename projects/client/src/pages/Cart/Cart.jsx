@@ -5,7 +5,7 @@ import {
   increaseQuantity,
 } from "../../features/cart/cartSlice";
 import Swal from "sweetalert2";
-import emptyCart from "../../img/EmptyCart_3-Copy.png";
+import emptyCart from "../../img/EmptyCart_3-Copy-removebg-preview.png";
 
 function Cart() {
   const dispatch = useDispatch();
@@ -67,10 +67,10 @@ function Cart() {
   );
 
   return (
-    <div className="flex flex-col h-10 mx-auto max-w-2xl mb-20 mt-20">
+    <div className="flex flex-col h-30 mx-auto max-w-l mt-20">
       {cartItems.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-screen">
-          <img src={emptyCart} alt="Empty Cart" className="max-w-full h-auto" />
+        <div className="flex flex-col items-center justify-center">
+          <img src={emptyCart} alt="Empty Cart" className="w-40 h-30" />
           <p className="text-lg text-red-600 mt-4">Your cart is empty.</p>
           <p className="text-sm text-gray-500 mt-2">
             It looks like you haven't added any products to your cart.

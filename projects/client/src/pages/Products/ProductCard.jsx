@@ -9,11 +9,11 @@ function ProductCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
+  const userGlobal = useSelector((state) => state.users.user);
 
   const [products, setProductList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sort, setSort] = useState(`lowPrice`);
-
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,19 +36,33 @@ function ProductCard() {
   };
 
   const handleAddToCart = (product) => {
-    const existingItem = cartItems.find(
-      (item) => item.id_product === product.id_product
-    );
-    if (existingItem) {
-      dispatch(increaseQuantity(product.id_product));
+    if (userGlobal.id <= 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Please login first, to make any transaction",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/user/login");
+        }
+      });
     } else {
-      dispatch(addItem({ ...product, quantity: 1 }));
+      const existingItem = cartItems.find(
+        (item) => item.id_product === product.id_product
+      );
+      if (existingItem) {
+        dispatch(increaseQuantity(product.id_product));
+      } else {
+        dispatch(addItem({ ...product, quantity: 1 }));
+      }
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "Added to your cart",
+      });
     }
-    Swal.fire({
-      icon: "success",
-      title: "Success",
-      text: "Added to your cart",
-    });
   };
 
   const handleCategoryChange = (e) => {

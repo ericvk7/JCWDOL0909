@@ -9,20 +9,11 @@ const CartModal = ({ closeModal }) => {
     closeModal();
   };
 
-  useEffect(() => {
-    const modalContent = modalRef.current;
-    modalContent.style.height = `${modalContent.scrollHeight}px`;
-  }, []);
-
   return (
     <div>
-      <div className="fixed z-10 inset-0">
-        <div className="flex items-center justify-end mt-20">
-          <div
-            className="bg-white p-8 rounded"
-            ref={modalRef}
-            style={{ maxWidth: "400px" }}
-          >
+      <div className="fixed z-10 inset-0 h-screen">
+        <div className="flex items-center justify-end mt-20 mr-20">
+          <div className="bg-white p-8 rounded" style={{ maxWidth: "400px" }}>
             <div className="flex justify-end">
               <button
                 className="text-gray-500 hover:text-gray-700"
