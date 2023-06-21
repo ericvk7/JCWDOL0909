@@ -1,6 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 function ProfileForm() {
+  const userData = useSelector((state) => state.users.user); // Replace 'users' with the appropriate slice name if different
+
   return (
     <>
       <section className=" p-6 mx-4 bg-white border-2 rounded-lg shadow-md mt-4">
@@ -16,6 +19,7 @@ function ProfileForm() {
               <input
                 id="emailAddress"
                 type="email"
+                value={userData.email}
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
@@ -27,6 +31,7 @@ function ProfileForm() {
               <input
                 id="fullName"
                 type="text"
+                value={userData.name}
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
@@ -38,6 +43,7 @@ function ProfileForm() {
               <input
                 id="phoneNumber"
                 type="text"
+                value={userData.phone}
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>
@@ -73,6 +79,7 @@ function ProfileForm() {
               <input
                 id="date"
                 type="date"
+                value={userData.date}
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
               />
             </div>

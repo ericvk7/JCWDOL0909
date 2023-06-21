@@ -14,4 +14,20 @@ module.exports = {
       res.status(error.status || 500).send(error);
     }
   },
+  editProfile: async (req, res) => {
+    const { email, fullName, phoneNumber, gender, birthday } = req.body;
+
+    try {
+      const idParams = parseInt(req.params.id);
+      if (req.user.id !== idParams) {
+        return res.status(400).send("Unauthorized attempt");
+      }
+      const users = await query(
+        `SELECT * FROM users WHERE id_user = ${db.escape(idParams)}`
+      );
+      return res.status(200).send(users);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
 };

@@ -50,7 +50,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
         <Route path="/productcard" element={<ProductCard />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/user/profile" element={<Profile />} />
       </Routes>
     </div>
   );

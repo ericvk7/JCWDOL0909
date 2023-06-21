@@ -21,6 +21,7 @@ export const usersSlice = createSlice({
         id: "",
         email: "",
         phoneNumber: "",
+        name: "",
       };
     },
   },
@@ -29,7 +30,7 @@ export const usersSlice = createSlice({
 export const { setUser, resetUser } = usersSlice.actions;
 export default usersSlice.reducer;
 
-export function fetchUsersData() {
+export function fetchUserData() {
   return async (dispatch) => {
     let response = await Axios.get("http://localhost:8000/users");
     console.log(response.data);

@@ -1,10 +1,11 @@
 import React from "react";
 import ProfileForm from "./ProfileForm";
+import Tab from "../../components/Tab";
 
 function Profile() {
   return (
     <div>
-      <ProfileForm />
+      <Tab />
     </div>
   );
 }
