@@ -51,6 +51,7 @@ function App() {
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
+        <Route path="/" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
         <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
       </Routes>
