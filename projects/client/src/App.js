@@ -12,6 +12,7 @@ import NotFound from "./pages/Error/NotFound";
 import Navbar from "./components/Navbar";
 import ProductDetailPage from "./pages/Products/ProductDetail";
 import VerifyEmail from "./pages/Auth/Activation/VerifyEmail";
+import BeforeLoginNavbar from "./components/BeforeLoginNavbar";
 
 function App() {
   const navigate = useNavigate();
@@ -38,7 +39,8 @@ function App() {
 
   return (
     <div>
-      {shouldShowNavbar && <Navbar />}
+      {shouldShowNavbar &&
+        (userGlobal > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
 
       <Routes>
         <Route path="/user/register" element={<Register />} />
