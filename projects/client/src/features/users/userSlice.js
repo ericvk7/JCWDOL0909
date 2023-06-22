@@ -7,25 +7,26 @@ export const usersSlice = createSlice({
   initialState: {
     user: {
       id: "",
-      name: "",
       email: "",
-      username: "",
-      imagePath: "",
-      isAdmin: false,
+      phoneNumber: "",
+      name: "",
+      gender: "",
+      birthday: "",
     },
   },
   reducers: {
-    // Function untuk masukin data dari login ke global state
+    // Function untuk memasukkan data dari login ke global state
     setUser: (state, action) => {
       state.user = action.payload;
     },
     resetUser: (state) => {
       state.user = {
         id: "",
-        name: "",
         email: "",
-        username: "",
-        isAdmin: false,
+        phoneNumber: "",
+        name: "",
+        gender: "",
+        birthday: "",
       };
     },
   },
@@ -36,21 +37,38 @@ export default usersSlice.reducer;
 
 export function fetchUsersData() {
   return async (dispatch) => {
-    let response = await Axios.get("http://localhost:8000/users");
-    console.log(response.data);
-    dispatch(setUser(response.data));
+    try {
+      let response = await Axios.get("http://localhost:8000/users");
+      console.log(response.data);
+      dispatch(setUser(response.data));
+    } catch (error) {
+      console.error(error);
+    }
   };
 }
 
 export function registerUser(data) {
   return async (dispatch) => {
-    let response = await Axios.post(
-      "http://localhost:8000/auth/register",
-      data
-    );
-    console.log(response);
-    if (response) {
-      Swal.fire(response.data.message);
+    try {
+      let response = await Axios.post(
+        "http://localhost:8000/auth/register",
+        data
+      );
+      console.log(response);
+      if (response) {
+        Swal.fire(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      if (error.response && error.response.data) {
+        Swal.fire("Error", error.response.data.message, "error");
+      } else {
+        Swal.fire(
+          "Error",
+          "An error occurred. Please try again later.",
+          "error"
+        );
+      }
     }
   };
 }
@@ -77,39 +95,46 @@ export function changePassword(data) {
           "error"
         );
       }
-      Swal.fire(response.data.message, "please use another email");
     }
   };
 }
 
-export function loginUser(data) {
-  return async (dispatch) => {
-    console.log(data);
-    let response = await Axios.post("http://localhost:8000/auth/login", data);
-    console.log(response);
-    if (response) {
-      dispatch(setUser(response.data.data));
-      localStorage.setItem("user_token", response.data.token);
-      Swal.fire(response.data.message, "success");
-    }
-  };
-}
+// export function loginUser(data) {
+//   return async (dispatch) => {
+//     console.log(data);
+//     try {
+//       let response = await Axios.post("http://localhost:8000/auth/login", data);
+//       console.log(response);
+//       if (response) {
+//         dispatch(setUser(response.data.data));
+//         localStorage.setItem("user_token", response.data.token);
+//         Swal.fire(response.data.message, "success");
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       Swal.fire("Error", "An error occurred. Please try again later.", "error");
+//     }
+//   };
+// }
 
 export function checkLogin(token) {
   return async (dispatch) => {
-    // console.log(token)
-    let response = await Axios.post(
-      "http://localhost:8000/auth/check-login",
-      {},
-      {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
+    try {
+      let response = await Axios.post(
+        "http://localhost:8000/auth/check-login",
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response) {
+        dispatch(setUser(response.data.data));
       }
-    );
-    console.log(response);
-    if (response) {
-      dispatch(setUser(response.data.data));
+    } catch (error) {
+      console.error(error);
     }
   };
 }
@@ -150,7 +175,9 @@ export function verifyEmail(data) {
     } catch (error) {
       alert(error);
       console.error(error);
-    }}}
+    }
+  };
+}
 
 export function confirmEmail(data) {
   return async (dispatch) => {
@@ -184,11 +211,24 @@ export function resetPassword(data, token) {
       );
 
       if (response) {
-        // alert(response.data.message);
         Swal.fire("Password Anda berhasil diganti.");
       }
     } catch (error) {
+      console.error(error);
       Swal.fire(error.message);
+    }
+  };
+}
+
+export function editProfile(data) {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.patch(
+        "http://localhost:8000/user/edit/:id",
+        data
+      );
+    } catch (error) {
+      Swal.fire("Error getting data from database");
     }
   };
 }

@@ -15,6 +15,7 @@ import VerifyEmail from "./pages/Auth/Activation/VerifyEmail";
 import ChangePassword from "./pages/Auth/ChangePassword/ChangePassword";
 import ConfirmEmail from "./pages/Auth/ResetPassword/ConfirmEmail";
 import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -56,6 +57,7 @@ function App() {
         <Route path="/user/changePassword" element={<ChangePassword />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/notfound" element={<NotFound />} />
+        <Route path="/user/profile" element={<Profile />} />
       </Routes>
     </div>
   );

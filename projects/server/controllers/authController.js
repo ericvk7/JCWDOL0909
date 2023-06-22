@@ -8,9 +8,7 @@ module.exports = {
     try {
       const { email, password, phoneNumber } = req.body;
 
-      let getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(
-        email
-      )}`;
+      let getEmailQuery = `SELECT * FROM users WHERE email=${db.escape(email)}`;
       let isEmailExist = await query(getEmailQuery);
       if (isEmailExist.length > 0) {
         return res.status(200).send({ message: "Email has been used" });
@@ -87,7 +85,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
       let isEmailExist = await query(
-        `SELECT * FROM users WHERE user_email=${db.escape(email)}`
+        `SELECT * FROM users WHERE email=${db.escape(email)}`
       );
       console.log(isEmailExist);
 
@@ -96,10 +94,7 @@ module.exports = {
           .status(200)
           .send({ message: "Email or Password is Invalid", success: false });
       }
-      const isValid = await bcrypt.compare(
-        password,
-        isEmailExist[0].user_password
-      );
+      const isValid = await bcrypt.compare(password, isEmailExist[0].password);
       if (!isValid) {
         return res
           .status(200)
@@ -108,14 +103,14 @@ module.exports = {
       let payload = {
         id: isEmailExist[0].id_user,
       };
-      const token = jwt.sign(payload, "six6", { expiresIn: "2h" });
+      const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
       return res.status(200).send({
         message: "Login Success",
         token,
         data: {
           id: isEmailExist[0].id_user,
-          email: isEmailExist[0].user_email,
-          phone: isEmailExist[0].user_phone_number,
+          email: isEmailExist[0].email,
+          phone: isEmailExist[0].phone_number,
         },
         success: true,
       });
@@ -130,7 +125,7 @@ module.exports = {
 
       // Verifikasi email pengguna
       const user = await query(
-        `SELECT * FROM users WHERE user_email = ${db.escape(email)}`
+        `SELECT * FROM users WHERE email = ${db.escape(email)}`
       );
 
       if (user.length === 0) {
@@ -148,9 +143,9 @@ module.exports = {
 
       // Update password di database
       await query(
-        `UPDATE users SET user_password = ${db.escape(
+        `UPDATE users SET password = ${db.escape(
           hashPassword
-        )} WHERE user_email = ${db.escape(email)}`
+        )} WHERE email = ${db.escape(email)}`
       );
 
       return res.status(200).send("Password updated successfully");
@@ -189,8 +184,8 @@ module.exports = {
       return res.status(200).send({
         data: {
           id: users[0].id_user,
-          email: users[0].user_email,
-          phone: users[0].user_phone_number,
+          email: users[0].email,
+          phone: users[0].phone_number,
         },
       });
     } catch (error) {
@@ -202,7 +197,7 @@ module.exports = {
     const { email } = req.body;
 
     try {
-      const getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(
+      const getEmailQuery = `SELECT * FROM users WHERE email=${db.escape(
         email
       )}`;
       // console.log(getEmailQuery);
@@ -212,7 +207,7 @@ module.exports = {
       if (isEmailExist.length > 0) {
         payload = {
           id: isEmailExist[0].id_user,
-          email: isEmailExist[0].user_email,
+          email: isEmailExist[0].email,
         };
         const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
 
@@ -288,7 +283,7 @@ module.exports = {
       const hashPassword = await bcrypt.hash(newPassword, saltRounds);
 
       // Update password di database
-      await query("UPDATE users SET user_password = ? WHERE id_user = ?", [
+      await query("UPDATE users SET password = ? WHERE id_user = ?", [
         hashPassword,
         userId,
       ]);

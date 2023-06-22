@@ -64,9 +64,9 @@ function ProductDetailPage() {
         </p>
 
         <div className="flex items-center">
-          {adminData && adminData.user_profile_picture ? (
+          {adminData && adminData.profile_picture ? (
             <img
-              src={adminData.user_profile_picture}
+              src={adminData.profile_picture}
               alt="Avatar Admin"
               className="w-10 h-10 rounded-full mr-2 bg-white"
             />
