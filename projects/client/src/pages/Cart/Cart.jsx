@@ -33,11 +33,11 @@ function Cart() {
   );
 
   return (
-    <div className="flex flex-col h-10 mx-auto max-w-2xl my-20">
-      <p className="text-lg font-bold text-white text-center">Shopping Cart</p>
+    <div className="flex flex-col mx-auto max-w-screen-sm my-4 sm:my-10">
+      <p className="text-base sm:text-lg font-bold text-white text-center">Shopping Cart</p>
 
       {cartItems.length === 0 ? (
-        <p className="text-lg text-white">Your cart is empty.</p>
+        <p className="text-base sm:text-lg text-white">Your cart is empty.</p>
       ) : (
         <ul className="divide-y divide-[#EDA415]">
           {cartItems.map((item) => (
