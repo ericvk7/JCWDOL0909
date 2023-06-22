@@ -40,7 +40,7 @@ function App() {
   return (
     <div>
       {shouldShowNavbar &&
-        (userGlobal > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
+        (userGlobal.id > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
 
       <Routes>
         <Route path="/user/register" element={<Register />} />
