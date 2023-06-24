@@ -181,11 +181,16 @@ module.exports = {
         `SELECT * FROM users WHERE id_user = ${db.escape(req.user.id)}`
       );
       console.log(users);
+
+      const formattedBirthday = moment(users[0].birthday).format("YYYY-MM-DD");
+
       return res.status(200).send({
         data: {
           id: users[0].id_user,
           email: users[0].email,
           phone_number: users[0].phone_number,
+          gender: users[0].gender,
+          birthday: formattedBirthday,
         },
       });
     } catch (error) {

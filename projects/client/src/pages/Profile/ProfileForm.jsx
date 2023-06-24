@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { editProfile } from "../../features/users/userSlice";
+import { editProfile, setUser } from "../../features/users/userSlice";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 const ProfileForm = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    setIsEditing(false);
+  }, [user]);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Required"),
@@ -16,17 +23,32 @@ const ProfileForm = () => {
     gender: Yup.string()
       .oneOf(["male", "female"], "Please select a gender")
       .required("Required"),
-    birthday: Yup.date().required("Required"),
+    birthday: Yup.date()
+      .max(
+        moment().subtract(10, "years").format("YYYY-MM-DD"),
+        "Must be at least 10 years old"
+      )
+      .required("Required"),
   });
 
   const handleEditProfile = (values) => {
-    console.log(values);
-    dispatch(editProfile(values));
+    const formattedValues = {
+      ...values,
+      birthday: moment(values.birthday).format("YYYY-MM-DD"),
+    };
+
+    dispatch(editProfile(formattedValues));
+    dispatch(setUser(formattedValues));
     setIsEditing(false);
+    navigate("/user/profile");
   };
 
   const handleEditClick = () => {
     setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
   };
 
   return (
@@ -38,7 +60,9 @@ const ProfileForm = () => {
           name: user.name || "",
           phone_number: user.phone_number || "",
           gender: user.gender || "",
-          birthday: user.birthday || "",
+          birthday: user.birthday
+            ? moment(user.birthday).format("YYYY-MM-DD")
+            : "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleEditProfile}
@@ -47,7 +71,7 @@ const ProfileForm = () => {
           <Form>
             <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-1 mx">
               <div>
-                <label className="text-black" htmlFor="emailAddress">
+                <label htmlFor="email" className="text-black">
                   Email Address
                 </label>
                 <Field
@@ -67,7 +91,7 @@ const ProfileForm = () => {
               </div>
 
               <div>
-                <label className="text-black" htmlFor="name">
+                <label htmlFor="name" className="text-black">
                   Full Name
                 </label>
                 <Field
@@ -85,7 +109,7 @@ const ProfileForm = () => {
               </div>
 
               <div>
-                <label className="text-black" htmlFor="phone_number">
+                <label htmlFor="phone_number" className="text-black">
                   Phone Number
                 </label>
                 <Field
@@ -131,7 +155,7 @@ const ProfileForm = () => {
               </div>
 
               <div>
-                <label className="text-black" htmlFor="birthday">
+                <label htmlFor="birthday" className="text-black">
                   Date
                 </label>
                 <Field
@@ -159,13 +183,22 @@ const ProfileForm = () => {
                   Edit
                 </button>
               ) : (
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-green-500 rounded-md hover:bg-green-400 focus:outline-none focus:bg-green-400"
-                >
-                  Save
-                </button>
+                <div>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-green-500 rounded-md hover:bg-green-400 focus:outline-none focus:bg-green-400"
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancelClick}
+                    className="ml-3 px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-red-500 rounded-md hover:bg-red-400 focus:outline-none focus:bg-red-400"
+                  >
+                    Cancel
+                  </button>
+                </div>
               )}
             </div>
           </Form>
