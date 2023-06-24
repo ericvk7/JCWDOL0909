@@ -3,7 +3,12 @@ const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
 const { db, query } = require("../database");
-const { authRoutes, productRoutes, categoryRoutes } = require("../routes");
+const {
+  authRoutes,
+  productRoutes,
+  categoryRoutes,
+  adminRoutes,
+} = require("../routes");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -17,6 +22,7 @@ app.use(express.static("public"));
 //#region API ROUTES
 
 app.use("/auth", authRoutes);
+app.use("/admin", adminRoutes);
 app.use("/products", productRoutes);
 app.use("/category", categoryRoutes);
 
