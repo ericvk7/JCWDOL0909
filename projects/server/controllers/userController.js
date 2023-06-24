@@ -17,19 +17,15 @@ module.exports = {
   },
 
   editProfile: async (req, res) => {
-    const { email, name, phone_number, gender, birthday } = req.body;
-    const idParams = parseInt(req.params.id);
-    console.log(req.body);
     try {
-      if (req.user.id !== idParams) {
-        return res.status(400).send("Unauthorized attempt");
-      }
-
+      const { email, name, phone_number, gender, birthday } = req.body;
+      console.log(req.body);
+      const idUser = req.user.id;
       const user = await query(
-        `SELECT * FROM users WHERE id_user = ${db.escape(idParams)}`
+        `SELECT * FROM users WHERE id_user = ${db.escape(idUser)}`
       );
 
-      if (user.length === 0) {
+      if (user.length <= 0) {
         return res.status(404).send("User not found");
       }
 
@@ -42,13 +38,11 @@ module.exports = {
       birthday = COALESCE(STR_TO_DATE(${db.escape(
         birthday
       )}, '%m/%d/%Y'), birthday)
-      WHERE id_user = ${db.escape(idParams)}`;
+      WHERE id_user = ${db.escape(idUser)}`;
 
       await query(updateQuery);
 
-      const updatedUser = await query(
-        `SELECT * FROM users WHERE id_user = ${db.escape(idParams)}`
-      );
+      const updatedUser = await query(updateQuery);
 
       return res.status(200).send(updatedUser);
     } catch (error) {

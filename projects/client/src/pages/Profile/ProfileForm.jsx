@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { editProfile } from "../../features/users/userSlice";
 
-function ProfileForm() {
+const ProfileForm = () => {
   const dispatch = useDispatch();
-
   const user = useSelector((state) => state.users.user);
-  const [isEditing, setIsEditing] = useState(false); // State variable for editing mode
+  const [isEditing, setIsEditing] = useState(false);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Required"),
@@ -17,28 +16,17 @@ function ProfileForm() {
     gender: Yup.string()
       .oneOf(["male", "female"], "Please select a gender")
       .required("Required"),
-    birthdate: Yup.date().required("Required"),
+    birthday: Yup.date().required("Required"),
   });
 
-  const handleEditProfile = async (values) => {
-    const editedValues = {
-      ...values,
-      email: values.email.toLowerCase(),
-      name: values.name.toLowerCase(),
-      gender: values.gender.toLowerCase(),
-    };
-    dispatch(editProfile(editedValues));
-  };
-
-  const handleSubmit = (values, { setSubmitting }) => {
-    // Handle form submission here
+  const handleEditProfile = (values) => {
     console.log(values);
-    setSubmitting(false);
-    setIsEditing(false); // Disable editing mode after form submission
+    dispatch(editProfile(values));
+    setIsEditing(false);
   };
 
   const handleEditClick = () => {
-    setIsEditing(true); // Enable editing mode when the edit button is clicked
+    setIsEditing(true);
   };
 
   return (
@@ -48,16 +36,15 @@ function ProfileForm() {
         initialValues={{
           email: user.email,
           name: user.name || "",
-          phone_number: user.phone_number || "", // Use user.phone_number for the initial value
+          phone_number: user.phone_number || "",
           gender: user.gender || "",
           birthday: user.birthday || "",
         }}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={handleEditProfile}
       >
-        {({ isSubmitting, handleChange }) => (
+        {({ isSubmitting }) => (
           <Form>
-            {/* {JSON.stringify(user)} */}
             <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-1 mx">
               <div>
                 <label className="text-black" htmlFor="emailAddress">
@@ -70,9 +57,8 @@ function ProfileForm() {
                   className={`block w-full px-4 py-2 mt-2 text-black bg-white border ${
                     isEditing ? "border-gray-400" : "border-gray-200"
                   } rounded-md focus:border-blue-500 focus:outline-none focus:ring`}
-                  disabled={!isEditing} // Disable input when not in editing mode
+                  disabled={!isEditing}
                 />
-
                 <ErrorMessage
                   name="email"
                   component="div"
@@ -89,7 +75,7 @@ function ProfileForm() {
                   type="text"
                   name="name"
                   className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
-                  disabled={!isEditing} // Disable input when not in editing mode
+                  disabled={!isEditing}
                 />
                 <ErrorMessage
                   name="name"
@@ -109,7 +95,7 @@ function ProfileForm() {
                   className={`block w-full px-4 py-2 mt-2 text-black bg-white border ${
                     isEditing ? "border-gray-400" : "border-gray-200"
                   } rounded-md focus:border-blue-500 focus:outline-none focus:ring`}
-                  disabled={!isEditing} // Disable input when not in editing mode
+                  disabled={!isEditing}
                 />
                 <ErrorMessage
                   name="phone_number"
@@ -127,7 +113,7 @@ function ProfileForm() {
                       name="gender"
                       value="male"
                       className="form-radio"
-                      disabled={!isEditing} // Disable input when not in editing mode
+                      disabled={!isEditing}
                     />
                     <span className="ml-2">Male</span>
                   </label>
@@ -137,7 +123,7 @@ function ProfileForm() {
                       name="gender"
                       value="female"
                       className="form-radio"
-                      disabled={!isEditing} // Disable input when not in editing mode
+                      disabled={!isEditing}
                     />
                     <span className="ml-2">Female</span>
                   </label>
@@ -153,7 +139,7 @@ function ProfileForm() {
                   type="date"
                   name="birthday"
                   className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
-                  disabled={!isEditing} // Disable input when not in editing mode
+                  disabled={!isEditing}
                 />
                 <ErrorMessage
                   name="birthday"
@@ -176,7 +162,6 @@ function ProfileForm() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  onClick={handleEditProfile}
                   className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-green-500 rounded-md hover:bg-green-400 focus:outline-none focus:bg-green-400"
                 >
                   Save
@@ -188,6 +173,6 @@ function ProfileForm() {
       </Formik>
     </section>
   );
-}
+};
 
 export default ProfileForm;

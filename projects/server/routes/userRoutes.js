@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/:id", verifyToken, userController.fetchUser);
 // router.get("/", userController.fetchProduct);
-router.patch("/edit/:id", verifyToken, userController.editProfile);
+router.patch("/edit", verifyToken, userController.editProfile);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Axios from "axios";
 import Swal from "sweetalert2";
+import ProfileForm from "../../pages/Profile/ProfileForm";
 
 export const usersSlice = createSlice({
   name: "users",
@@ -222,9 +223,16 @@ export function resetPassword(data, token) {
 export function editProfile(data) {
   return async (dispatch) => {
     try {
+      const userToken = localStorage.getItem("user_token");
+
       const response = await Axios.patch(
-        `http://localhost:8000/user/edit/:id`, // Ubah endpoint sesuai kebutuhan
-        data
+        `http://localhost:8000/user/edit`, // Ubah endpoint sesuai kebutuhan
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
       );
       console.log(response.message);
       console.log(data);
