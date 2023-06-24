@@ -234,13 +234,13 @@ export function editProfile(data) {
           },
         }
       );
-      console.log(response.data.message);
+      console.log(response.message);
       console.log(data);
       // Dispatch action untuk memperbarui data pengguna di Redux state
       dispatch(setUser(response.data));
       Swal.fire("Profile updated successfully"); // Menampilkan notifikasi sukses
     } catch (error) {
-      Swal.fire(error.message); // Menampilkan notifikasi error
+      Swal.fire("Error updating profile"); // Menampilkan notifikasi error
     }
   };
 }

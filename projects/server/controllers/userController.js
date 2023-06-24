@@ -37,7 +37,7 @@ module.exports = {
       gender = COALESCE(${db.escape(gender)}, gender),
       birthday = COALESCE(STR_TO_DATE(${db.escape(
         birthday
-      )}, '%Y-%m-%dT%H:%i:%s.%fZ'), birthday)
+      )}, '%m/%d/%Y'), birthday)
       WHERE id_user = ${db.escape(idUser)}`;
 
       await query(updateQuery);
