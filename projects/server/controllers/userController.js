@@ -17,7 +17,7 @@ module.exports = {
   },
 
   editProfile: async (req, res) => {
-    const { email, name, phone_number, gender, birthdate } = req.body;
+    const { email, name, phone_number, gender, birthday } = req.body;
     const idParams = parseInt(req.params.id);
     console.log(req.body);
     try {
@@ -39,9 +39,9 @@ module.exports = {
       name = COALESCE(${db.escape(name)}, name),
       phone_number = COALESCE(${db.escape(phone_number)}, phone_number),
       gender = COALESCE(${db.escape(gender)}, gender),
-      birthdate = COALESCE(STR_TO_DATE(${db.escape(
-        birthdate
-      )}, '%m/%d/%Y'), birthdate)
+      birthday = COALESCE(STR_TO_DATE(${db.escape(
+        birthday
+      )}, '%m/%d/%Y'), birthday)
       WHERE id_user = ${db.escape(idParams)}`;
 
       await query(updateQuery);

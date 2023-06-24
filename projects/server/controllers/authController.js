@@ -110,7 +110,7 @@ module.exports = {
         data: {
           id: isEmailExist[0].id_user,
           email: isEmailExist[0].email,
-          phone: isEmailExist[0].phone_number,
+          phone_number: isEmailExist[0].phone_number,
         },
         success: true,
       });
@@ -185,7 +185,7 @@ module.exports = {
         data: {
           id: users[0].id_user,
           email: users[0].email,
-          phone: users[0].phone_number,
+          phone_number: users[0].phone_number,
         },
       });
     } catch (error) {

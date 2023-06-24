@@ -8,7 +8,7 @@ export const usersSlice = createSlice({
     user: {
       id: "",
       email: "",
-      phoneNumber: "",
+      phone_number: "",
       name: "",
       gender: "",
       birthday: "",
@@ -23,7 +23,7 @@ export const usersSlice = createSlice({
       state.user = {
         id: "",
         email: "",
-        phoneNumber: "",
+        phone_number: "",
         name: "",
         gender: "",
         birthday: "",
@@ -129,7 +129,6 @@ export function checkLogin(token) {
           },
         }
       );
-      console.log(response);
       if (response) {
         dispatch(setUser(response.data.data));
       }
@@ -224,11 +223,16 @@ export function editProfile(data) {
   return async (dispatch) => {
     try {
       const response = await Axios.patch(
-        "http://localhost:8000/user/edit/:id",
+        `http://localhost:8000/user/edit/:id`, // Ubah endpoint sesuai kebutuhan
         data
       );
+      console.log(response.message);
+      console.log(data);
+      // Dispatch action untuk memperbarui data pengguna di Redux state
+      dispatch(setUser(response.data));
+      Swal.fire("Profile updated successfully"); // Menampilkan notifikasi sukses
     } catch (error) {
-      Swal.fire("Error getting data from database");
+      Swal.fire("Error updating profile"); // Menampilkan notifikasi error
     }
   };
 }

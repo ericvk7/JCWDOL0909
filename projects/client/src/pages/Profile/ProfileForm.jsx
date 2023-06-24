@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { editProfile } from "../../features/users/userSlice";
 
 function ProfileForm() {
+  const dispatch = useDispatch();
+
   const user = useSelector((state) => state.users.user);
   const [isEditing, setIsEditing] = useState(false); // State variable for editing mode
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Required"),
-    fullName: Yup.string().required("Required"),
-    phoneNumber: Yup.string().required("Required"),
+    name: Yup.string().required("Required"),
+    phone_number: Yup.string().required("Required"),
+    gender: Yup.string()
+      .oneOf(["male", "female"], "Please select a gender")
+      .required("Required"),
+    birthdate: Yup.date().required("Required"),
   });
+
+  const handleEditProfile = async (values) => {
+    const editedValues = {
+      ...values,
+      email: values.email.toLowerCase(),
+      name: values.name.toLowerCase(),
+      gender: values.gender.toLowerCase(),
+    };
+    dispatch(editProfile(editedValues));
+  };
 
   const handleSubmit = (values, { setSubmitting }) => {
     // Handle form submission here
@@ -30,17 +47,17 @@ function ProfileForm() {
       <Formik
         initialValues={{
           email: user.email,
-          fullName: user.name || "",
-          phoneNumber: user.phoneNumber || "",
+          name: user.name || "",
+          phone_number: user.phone_number || "", // Use user.phone_number for the initial value
           gender: user.gender || "",
-          date: user.birthday || "",
+          birthday: user.birthday || "",
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, handleChange }) => (
           <Form>
-            {JSON.stringify(user)}
+            {/* {JSON.stringify(user)} */}
             <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-1 mx">
               <div>
                 <label className="text-black" htmlFor="emailAddress">
@@ -50,11 +67,10 @@ function ProfileForm() {
                   id="email"
                   type="email"
                   name="email"
-                  Value={user.email}
-                  // onChange={handleChange}
                   className={`block w-full px-4 py-2 mt-2 text-black bg-white border ${
                     isEditing ? "border-gray-400" : "border-gray-200"
                   } rounded-md focus:border-blue-500 focus:outline-none focus:ring`}
+                  disabled={!isEditing} // Disable input when not in editing mode
                 />
 
                 <ErrorMessage
@@ -65,35 +81,38 @@ function ProfileForm() {
               </div>
 
               <div>
-                <label className="text-black" htmlFor="fullName">
+                <label className="text-black" htmlFor="name">
                   Full Name
                 </label>
                 <Field
-                  id="fullName"
+                  id="name"
                   type="text"
-                  name="fullName"
+                  name="name"
                   className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
+                  disabled={!isEditing} // Disable input when not in editing mode
                 />
                 <ErrorMessage
-                  name="fullName"
+                  name="name"
                   component="div"
                   className="text-red-500"
                 />
               </div>
 
               <div>
-                <label className="text-black" htmlFor="phoneNumber">
+                <label className="text-black" htmlFor="phone_number">
                   Phone Number
                 </label>
                 <Field
-                  id="phoneNumber"
+                  id="phone_number"
                   type="text"
-                  name="phoneNumber"
-                  value={user.phone}
-                  className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
+                  name="phone_number"
+                  className={`block w-full px-4 py-2 mt-2 text-black bg-white border ${
+                    isEditing ? "border-gray-400" : "border-gray-200"
+                  } rounded-md focus:border-blue-500 focus:outline-none focus:ring`}
+                  disabled={!isEditing} // Disable input when not in editing mode
                 />
                 <ErrorMessage
-                  name="phoneNumber"
+                  name="phone_number"
                   component="div"
                   className="text-red-500"
                 />
@@ -108,6 +127,7 @@ function ProfileForm() {
                       name="gender"
                       value="male"
                       className="form-radio"
+                      disabled={!isEditing} // Disable input when not in editing mode
                     />
                     <span className="ml-2">Male</span>
                   </label>
@@ -117,6 +137,7 @@ function ProfileForm() {
                       name="gender"
                       value="female"
                       className="form-radio"
+                      disabled={!isEditing} // Disable input when not in editing mode
                     />
                     <span className="ml-2">Female</span>
                   </label>
@@ -124,17 +145,18 @@ function ProfileForm() {
               </div>
 
               <div>
-                <label className="text-black" htmlFor="date">
+                <label className="text-black" htmlFor="birthday">
                   Date
                 </label>
                 <Field
-                  id="date"
+                  id="birthday"
                   type="date"
-                  name="date"
+                  name="birthday"
                   className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
+                  disabled={!isEditing} // Disable input when not in editing mode
                 />
                 <ErrorMessage
-                  name="date"
+                  name="birthday"
                   component="div"
                   className="text-red-500"
                 />
@@ -154,6 +176,7 @@ function ProfileForm() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
+                  onClick={handleEditProfile}
                   className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-green-500 rounded-md hover:bg-green-400 focus:outline-none focus:bg-green-400"
                 >
                   Save
