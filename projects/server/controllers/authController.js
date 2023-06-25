@@ -120,6 +120,7 @@ module.exports = {
           name: isEmailExist[0].name,
           gender: isEmailExist[0].gender,
           birthday: formattedBirthday,
+          imagePath: isEmailExist[0].profilePicture,
         },
         success: true,
       });
@@ -201,6 +202,7 @@ module.exports = {
           phone_number: users[0].phone_number,
           gender: users[0].gender,
           birthday: formattedBirthday,
+          imagePath: isEmailExist[0].profilePicture,
         },
       });
     } catch (error) {
