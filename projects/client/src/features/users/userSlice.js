@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Axios from "axios";
 import Swal from "sweetalert2";
-import ProfileForm from "../../pages/Profile/ProfileForm";
 
 export const usersSlice = createSlice({
   name: "users",
@@ -120,6 +119,7 @@ export function changePassword(data) {
 
 export function checkLogin(token) {
   return async (dispatch) => {
+    debugger;
     try {
       let response = await Axios.post(
         "http://localhost:8000/auth/check-login",
@@ -130,11 +130,13 @@ export function checkLogin(token) {
           },
         }
       );
+      console.log(response);
+
       if (response) {
         dispatch(setUser(response.data.data));
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 }
@@ -157,7 +159,7 @@ export function loginUser1(data) {
       }
     } catch (error) {
       alert(error);
-      console.error(error);
+      console.log(error);
     }
   };
 }

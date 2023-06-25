@@ -2,6 +2,7 @@ const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("../helpers/nodemailer");
+const moment = require("moment");
 
 module.exports = {
   register: async (req, res) => {
@@ -104,6 +105,10 @@ module.exports = {
         id: isEmailExist[0].id_user,
       };
       const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
+      const formattedBirthday = moment(isEmailExist[0].birthday).format(
+        "YYYY-MM-DD"
+      );
+
       return res.status(200).send({
         message: "Login Success",
         token,
@@ -111,6 +116,10 @@ module.exports = {
           id: isEmailExist[0].id_user,
           email: isEmailExist[0].email,
           phone_number: isEmailExist[0].phone_number,
+          isVerified: isEmailExist[0].isVerified,
+          name: isEmailExist[0].name,
+          gender: isEmailExist[0].gender,
+          birthday: formattedBirthday,
         },
         success: true,
       });
@@ -187,6 +196,7 @@ module.exports = {
       return res.status(200).send({
         data: {
           id: users[0].id_user,
+          name: users[0].name,
           email: users[0].email,
           phone_number: users[0].phone_number,
           gender: users[0].gender,
@@ -194,7 +204,7 @@ module.exports = {
         },
       });
     } catch (error) {
-      res.status(error.status || 500).send(error);
+      console.log(error);
     }
   },
 
