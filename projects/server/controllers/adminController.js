@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { db, query } = require("../database");
 
 module.exports = {
@@ -20,25 +21,31 @@ module.exports = {
       let isEmailExist = await query(
         `SELECT * FROM admins WHERE email=${db.escape(email)}`
       );
+      console.log(isEmailExist);
 
       if (isEmailExist.length == 0) {
         return res
           .status(200)
           .send({ message: "Email or Password is Invalid", success: false });
       }
-
       const isValid = await bcrypt.compare(password, isEmailExist[0].password);
       if (!isValid) {
         return res
           .status(200)
           .send({ message: "Email or Password is incorrect", success: false });
       }
-
+      let payload = {
+        id: isEmailExist[0].id_admin,
+      };
+      const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
       return res.status(200).send({
         message: "Login Success",
+        token,
         data: {
           id: isEmailExist[0].id_admin,
+          id_role: isEmailExist[0].id_role,
           email: isEmailExist[0].email,
+          name: isEmailExist[0].name,
         },
         success: true,
       });
