@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { editProfile, setUser } from "../../features/users/userSlice";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import UpdateProfile from "./ProfilePicture";
 
 const ProfileForm = () => {
   const dispatch = useDispatch();
@@ -69,6 +70,7 @@ const ProfileForm = () => {
       >
         {({ isSubmitting }) => (
           <Form>
+            <UpdateProfile />
             <div className="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-1 mx">
               <div>
                 <label htmlFor="email" className="text-black">

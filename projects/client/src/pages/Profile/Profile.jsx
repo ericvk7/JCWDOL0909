@@ -3,7 +3,7 @@ import Tab from "../../components/Tab";
 
 function Profile() {
   return (
-    <div>
+    <div className=" h-screen mt-6">
       <Tab />
     </div>
   );
