@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -10,11 +10,7 @@ const ProfileForm = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.user);
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    setIsEditing(false);
-  }, [user]);
+  const [isSaving, setIsSaving] = useState(false);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email address").required("Required"),
@@ -31,24 +27,16 @@ const ProfileForm = () => {
       .required("Required"),
   });
 
-  const handleEditProfile = (values) => {
+  const handleEditProfile = async (values) => {
     const formattedValues = {
       ...values,
       birthday: moment(values.birthday).format("YYYY-MM-DD"),
     };
 
-    dispatch(editProfile(formattedValues));
+    setIsSaving(true);
+    await dispatch(editProfile(formattedValues));
     dispatch(setUser(formattedValues));
-    setIsEditing(false);
-    navigate("/user/profile");
-  };
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancelClick = () => {
-    setIsEditing(false);
+    setIsSaving(false);
   };
 
   return (
@@ -78,10 +66,7 @@ const ProfileForm = () => {
                   id="email"
                   type="email"
                   name="email"
-                  className={`block w-full px-4 py-2 mt-2 text-black bg-white border ${
-                    isEditing ? "border-gray-400" : "border-gray-200"
-                  } rounded-md focus:border-blue-500 focus:outline-none focus:ring`}
-                  disabled={!isEditing}
+                  className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
                 />
                 <ErrorMessage
                   name="email"
@@ -99,7 +84,6 @@ const ProfileForm = () => {
                   type="text"
                   name="name"
                   className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
-                  disabled={!isEditing}
                 />
                 <ErrorMessage
                   name="name"
@@ -116,10 +100,7 @@ const ProfileForm = () => {
                   id="phone_number"
                   type="text"
                   name="phone_number"
-                  className={`block w-full px-4 py-2 mt-2 text-black bg-white border ${
-                    isEditing ? "border-gray-400" : "border-gray-200"
-                  } rounded-md focus:border-blue-500 focus:outline-none focus:ring`}
-                  disabled={!isEditing}
+                  className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
                 />
                 <ErrorMessage
                   name="phone_number"
@@ -137,7 +118,6 @@ const ProfileForm = () => {
                       name="gender"
                       value="male"
                       className="form-radio"
-                      disabled={!isEditing}
                     />
                     <span className="ml-2">Male</span>
                   </label>
@@ -147,7 +127,6 @@ const ProfileForm = () => {
                       name="gender"
                       value="female"
                       className="form-radio"
-                      disabled={!isEditing}
                     />
                     <span className="ml-2">Female</span>
                   </label>
@@ -163,7 +142,6 @@ const ProfileForm = () => {
                   type="date"
                   name="birthday"
                   className="block w-full px-4 py-2 mt-2 text-black bg-white border border-gray-400 rounded-md focus:border-blue-500 focus:outline-none focus:ring"
-                  disabled={!isEditing}
                 />
                 <ErrorMessage
                   name="birthday"
@@ -174,32 +152,13 @@ const ProfileForm = () => {
             </div>
 
             <div className="flex justify-end mt-6">
-              {!isEditing ? (
-                <button
-                  type="button"
-                  onClick={handleEditClick}
-                  className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
-                >
-                  Edit
-                </button>
-              ) : (
-                <div>
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-green-500 rounded-md hover:bg-green-400 focus:outline-none focus:bg-green-400"
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCancelClick}
-                    className="ml-3 px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-red-500 rounded-md hover:bg-red-400 focus:outline-none focus:bg-red-400"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
+              <button
+                type="submit"
+                disabled={isSubmitting || isSaving}
+                className="px-6 py-2 leading-5 text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:outline-none focus:bg-blue-400"
+              >
+                {isSaving ? "Saving..." : "Save"}
+              </button>
             </div>
           </Form>
         )}
