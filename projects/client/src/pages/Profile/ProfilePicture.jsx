@@ -50,7 +50,6 @@ function UpdateProfile() {
         if (!response.error) {
           setImageSrc(`http://localhost:8000/${response.data.filepath}`);
           alert("Upload success!");
-          setShowButtons(false);
           dispatch(setUser({ ...user, imagePath: response.data.filepath }));
         }
       } catch (error) {
@@ -65,7 +64,6 @@ function UpdateProfile() {
   };
 
   const cancelUpload = () => {
-    setFile(null);
     setShowButtons(false);
 
     if (user && user.imagePath) {
@@ -78,47 +76,45 @@ function UpdateProfile() {
   };
 
   return (
-    <div className="w-1/4 m-auto bg-white">
-      <div className="flex flex-col items-center py-10 border-dashed border-2 border-slate-400">
+    <div className="w-3/4 m-auto bg-blue-200">
+      <div className="flex flex-col items-center">
         <div className="mb-4">
           <img
             id="imagepreview"
-            className="w-32 h-32 rounded-full object-cover border-4"
+            className="w-40 h-40 rounded-full object-cover border-4 border-white"
             src={imageSrc}
             alt="Profile Avatar"
           />
         </div>
 
-        {!showButtons && (
-          <div>
-            <label
-              htmlFor="file"
-              className="cursor-pointer inline-block py-2 bg-sky-950 text-white px-4 rounded-md hover:bg-[#EDA415]"
-            >
-              Change Profile Photo
-            </label>
-            <input
-              type="file"
-              id="file"
-              className="hidden"
-              onChange={(event) => {
-                onFileChange(event);
-              }}
-            />
-          </div>
-        )}
+        <div>
+          <label
+            htmlFor="file"
+            className="cursor-pointer inline-block bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          >
+            {isLoading ? "Cancel" : "Change Profile Photo"}
+          </label>
+          <input
+            type="file"
+            id="file"
+            className="hidden"
+            onChange={(event) => {
+              onFileChange(event);
+            }}
+          />
+        </div>
 
         {showButtons && (
-          <div>
+          <div className="mt-4">
             <button
-              className="bg-red-400 mr-4 px-4 py-2 rounded-md hover:bg-red-200"
+              className="bg-red-400 px-4 py-2 rounded-md hover:bg-red-500"
               onClick={cancelUpload}
             >
               Cancel
             </button>
             {isLoading ? (
               <button
-                className="bg-red-400 text-white px-4 py-2 rounded-md hover:bg-[#EDA415]"
+                className="bg-green-400 px-4 py-2 rounded-md hover:bg-green-500"
                 onClick={uploadImage}
                 disabled
               >
@@ -126,7 +122,7 @@ function UpdateProfile() {
               </button>
             ) : (
               <button
-                className="bg-sky-800 px-4 text-white py-2 rounded-md hover:bg-[#EDA415]"
+                className="bg-green-400 px-4 py-2 rounded-md hover:bg-green-500"
                 onClick={uploadImage}
               >
                 Upload
