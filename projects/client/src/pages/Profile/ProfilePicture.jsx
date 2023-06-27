@@ -17,14 +17,16 @@ function UpdateProfile() {
   useEffect(() => {
     if (user && user.imagePath) {
       setImageSrc(`http://localhost:8000/${user.imagePath}`);
+    } else {
+      setImageSrc(
+        "https://i.pinimg.com/474x/c6/e9/ed/c6e9ed167165ca99c4d428426e256fae.jpg"
+      );
     }
   }, [user]);
 
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
     setImageSrc(URL.createObjectURL(event.target.files[0]));
-    // let preview = document.getElementById("imagepreview");
-    // preview.src = URL.createObjectURL(event.target.files[0]);
     setShowButtons(true);
   };
 
@@ -64,10 +66,15 @@ function UpdateProfile() {
 
   const cancelUpload = () => {
     setFile(null);
-
     setShowButtons(false);
 
-    setImageSrc(`http://localhost:8000${user.imagePath}`);
+    if (user && user.imagePath) {
+      setImageSrc(`http://localhost:8000/${user.imagePath}`);
+    } else {
+      setImageSrc(
+        "https://i.pinimg.com/474x/c6/e9/ed/c6e9ed167165ca99c4d428426e256fae.jpg"
+      );
+    }
   };
 
   return (
