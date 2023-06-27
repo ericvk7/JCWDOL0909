@@ -37,7 +37,7 @@ module.exports = {
       let payload = {
         id: isEmailExist[0].id_admin,
       };
-      const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
+      const token = jwt.sign(payload, "adminSecretKey", { expiresIn: "4h" });
       return res.status(200).send({
         message: "Login Success",
         token,
@@ -48,6 +48,24 @@ module.exports = {
           name: isEmailExist[0].name,
         },
         success: true,
+      });
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+  checkLoginAdmin: async (req, res) => {
+    try {
+      const admins = await query(
+        `SELECT * FROM admins WHERE id_admin = ${db.escape(req.admin.id)}`
+      );
+      console.log(admins);
+      return res.status(200).send({
+        data: {
+          id: admins[0].id_admin,
+          email: admins[0].email,
+          name: admins[0].name,
+          role: admins[0].role,
+        },
       });
     } catch (error) {
       res.status(error.status || 500).send(error);
