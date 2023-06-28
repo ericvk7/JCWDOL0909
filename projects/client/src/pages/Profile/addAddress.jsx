@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function AddressForm() {
   const [provinces, setProvinces] = useState([]);
@@ -11,7 +12,7 @@ function AddressForm() {
         "https://api.rajaongkir.com/starter/province",
         {
           headers: {
-            key: "YOUR_API_KEY", // Ganti dengan API key Anda
+            key: "e4cec3d07804ee5fb5e9be38ae552a69", // Ganti dengan API key Anda
           },
         }
       );
@@ -30,7 +31,7 @@ function AddressForm() {
         `https://api.rajaongkir.com/starter/city?province=${provinceId}`,
         {
           headers: {
-            key: "YOUR_API_KEY", // Ganti dengan API key Anda
+            key: "e4cec3d07804ee5fb5e9be38ae552a69", // Ganti dengan API key Anda
           },
         }
       );
@@ -49,7 +50,7 @@ function AddressForm() {
         `https://api.rajaongkir.com/starter/subdistrict?city=${cityId}`,
         {
           headers: {
-            key: "YOUR_API_KEY", // Ganti dengan API key Anda
+            key: "e4cec3d07804ee5fb5e9be38ae552a69", // Ganti dengan API key Anda
           },
         }
       );
@@ -99,14 +100,58 @@ function AddressForm() {
             />
           </div>
         </div>
-        <div className="w-full my-4">
-          <input
-            id="address"
-            type="text"
-            placeholder="Province, City, District, Postal Code"
+        <div className="mb-4 w-full max-w-md">
+          <label htmlFor="province" className="text-lg font-bold mb-2">
+            Provinsi
+          </label>
+          <select
+            id="province"
             className="border border-gray-300 p-2 rounded-md w-full"
-            autoComplete="user-administrative-divisions"
-          />
+            onChange={handleProvinceChange}
+          >
+            <option value="">Pilih Provinsi</option>
+            {provinces.map((province) => (
+              <option key={province.province_id} value={province.province_id}>
+                {province.province}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4 w-full max-w-md">
+          <label htmlFor="city" className="text-lg font-bold mb-2">
+            Kota
+          </label>
+          <select
+            id="city"
+            className="border border-gray-300 p-2 rounded-md w-full"
+            onChange={handleCityChange}
+          >
+            <option value="">Pilih Kota</option>
+            {cities.map((city) => (
+              <option key={city.city_id} value={city.city_id}>
+                {city.city_name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4 w-full max-w-md">
+          <label htmlFor="district" className="text-lg font-bold mb-2">
+            Kecamatan
+          </label>
+          <select
+            id="district"
+            className="border border-gray-300 p-2 rounded-md w-full"
+          >
+            <option value="">Pilih Kecamatan</option>
+            {districts.map((district) => (
+              <option
+                key={district.subdistrict_id}
+                value={district.subdistrict_id}
+              >
+                {district.subdistrict_name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="mb-4 w-full">
           <textarea
