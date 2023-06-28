@@ -33,6 +33,10 @@ exports.runSeed = async function () {
 
       let addAdminResult = await query(addAdminQuery);
 
+      let payload = { id: addUserResult.insertId };
+      const token = jwt.sign(payload, "six6", { expiresIn: "5m" });
+      console.log(token);
+
       console.log("create user:", addAdminResult);
 
       let mail = {
