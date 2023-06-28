@@ -43,7 +43,7 @@ module.exports = {
         token,
         data: {
           id: isEmailExist[0].id_admin,
-          role: isEmailExist[0].role,
+          id_role: isEmailExist[0].id_role,
           email: isEmailExist[0].email,
           name: isEmailExist[0].name,
         },
@@ -64,7 +64,7 @@ module.exports = {
           id: admins[0].id_admin,
           email: admins[0].email,
           name: admins[0].name,
-          role: admins[0].role,
+          id_role: admins[0].id_role,
         },
       });
     } catch (error) {

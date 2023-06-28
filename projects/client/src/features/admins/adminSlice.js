@@ -9,7 +9,7 @@ export const adminSlice = createSlice({
       id: "",
       name: "",
       email: "",
-      role: "",
+      id_role: "",
     },
   },
   reducers: {
@@ -21,7 +21,7 @@ export const adminSlice = createSlice({
         id: "",
         name: "",
         email: "",
-        role: "",
+        id_role: "",
       };
     },
   },
