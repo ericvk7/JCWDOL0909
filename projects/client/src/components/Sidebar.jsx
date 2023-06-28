@@ -1,7 +1,10 @@
 import React from "react";
 import logo from "../img/Logo-white.PNG";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { resetAdmin } from "../features/admins/adminSlice";
+import Swal from "sweetalert2";
 import {
-  FaEnvelope,
   FaShieldAlt,
   FaCog,
   FaBell,
@@ -14,6 +17,33 @@ import {
 import { RiMessage2Line } from "react-icons/ri";
 
 function Sidebar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const adminGlobal = useSelector((state) => state.admins.admin);
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, log me out!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("user_token");
+        dispatch(resetAdmin());
+        Swal.fire(
+          "Logged Out!",
+          "You have been successfully logged out.",
+          "success"
+        ).then(() => {
+          navigate("/admin/login");
+        });
+      }
+    });
+  };
+
   return (
     <div>
       <div
@@ -69,23 +99,25 @@ function Sidebar() {
             </button>
             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2 w-full md:w-52">
               <FaSignOutAlt className="text-xl" />
-              <p className="text-2xl leading-8">Logout</p>
+              <p className="text-2xl leading-8" onClick={handleLogout}>
+                Logout
+              </p>
             </button>
           </div>
-          <div class="flex justify-center items-center  space-x-2 my-11">
+          <div class="flex justify-center items-center  space-x-2 my-32">
             <div>
               <img
                 class="rounded-full"
-                src="https://i.ibb.co/L1LQtBm/Ellipse-1.png"
+                src="https://i.pinimg.com/474x/c6/e9/ed/c6e9ed167165ca99c4d428426e256fae.jpg"
                 alt="avatar"
               />
             </div>
             <div class="flex justify-start flex-col items-start">
               <p class="cursor-pointer text-lg leading-5 text-white">
-                Alexis Enache
+                {adminGlobal.name}
               </p>
               <p class="cursor-pointer text-base leading-3 text-gray-300">
-                alexis81@gmail.com
+                {adminGlobal.email}
               </p>
             </div>
           </div>

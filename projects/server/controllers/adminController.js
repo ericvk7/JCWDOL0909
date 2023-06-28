@@ -37,13 +37,13 @@ module.exports = {
       let payload = {
         id: isEmailExist[0].id_admin,
       };
-      const token = jwt.sign(payload, "adminSecretKey", { expiresIn: "4h" });
+      const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
       return res.status(200).send({
         message: "Login Success",
         token,
         data: {
           id: isEmailExist[0].id_admin,
-          id_role: isEmailExist[0].id_role,
+          role: isEmailExist[0].role,
           email: isEmailExist[0].email,
           name: isEmailExist[0].name,
         },
