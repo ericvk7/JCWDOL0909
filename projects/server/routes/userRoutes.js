@@ -14,5 +14,6 @@ router.post(
   upload.single("file"),
   userController.uploadProfilePic
 );
+router.post("/addAddress", verifyToken, userController.addAddress);
 
 module.exports = router;
