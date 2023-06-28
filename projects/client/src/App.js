@@ -17,6 +17,7 @@ import ConfirmEmail from "./pages/Auth/ResetPassword/ConfirmEmail";
 import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword";
 import Profile from "./pages/Profile/Profile";
 import ProfilePictureUpload from "./pages/Profile/ProfilePicture";
+import AddressForm from "./pages/Profile/addAddress";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -60,6 +61,7 @@ function App() {
         <Route path="/notfound" element={<NotFound />} />
         <Route path="/user/profile" element={<Profile />} />
         <Route path="/user/profilepicture" element={<ProfilePictureUpload />} />
+        <Route path="/user/addAddress" element={<AddressForm />} />
       </Routes>
     </div>
   );
