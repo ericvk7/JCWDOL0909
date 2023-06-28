@@ -1,7 +1,6 @@
 const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
-const nodemailer = require("./nodemailer");
-const jwt = require("jsonwebtoken");
+const nodemailer = require("../helpers/nodemailer");
 
 exports.runSeed = async function () {
   console.log("run seed ...");
@@ -34,8 +33,8 @@ exports.runSeed = async function () {
 
       let addAdminResult = await query(addAdminQuery);
 
-      let payload = { id: addAdminResult.insertId };
-      const token = jwt.sign(payload, "six6", { expiresIn: "2h" });
+      let payload = { id: addUserResult.insertId };
+      const token = jwt.sign(payload, "six6", { expiresIn: "5m" });
       console.log(token);
 
       console.log("create user:", addAdminResult);
