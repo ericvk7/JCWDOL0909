@@ -38,9 +38,9 @@ function App() {
     if (userToken) {
       dispatch(checkLogin(userToken));
     } else {
-      dispatch(checkLoginAdmin(userToken));
+      // dispatch(checkLoginAdmin(userToken));
     }
-  }, []);
+  }, [userToken]); // Menambahkan dependensi userToken
 
   return (
     <div>

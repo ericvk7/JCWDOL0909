@@ -37,8 +37,8 @@ function LoginAdmin() {
               d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
             />
           </svg>
-          <h1 class="text-3xl font-bold text-[#EDA415] pb-10">Sign In</h1>
-          <h3 class="text-1xl font-semibold text-gray-500 pb-5">
+          <h1 class="text-3xl font-bold text-[#EDA415] pb-5">Admin Login</h1>
+          <h3 class="text-1xl font-semibold text-gray-500 pb-2">
             Sign in to your account!
           </h3>
 
