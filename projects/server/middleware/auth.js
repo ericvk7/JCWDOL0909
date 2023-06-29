@@ -21,7 +21,7 @@ const verifyToken = (req, res, next) => {
     console.log(verifiedUser);
   } catch (error) {
     console.log(error);
-    return;
+    return res.status(401).send("Access Denied");
   }
   next();
 };

@@ -88,8 +88,6 @@ module.exports = {
         ${db.escape(district)}
       )`;
 
-      console.log(addAddressQuery);
-
       let addAddressResult = await query(addAddressQuery);
 
       // Check if the address column is null in the user table
@@ -111,6 +109,116 @@ module.exports = {
         .send({ data: addAddressResult, message: "Add Address Success" });
     } catch (error) {
       console.log(error);
+    }
+  },
+  addMainAddress: async (req, res) => {
+    try {
+      const idUser = req.user.id;
+      const idAddress = req.query.id_address;
+      const user = await query(
+        `SELECT * FROM users WHERE id_user = ${db.escape(idUser)}`
+      );
+
+      // Check if the user exists
+      if (user.length > 0) {
+        // Update the address column with the provided idAddress
+        const updateAddressQuery = `UPDATE users SET id_address = ${db.escape(
+          idAddress
+        )} WHERE id_user = ${db.escape(idUser)}`;
+        await query(updateAddressQuery);
+
+        res.status(200).send({
+          data: idAddress,
+          message: "Update main address success",
+        });
+      } else {
+        res.status(404).send({
+          message: "User not found",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Internal server error",
+      });
+    }
+  },
+  editAddress: async (req, res) => {
+    try {
+      const { address, city, province, postalCode, district } = req.body;
+      const idAddress = req.query.id_address;
+
+      let editAddressQuery = `UPDATE addresses SET 
+        address = ${db.escape(address)},
+        city = ${db.escape(city)},
+        province = ${db.escape(province)},
+        postalCode = ${db.escape(postalCode)},
+        district = ${db.escape(district)}
+        WHERE id_address = ${db.escape(idAddress)}`;
+
+      let editAddressResult = await query(editAddressQuery);
+
+      res
+        .status(200)
+        .send({ data: editAddressQuery, message: "Edit Address Success" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Internal server error" });
+    }
+  },
+  deleteAddress: async (req, res) => {
+    try {
+      const idAddress = req.query.id_address;
+
+      let deleteAddressQuery = `DELETE FROM addresses WHERE id_address = ${db.escape(
+        idAddress
+      )}`;
+
+      let deleteAddressResult = await query(deleteAddressQuery);
+
+      if (deleteAddressResult.affectedRows > 0) {
+        res.status(200).send({
+          message: "Delete Address Success",
+        });
+      } else {
+        res.status(404).send({
+          message: "Address not found",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Internal server error",
+      });
+    }
+  },
+  fetchAddress: async (req, res) => {
+    try {
+      const id = req.user.id;
+      const getAddresses = await query(
+        `SELECT * FROM addresses WHERE id_user = ${db.escape(id)}`
+      );
+      return res.status(200).send(getAddresses);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  fetchMainAddress: async (req, res) => {
+    try {
+      const idUser = req.user.id;
+
+      const getAddresses = await query(`
+        SELECT a.*, u.id_address
+        FROM addresses a
+        INNER JOIN users u ON a.id_address = u.id_address
+        WHERE u.id_user = ${db.escape(idUser)}
+      `);
+
+      return res.status(200).send(getAddresses);
+    } catch (error) {
+      res.status(500).send({
+        message: "Internal server error",
+      });
     }
   },
 };
