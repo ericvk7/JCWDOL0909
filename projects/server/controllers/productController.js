@@ -99,12 +99,12 @@ module.exports = {
   // },
   // filterProductsByName: async (req, res) => {
   //   try {
-  //     const nameParams = toString(req.params.product_name);
-  //     if (req.product.product_name != nameParams) {
+  //     const nameParams = toString(req.params.name);
+  //     if (req.product.name != nameParams) {
   //       return res.status(400).send("tidak ada product tersebut");
   //     }
   //     const filterProductsByName = await query(
-  //       `SELECT * FROM product where product_name = ${db.escape(nameParams)}`
+  //       `SELECT * FROM product where name = ${db.escape(nameParams)}`
   //     );
 
   //     return res.status(200).send(filterProductsByName);

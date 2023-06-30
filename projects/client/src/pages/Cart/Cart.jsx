@@ -28,7 +28,7 @@ function Cart() {
   };
 
   const totalPrice = cartItems.reduce(
-    (total, item) => total + item.product_price * item.quantity,
+    (total, item) => total + item.price * item.quantity,
     0
   );
 
@@ -46,10 +46,10 @@ function Cart() {
                 <div className="flex">
                   <div className="flex-1">
                     <h2 className="text-lg font-medium text-white">
-                      {item.product_name}
+                      {item.name}
                     </h2>
                     <p className="mt-1 text-sm text-white-500">
-                      {item.product_description}
+                      {item.description}
                     </p>
                   </div>
                   <div className="ml-4 flex-shrink-0 flow-root">
@@ -66,7 +66,7 @@ function Cart() {
                   <div className="flex">
                     <div className="flex-shrink-0">
                       <p className="text-lg font-medium text-white">
-                        {item.product_price.toLocaleString("id-ID", {
+                        {item.price.toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
                         })}

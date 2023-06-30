@@ -6,9 +6,7 @@ module.exports = {
   register: async (req, res) => {
     const { email, password, phoneNumber } = req.body;
 
-    let getEmailQuery = `SELECT * FROM users WHERE user_email=${db.escape(
-      email
-    )}`;
+    let getEmailQuery = `SELECT * FROM users WHERE email=${db.escape(email)}`;
 
     let isEmailExist = await query(getEmailQuery);
     if (isEmailExist.length > 0) {
@@ -38,7 +36,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
       let isEmailExist = await query(
-        `SELECT * FROM users WHERE user_email=${db.escape(email)}`
+        `SELECT * FROM users WHERE email=${db.escape(email)}`
       );
       console.log(isEmailExist);
 
@@ -47,10 +45,7 @@ module.exports = {
           .status(200)
           .send({ message: "Email or Password is Invalid", success: false });
       }
-      const isValid = await bcrypt.compare(
-        password,
-        isEmailExist[0].user_password
-      );
+      const isValid = await bcrypt.compare(password, isEmailExist[0].password);
       if (!isValid) {
         return res
           .status(200)
@@ -65,8 +60,8 @@ module.exports = {
         token,
         data: {
           id: isEmailExist[0].id_user,
-          email: isEmailExist[0].user_email,
-          phone: isEmailExist[0].user_phone_number,
+          email: isEmailExist[0].email,
+          phone: isEmailExist[0].phone_number,
         },
         success: true,
       });
@@ -107,8 +102,8 @@ module.exports = {
       return res.status(200).send({
         data: {
           id: users[0].id_user,
-          email: users[0].user_email,
-          phone: users[0].user_phone_number,
+          email: users[0].email,
+          phone: users[0].phone_number,
         },
       });
     } catch (error) {
