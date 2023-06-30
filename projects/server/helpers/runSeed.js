@@ -1,6 +1,7 @@
 const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const nodemailer = require("../helpers/nodemailer");
+const jwt = require("jsonwebtoken");
 
 exports.runSeed = async function () {
   console.log("run seed ...");
@@ -8,6 +9,11 @@ exports.runSeed = async function () {
     {
       name: "annisafirlia",
       email: "annisafirlia1@gmail.com",
+      id_role: "1",
+    },
+    {
+      name: "adibpy",
+      email: "adib.yadri@gmail.com",
       id_role: "1",
     },
   ];
@@ -33,7 +39,7 @@ exports.runSeed = async function () {
 
       let addAdminResult = await query(addAdminQuery);
 
-      let payload = { id: addUserResult.insertId };
+      let payload = { id: addAdminResult.insertId };
       const token = jwt.sign(payload, "six6", { expiresIn: "5m" });
       console.log(token);
 
