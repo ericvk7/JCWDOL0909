@@ -1,12 +1,12 @@
 import React from "react";
 import Sidebar from "../../components/Sidebar";
+import AdminLayout from "../../components/AdminLayout";
 
 function Dashboard() {
   return (
-    <>
-      <Sidebar />
-      <div>Dashboard</div>
-    </>
+    <AdminLayout>
+      <div>Ini Dashboard</div>
+    </AdminLayout>
   );
 }
 

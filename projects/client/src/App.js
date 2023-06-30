@@ -47,7 +47,7 @@ function App() {
     } else if (adminToken) {
       dispatch(checkLoginAdmin(adminToken));
     }
-  }, []); // Menambahkan dependensi userToken
+  }, [userToken, adminToken]); // Menambahkan dependensi userToken
 
   return (
     <div>
@@ -78,6 +78,8 @@ function App() {
         <Route path="/admin/createAdmin" element={<CreateAdmin />} />
         <Route path="/blankPage" element={<BlankPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+
+        {/* Routes for super admin  */}
       </Routes>
     </div>
   );

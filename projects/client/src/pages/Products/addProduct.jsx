@@ -18,7 +18,7 @@ const AddProduct = () => {
     const formData = new FormData();
     formData.append("productName", name);
     formData.append("productPrice", price);
-    formData.append("productStock", price);
+    formData.append("productStock", stock);
     formData.append("productDesc", description);
     formData.append("file", image);
     formData.append("id_category", category);
