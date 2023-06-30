@@ -31,7 +31,7 @@ function Sidebar() {
       confirmButtonText: "Yes, log me out!",
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem("user_token");
+        localStorage.removeItem("admin_token");
         dispatch(resetAdmin());
         Swal.fire(
           "Logged Out!",
@@ -104,19 +104,19 @@ function Sidebar() {
               </p>
             </button>
           </div>
-          <div class="flex justify-center items-center  space-x-2 my-32">
+          <div className="flex justify-center items-center  space-x-2 my-32">
             <div>
               <img
-                class="rounded-full"
+                className="rounded-full"
                 src="https://i.pinimg.com/474x/c6/e9/ed/c6e9ed167165ca99c4d428426e256fae.jpg"
                 alt="avatar"
               />
             </div>
-            <div class="flex justify-start flex-col items-start">
-              <p class="cursor-pointer text-lg leading-5 text-white">
+            <div className="flex justify-start flex-col items-start">
+              <p className="cursor-pointer text-lg leading-5 text-white">
                 {adminGlobal.name}
               </p>
-              <p class="cursor-pointer text-base leading-3 text-gray-300">
+              <p className="cursor-pointer text-base leading-3 text-gray-300">
                 {adminGlobal.email}
               </p>
             </div>

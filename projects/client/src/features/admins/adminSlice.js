@@ -40,7 +40,7 @@ export function loginAdmin(data) {
       );
       if (response.data.success) {
         dispatch(setAdmin(response.data.data));
-        localStorage.setItem("user_token", response.data.token);
+        localStorage.setItem("admin_token", response.data.token);
         if (response) {
           Swal.fire(response.data.message);
         }
@@ -56,19 +56,26 @@ export function loginAdmin(data) {
 
 export function checkLoginAdmin(token) {
   return async (dispatch) => {
-    // console.log(token)
-    let response = await Axios.post(
-      "http://localhost:8000/admin/check-login",
-      {},
-      {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
+    try {
+      let response = await Axios.post(
+        "http://localhost:8000/admin/check-login",
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        dispatch(setAdmin(response.data.data));
+      } else {
+        throw new Error("Failed to check login status.");
       }
-    );
-    console.log(response);
-    if (response) {
-      dispatch(setAdmin(response.data.data));
+    } catch (error) {
+      // Error handling
+      console.log("Error checking login status:", error.message);
+      // Tambahkan kode untuk memberikan umpan balik yang sesuai kepada pengguna
     }
   };
 }
