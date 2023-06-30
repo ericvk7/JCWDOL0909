@@ -62,7 +62,7 @@ function Cart() {
   };
 
   const totalPrice = cartItems.reduce(
-    (total, item) => total + item.product_price * item.quantity,
+    (total, item) => total + item.price * item.quantity,
     0
   );
 
@@ -84,7 +84,7 @@ function Cart() {
                 <div className="flex">
                   <div className="flex-1">
                     <h2 className="text-lg font-medium text-[#EDA415]">
-                      {item.product_name}
+                      {item.name}
                     </h2>
                   </div>
                   <div className="ml-4 flex-shrink-0 flow-root">
@@ -101,7 +101,7 @@ function Cart() {
                   <div className="flex">
                     <div className="flex-shrink-0">
                       <p className="text-l font-medium">
-                        {item.product_price.toLocaleString("id-ID", {
+                        {item.price.toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
                         })}
@@ -130,9 +130,9 @@ function Cart() {
               </div>
             </li>
           ))}
-          <div class="mt-6 flex items-center justify-between">
-            <p class="text-sm font-medium text-[#EDA415]">Total</p>
-            <p class="text-l font-semibold">
+          <div className="mt-6 flex items-center justify-between">
+            <p className="text-sm font-medium text-[#EDA415]">Total</p>
+            <p className="text-l font-semibold">
               {" "}
               {totalPrice.toLocaleString("id-ID", {
                 style: "currency",
@@ -140,23 +140,23 @@ function Cart() {
               })}
             </p>
           </div>
-          <div class="mt-6 text-center">
+          <div className="mt-6 text-center">
             <button
               type="button"
-              class="group inline-flex w-full items-center justify-center rounded-md bg-[#EDA415] px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+              className="group inline-flex w-full items-center justify-center rounded-md bg-[#EDA415] px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
             >
               Checkout
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="group-hover:ml-8 ml-4 h-6 w-6 transition-all"
+                className="group-hover:ml-8 ml-4 h-6 w-6 transition-all"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M13 7l5 5m0 0l-5 5m5-5H6"
                 />
               </svg>

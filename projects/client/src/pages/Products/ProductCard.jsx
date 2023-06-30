@@ -3,18 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, increaseQuantity } from "../../features/cart/cartSlice";
 import Axios from "axios";
-import Swal from "sweetalert2";
-import { FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa";
 
 function ProductCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.items);
-  const userGlobal = useSelector((state) => state.users.user);
 
   const [products, setProductList] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sort, setSort] = useState(`lowPrice`);
+
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,33 +35,15 @@ function ProductCard() {
   };
 
   const handleAddToCart = (product) => {
-    if (userGlobal.id <= 0) {
-      Swal.fire({
-        icon: "warning",
-        title: "Please login first, to make any transaction",
-        showCancelButton: true,
-        confirmButtonText: "Yes",
-        cancelButtonText: "Cancel",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate("/user/login");
-        }
-      });
+    const existingItem = cartItems.find(
+      (item) => item.id_product === product.id_product
+    );
+    if (existingItem) {
+      dispatch(increaseQuantity(product.id_product));
     } else {
-      const existingItem = cartItems.find(
-        (item) => item.id_product === product.id_product
-      );
-      if (existingItem) {
-        dispatch(increaseQuantity(product.id_product));
-      } else {
-        dispatch(addItem({ ...product, quantity: 1 }));
-      }
-      Swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "Added to your cart",
-      });
+      dispatch(addItem({ ...product, quantity: 1 }));
     }
+    alert("berhasil menambahkan ke keranjang");
   };
 
   const handleCategoryChange = (e) => {
@@ -80,7 +60,7 @@ function ProductCard() {
       ? products
       : products.filter((p) => p.id_category === selectedCategory);
   const filteredProductsBySearchTerm = filteredProducts.filter((p) =>
-    p.product_name.toLowerCase().includes(searchTerm.toLowerCase())
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -133,21 +113,9 @@ function ProductCard() {
 
   useEffect(() => {
     if (sort === "lowPrice") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => a.product_price - b.product_price)
-      );
+      setProductList((prev) => [...prev].sort((a, b) => a.price - b.price));
     } else if (sort === "highPrice") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => b.product_price - a.product_price)
-      );
-    } else if (sort === "aToZ") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => a.product_name.localeCompare(b.product_name))
-      );
-    } else if (sort === "zToA") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => b.product_name.localeCompare(a.product_name))
-      );
+      setProductList((prev) => [...prev].sort((a, b) => b.price - a.price));
     }
   }, [sort]);
 
@@ -160,8 +128,8 @@ function ProductCard() {
         >
           <div className="relative flex flex-col overflow-hidden rounded-lg border">
             <img
-              src={`http://localhost:8000/${product.product_image}`}
-              alt={product.product_name}
+              src={`http://localhost:8000/${product.image}`}
+              alt={product.name}
               className="w-50 h-80 object-cover"
               onClick={() => handleProductClick(product)}
             />
@@ -169,13 +137,13 @@ function ProductCard() {
             <div className="my-4 mx-auto flex w-10/12 flex-col items-start justify-between">
               <div className="mb-2 flex">
                 <p className="mr-3 text-sm font-bold text-[#EDA415]">
-                  {product.product_price.toLocaleString("id-ID", {
+                  {product.price.toLocaleString("id-ID", {
                     style: "currency",
                     currency: "IDR",
                   })}
                 </p>
               </div>
-              <p className="text-lg font-medium">{product.product_name}</p>
+              <p className="text-lg font-medium">{product.name}</p>
             </div>
 
             <button
@@ -270,42 +238,6 @@ function ProductCard() {
           >
             <span>&#x2193;</span>
           </button>
-          <button
-            className={`ml-6 mr-2 py-2 px-4 rounded hover:bg-yellow-200 ${
-              sort === "aToZ" ? "bg-[#EDA415] text-white" : "bg-gray-200"
-            }`}
-            onClick={() => handleSort("aToZ")}
-          >
-            <FaSortAlphaDown
-              className={`sort-icon ${sort === "aToZ" ? "text-white" : ""}`}
-            />
-          </button>
-          <button
-            className={`py-2 px-4 rounded hover:bg-yellow-200 ${
-              sort === "zToA" ? "bg-[#EDA415] text-white" : "bg-gray-200"
-            }`}
-            onClick={() => handleSort("zToA")}
-          >
-            <FaSortAlphaUp
-              className={`sort-icon ${sort === "zToA" ? "text-white" : ""}`}
-            />
-          </button>
-          {/* <button
-            className="sort-button"
-            onClick={() => handleSort("aToZ")}
-            value="aToZ"
-          >
-            <FaSortAlphaDown className="sort-icon" />
-            A-Z
-          </button>
-          <button
-            className="sort-button"
-            onClick={() => handleSort("zToA")}
-            value="zToA"
-          >
-            <FaSortAlphaUp className="sort-icon" />
-            Z-A
-          </button> */}
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 gap-2">
           {renderList()}

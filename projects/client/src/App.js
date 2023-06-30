@@ -25,6 +25,7 @@ function App() {
   const adminGlobal = useSelector((state) => state.admins.admin);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("user_token");
+  const adminToken = localStorage.getItem("admin_token");
   const location = useLocation();
 
   const shouldShowNavbar =
@@ -37,8 +38,8 @@ function App() {
   useEffect(() => {
     if (userToken) {
       dispatch(checkLogin(userToken));
-    } else {
-      dispatch(checkLoginAdmin(userToken));
+    } else if (adminToken) {
+      dispatch(checkLoginAdmin(adminToken));
     }
   }, []);
 
