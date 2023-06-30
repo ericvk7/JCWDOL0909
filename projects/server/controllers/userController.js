@@ -76,16 +76,18 @@ module.exports = {
   },
   addAddress: async (req, res) => {
     try {
-      const { address, city, province, postalCode, district } = req.body;
+      const { name, phoneNumber, address, city, province, postalCode } =
+        req.body;
       const idUser = req.user.id;
 
       let addAddressQuery = `INSERT INTO addresses VALUES (null, 
         ${db.escape(idUser)}, 
+        ${db.escape(name)}, 
+        ${db.escape(phoneNumber)}, 
         ${db.escape(address)}, 
-        ${db.escape(city)}, 
         ${db.escape(province)}, 
+        ${db.escape(city)}, 
         ${db.escape(postalCode)},
-        ${db.escape(district)}
       )`;
 
       let addAddressResult = await query(addAddressQuery);

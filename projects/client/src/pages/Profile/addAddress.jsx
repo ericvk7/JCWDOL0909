@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Geocoder from "opencage-api-client";
 
 function AddressForm() {
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
-  const [districts, setDistricts] = useState([]);
+  const [geolocation, setGeolocation] = useState(null);
 
   const fetchProvinces = async () => {
     try {
       const response = await axios.get(
-        "https://api.rajaongkir.com/starter/province",
-        {
-          headers: {
-            key: "e4cec3d07804ee5fb5e9be38ae552a69", // Ganti dengan API key Anda
-          },
-        }
+        "http://localhost:8000/rajaongkir/province"
       );
 
       const provinces = response.data.rajaongkir.results;
@@ -24,16 +20,10 @@ function AddressForm() {
     }
   };
 
-  // Fungsi untuk mengambil data kota berdasarkan provinsi dari API RajaOngkir
   const fetchCities = async (provinceId) => {
     try {
       const response = await axios.get(
-        `https://api.rajaongkir.com/starter/city?province=${provinceId}`,
-        {
-          headers: {
-            key: "e4cec3d07804ee5fb5e9be38ae552a69", // Ganti dengan API key Anda
-          },
-        }
+        `http://localhost:8000/rajaongkir/city?provinceId=${provinceId}`
       );
 
       const cities = response.data.rajaongkir.results;
@@ -43,22 +33,31 @@ function AddressForm() {
     }
   };
 
-  // Fungsi untuk mengambil data kecamatan berdasarkan kota dari API RajaOngkir
-  const fetchDistricts = async (cityId) => {
+  const fetchGeolocation = async (cityId) => {
     try {
-      const response = await axios.get(
-        `https://api.rajaongkir.com/starter/subdistrict?city=${cityId}`,
-        {
-          headers: {
-            key: "e4cec3d07804ee5fb5e9be38ae552a69", // Ganti dengan API key Anda
-          },
-        }
-      );
+      const selectedCity = cities.find((city) => city.city_id === cityId);
 
-      const districts = response.data.rajaongkir.results;
-      setDistricts(districts);
+      if (selectedCity) {
+        const query = `${selectedCity.city_name}, ${selectedCity.province}`;
+        const geocoder = new Geocoder.Geocoder({
+          key: "YOUR_OPENCAGE_API_KEY",
+        }); // Ganti dengan kunci API OpenCage Anda
+
+        geocoder.geocode({ q: query }, (error, response) => {
+          if (error) {
+            console.error("Error fetching geolocation:", error);
+          } else if (
+            response &&
+            response.results &&
+            response.results.length > 0
+          ) {
+            const { geometry } = response.results[0];
+            setGeolocation(geometry);
+          }
+        });
+      }
     } catch (error) {
-      console.error("Error fetching districts:", error);
+      console.error("Error fetching geolocation:", error);
     }
   };
 
@@ -73,7 +72,7 @@ function AddressForm() {
 
   const handleCityChange = (e) => {
     const selectedCityId = e.target.value;
-    fetchDistricts(selectedCityId);
+    fetchGeolocation(selectedCityId);
   };
 
   return (
@@ -134,25 +133,12 @@ function AddressForm() {
             ))}
           </select>
         </div>
-        <div className="mb-4 w-full max-w-md">
-          <label htmlFor="district" className="text-lg font-bold mb-2">
-            Kecamatan
-          </label>
-          <select
-            id="district"
-            className="border border-gray-300 p-2 rounded-md w-full"
-          >
-            <option value="">Pilih Kecamatan</option>
-            {districts.map((district) => (
-              <option
-                key={district.subdistrict_id}
-                value={district.subdistrict_id}
-              >
-                {district.subdistrict_name}
-              </option>
-            ))}
-          </select>
-        </div>
+        {geolocation && (
+          <div>
+            <p>Latitude: {geolocation.lat}</p>
+            <p>Longitude: {geolocation.lng}</p>
+          </div>
+        )}
         <div className="mb-4 w-full">
           <textarea
             id="street-address"
