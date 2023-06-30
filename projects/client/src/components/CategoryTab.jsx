@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AddProductForm from "../pages/Admin/Product/AddProductForm";
+import AddCategoryForm from "../pages/Admin/Product/AddCategoryForm";
 function ProductTab() {
   const [activeTab, setActiveTab] = useState("product");
 
@@ -23,12 +23,11 @@ function ProductTab() {
               <a
                 href="#"
                 className={`inline-flex p-4 ${
-                  activeTab === "profile"
-                    ? "text-blue-600 border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group"
+                  activeTab === "password"
+                    ? "border-b-2 border-blue-600 rounded-t-lg active dark:text-blue-500 dark:border-blue-500 group"
                     : "border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group"
                 }`}
-                aria-current={activeTab === "profile" ? "page" : undefined}
-                onClick={() => handleTabClick("profile")}
+                onClick={() => handleTabClick("password")}
               >
                 <svg
                   aria-hidden="true"
@@ -37,15 +36,12 @@ function ProductTab() {
                   viewBox="0 0 20 20"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-                    clipRule="evenodd"
-                  ></path>
+                  <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"></path>
                 </svg>
-                Add Product
+                Add Category
               </a>
             </li>
+
             <li class="mr-2">
               <a
                 href="#"
@@ -65,7 +61,7 @@ function ProductTab() {
                     clip-rule="evenodd"
                   ></path>
                 </svg>
-                Edit Product
+                Edit Category
               </a>
             </li>
           </ul>
@@ -73,7 +69,7 @@ function ProductTab() {
       </section>
 
       {/* Render different content based on activeTab */}
-      {activeTab === "addProduct" && <AddProductForm />}
+      {activeTab === "addCategory" && <AddCategoryForm />}
       {/* {activeTab === "editProduct" && (
         // <ChangePasswordForm handleChangePassword={handleChangePassword} />
       )} */}

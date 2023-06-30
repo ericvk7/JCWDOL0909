@@ -18,6 +18,7 @@ function Sidebar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const adminGlobal = useSelector((state) => state.admins.admin);
+
   const handleLogout = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -72,19 +73,33 @@ function Sidebar() {
               <FaChartBar className="text-xl" />
               <p className="text-2xl leading-8   ">Dashboard</p>
             </button>
-            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
-              <FaShoppingBasket className="text-xl" />
-              <p className="text-2xl leading-8   ">Product</p>
-            </button>
-            <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
-              <FaTags className="text-xl" />
-              <p className="text-2xl leading-8   ">Category</p>
-            </button>
+            {adminGlobal.id_role === 2 && ( // Conditionally render the button based on the admin's id_role
+              <>
+                <button
+                  onClick={() => {
+                    navigate("/admin/addProduct");
+                  }}
+                  className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52"
+                >
+                  <FaShoppingBasket className="text-xl" />
+                  <p className="text-2xl leading-8   ">Product</p>
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/admin/addCategory");
+                  }}
+                  className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52"
+                >
+                  <FaTags className="text-xl" />
+                  <p className="text-2xl leading-8   ">Category</p>
+                </button>
+              </>
+            )}
             <button className="flex justify-start items-center space-x-6 hover:text-white focus:bg-gray-700 focus:text-white hover:bg-gray-700 text-gray-400 rounded px-3 py-2  w-full md:w-52">
               <FaFileInvoice className="text-xl" />
               <p className="text-2xl leading-8   ">Transaction</p>
             </button>
-            {adminGlobal.id_role === 1 && ( // Conditionally render the button based on the admin's id_role
+            {adminGlobal.id_role === 1 && (
               <button
                 onClick={() => {
                   navigate("/admin/createAdmin");

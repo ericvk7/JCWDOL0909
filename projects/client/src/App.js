@@ -23,6 +23,8 @@ import LoginAdmin from "./pages/Admin/LoginAdmin/LoginAdmin";
 import CreateAdmin from "./pages/Admin/CreateAdmin/CreateAdmin";
 import BlankPage from "./pages/Error/BlankPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import AddProductForm from "./pages/Admin/Product/AddProductForm";
+import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -60,7 +62,6 @@ function App() {
         <Route path="/user/login" element={<Login />} />
         <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
         <Route path="/user/resetPassword/:token" element={<ResetPassword />} />
-        <Route path="/product/addProduct" element={<AddProduct />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
@@ -78,6 +79,8 @@ function App() {
         <Route path="/admin/createAdmin" element={<CreateAdmin />} />
         <Route path="/blankPage" element={<BlankPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin/addProduct" element={<AddProductForm />} />
+        <Route path="/admin/addCategory" element={<AddCategoryForm />} />
 
         {/* Routes for super admin  */}
       </Routes>
