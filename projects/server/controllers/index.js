@@ -3,6 +3,7 @@ const productController = require("./productController");
 const categoryController = require("./categoryController");
 const userController = require("./userController");
 const rajaOngkirController = require("./rajaOngkirController");
+const opencageController = require("./openCage");
 
 module.exports = {
   authController,
@@ -10,4 +11,5 @@ module.exports = {
   categoryController,
   userController,
   rajaOngkirController,
+  opencageController,
 };

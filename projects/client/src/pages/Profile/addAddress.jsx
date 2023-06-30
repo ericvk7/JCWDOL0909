@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Geocoder from "opencage-api-client";
 
 function AddressForm() {
   const [provinces, setProvinces] = useState([]);
@@ -38,23 +37,13 @@ function AddressForm() {
       const selectedCity = cities.find((city) => city.city_id === cityId);
 
       if (selectedCity) {
-        const query = `${selectedCity.city_name}, ${selectedCity.province}`;
-        const geocoder = new Geocoder.Geocoder({
-          key: "YOUR_OPENCAGE_API_KEY",
-        }); // Ganti dengan kunci API OpenCage Anda
+        const { province, city_name } = selectedCity;
+        const url = `http://localhost:8000/opencage/geolocation/${province}/${city_name}`;
 
-        geocoder.geocode({ q: query }, (error, response) => {
-          if (error) {
-            console.error("Error fetching geolocation:", error);
-          } else if (
-            response &&
-            response.results &&
-            response.results.length > 0
-          ) {
-            const { geometry } = response.results[0];
-            setGeolocation(geometry);
-          }
-        });
+        const response = await axios.get(url);
+
+        const location = response.data;
+        setGeolocation(location);
       }
     } catch (error) {
       console.error("Error fetching geolocation:", error);
@@ -135,8 +124,8 @@ function AddressForm() {
         </div>
         {geolocation && (
           <div>
-            <p>Latitude: {geolocation.lat}</p>
-            <p>Longitude: {geolocation.lng}</p>
+            <p>Latitude: {geolocation.latitude}</p>
+            <p>Longitude: {geolocation.longitude}</p>
           </div>
         )}
         <div className="mb-4 w-full">

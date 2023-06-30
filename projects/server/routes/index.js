@@ -3,6 +3,7 @@ const productRoutes = require("./productRoutes");
 const categoryRoutes = require("./categoryRoutes");
 const userRoutes = require("./userRoutes");
 const rajaongkirRoutes = require("./rajaOngkirRoutes");
+const opencageRoutes = require("./opencageRoutes");
 
 module.exports = {
   authRoutes,
@@ -10,4 +11,5 @@ module.exports = {
   categoryRoutes,
   userRoutes,
   rajaongkirRoutes,
+  opencageRoutes,
 };
