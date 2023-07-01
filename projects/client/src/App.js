@@ -18,6 +18,7 @@ import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword";
 import Profile from "./pages/Profile/Profile";
 import ProfilePictureUpload from "./pages/Profile/ProfilePicture";
 import AddressForm from "./pages/Profile/addAddress";
+import UpdateAddress from "./pages/Profile/updateAddress";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -62,6 +63,7 @@ function App() {
         <Route path="/user/profile" element={<Profile />} />
         <Route path="/user/profilepicture" element={<ProfilePictureUpload />} />
         <Route path="/user/addAddress" element={<AddressForm />} />
+        <Route path="/user/updateAddress" element={<UpdateAddress />} />
       </Routes>
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function updateAddress({ addressId }) {
+function UpdateAddress({ addressId }) {
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedProvinceId, setSelectedProvinceId] = useState("");
@@ -242,4 +242,4 @@ function updateAddress({ addressId }) {
   );
 }
 
-export default updateAddress;
+export default UpdateAddress;
