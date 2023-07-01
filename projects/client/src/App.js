@@ -22,7 +22,7 @@ import ProfilePictureUpload from "./pages/Profile/ProfilePicture";
 import LoginAdmin from "./pages/Admin/LoginAdmin/LoginAdmin";
 import CreateAdmin from "./pages/Admin/CreateAdmin/CreateAdmin";
 import BlankPage from "./pages/Error/BlankPage";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -77,7 +77,7 @@ function App() {
         <Route path="/admin/login" element={<LoginAdmin />} />
         <Route path="/admin/createAdmin" element={<CreateAdmin />} />
         <Route path="/blankPage" element={<BlankPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
       </Routes>
     </div>
   );
