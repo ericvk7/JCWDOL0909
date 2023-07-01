@@ -24,7 +24,6 @@ function App() {
   const userGlobal = useSelector((state) => state.users.user);
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("user_token");
-  // const userGlobal = useSelector((state) => state.users.user);
   const location = useLocation();
 
   const shouldShowNavbar =
