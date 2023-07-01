@@ -24,11 +24,11 @@ module.exports = {
           };
           res.json(location);
         } else {
-          res.status(404).json({ error: "Lokasi tidak ditemukan." });
+          res.status(404).json({ error: "unknown location!" });
         }
       })
       .catch((error) => {
-        res.status(500).json({ error: "Terjadi kesalahan." });
+        res.status(500).json({ error: "an error occured!" });
       });
   },
 };

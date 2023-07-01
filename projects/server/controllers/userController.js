@@ -2,21 +2,6 @@ const { db, query } = require("../database");
 const moment = require("moment");
 
 module.exports = {
-  fetchUser: async (req, res) => {
-    try {
-      const idParams = parseInt(req.params.id);
-      if (req.user.id !== idParams) {
-        return res.status(400).send("Unauthorized attempt");
-      }
-      const users = await query(
-        `SELECT * FROM users WHERE id_user = ${db.escape(idParams)}`
-      );
-      return res.status(200).send(users);
-    } catch (error) {
-      res.status(error.status || 500).send(error);
-    }
-  },
-
   editProfile: async (req, res) => {
     try {
       const { email, name, phone_number, gender, birthday } = req.body;
@@ -76,8 +61,17 @@ module.exports = {
   },
   addAddress: async (req, res) => {
     try {
-      const { name, phoneNumber, address, city, province, postalCode } =
-        req.body;
+      const {
+        name,
+        phoneNumber,
+        address,
+        additionalDetails,
+        city,
+        province,
+        postalCode,
+        longitude,
+        latitude,
+      } = req.body;
       const idUser = req.user.id;
 
       let addAddressQuery = `INSERT INTO addresses VALUES (null, 
@@ -85,9 +79,12 @@ module.exports = {
         ${db.escape(name)}, 
         ${db.escape(phoneNumber)}, 
         ${db.escape(address)}, 
+        ${db.escape(additionalDetails)}, 
         ${db.escape(province)}, 
         ${db.escape(city)}, 
         ${db.escape(postalCode)},
+        ${db.escape(longitude)},
+        ${db.escape(latitude)}
       )`;
 
       let addAddressResult = await query(addAddressQuery);
