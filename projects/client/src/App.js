@@ -47,9 +47,11 @@ function App() {
     if (userToken) {
       dispatch(checkLogin(userToken));
     } else if (adminToken) {
+      console.log("masuk");
       dispatch(checkLoginAdmin(adminToken));
     }
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
+  console.log(adminToken);
 
   return (
     <div>
@@ -57,30 +59,46 @@ function App() {
         (userGlobal.id > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
 
       <Routes>
-        {/* Routes for user  */}
-        <Route path="/user/register" element={<Register />} />
-        <Route path="/user/login" element={<Login />} />
-        <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
-        <Route path="/user/resetPassword/:token" element={<ResetPassword />} />
-        <Route path="/category/addCategory" element={<AddCategory />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/product" element={<Products />} />
-        <Route path="/" element={<Products />} />
-        <Route path="/product/:id" element={<ProductDetailPage />} />
-        <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
-        <Route path="/user/changePassword" element={<ChangePassword />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/notfound" element={<NotFound />} />
-        <Route path="/user/profile" element={<Profile />} />
-        <Route path="/user/profilePicture" element={<ProfilePictureUpload />} />
+        {!adminGlobal.id && (
+          <>
+            <Route path="/user/register" element={<Register />} />
+            <Route path="/user/login" element={<Login />} />
+            <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
+            <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
+            <Route
+              path="/user/resetPassword/:token"
+              element={<ResetPassword />}
+            />
+            <Route path="/product" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/" element={<Products />} />
+          </>
+        )}
 
+        {userGlobal.id > 0 && (
+          <>
+            <Route path="/user/changePassword" element={<ChangePassword />} />
+            <Route path="/user/profile" element={<Profile />} />
+            <Route
+              path="/user/profilePicture"
+              element={<ProfilePictureUpload />}
+            />
+          </>
+        )}
+
+        <Route path="/notfound" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
+
+        {adminGlobal.id_role === 1 && (
+          <Route path="/admin/createAdmin" element={<CreateAdmin />} />
+        )}
         {/* Routes for admin  */}
         <Route path="/admin/login" element={<LoginAdmin />} />
-        <Route path="/admin/createAdmin" element={<CreateAdmin />} />
         <Route path="/blankPage" element={<BlankPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin/addProduct" element={<AddProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
+        <Route path="/category/addCategory" element={<AddCategory />} />
 
         {/* Routes for super admin  */}
       </Routes>
