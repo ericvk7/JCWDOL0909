@@ -100,18 +100,18 @@ module.exports = {
       const idAddress = req.query.id_address;
 
       let editAddressQuery = `UPDATE addresses SET 
-        name = COALESCE(${db.escape(name)}, name),
-        phoneNumber = COALESCE(${db.escape(phoneNumber)}, phoneNumber),
-        address = COALESCE(${db.escape(address)}, address),
-        additionalDetails = COALESCE(${db.escape(
-          additionalDetails
-        )}, additionalDetails), 
-        city = COALESCE(${db.escape(city)}, city)
-        province = COALESCE(${db.escape(province)}, province),
-        postalCode = COALESCE(${db.escape(postalCode)}, postalCode),
-        longitude = COALESCE(${db.escape(longitude)},longitude),
-        latitude = COALESCE(${db.escape(latitude)}, latitude)
-        WHERE id_address = ${db.escape(idAddress)}`;
+      name = COALESCE(${db.escape(name)}, name),
+      phoneNumber = COALESCE(${db.escape(phoneNumber)}, phoneNumber),
+      address = COALESCE(${db.escape(address)}, address),
+      additionalDetails = COALESCE(${db.escape(
+        additionalDetails
+      )}, additionalDetails), 
+      city = COALESCE(${db.escape(city)}, city),
+      province = COALESCE(${db.escape(province)}, province),
+      postalCode = COALESCE(${db.escape(postalCode)}, postalCode),
+      longitude = COALESCE(${db.escape(longitude)}, longitude),
+      latitude = COALESCE(${db.escape(latitude)}, latitude)
+      WHERE id_address = ${db.escape(idAddress)}`;
 
       let editAddressResult = await query(editAddressQuery);
 

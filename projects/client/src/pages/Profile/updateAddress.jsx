@@ -4,7 +4,6 @@ import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 
 function UpdateAddress({ editAddressData }) {
-  debugger;
   const { id } = useParams();
   const [address, setAddress] = useState(null);
   const [provinces, setProvinces] = useState([]);
@@ -21,7 +20,6 @@ function UpdateAddress({ editAddressData }) {
   const userToken = localStorage.getItem("user_token");
 
   useEffect(() => {
-    debugger;
     const fetchAddressData = async () => {
       try {
         const addressResponse = await axios.get(
@@ -63,21 +61,23 @@ function UpdateAddress({ editAddressData }) {
     const selectedCity = cities.find((city) => city.city_id === selectedCityId);
 
     const data = {
-      name: fullName,
-      phoneNumber,
-      address: streetAddress,
-      additionalDetails,
-      postalCode,
+      name: fullName || (address && address.name) || "",
+      phoneNumber: phoneNumber || (address && address.phoneNumber) || "",
+      address: streetAddress || (address && address.address) || "",
+      additionalDetails:
+        additionalDetails || (address && address.additionalDetails) || "",
+      postalCode: postalCode || (address && address.postalCode) || "",
       privateAddress,
-      longitude: geolocation.longitude,
-      latitude: geolocation.latitude,
+      longitude:
+        geolocation?.longitude || (address && address.longitude) || null,
+      latitude: geolocation?.latitude || (address && address.latitude) || null,
       province: selectedProvince ? selectedProvince.province : "",
       city: selectedCity ? selectedCity.city_name : "",
     };
 
     if (geolocation) {
-      data.longitude = geolocation.longitude;
-      data.latitude = geolocation.latitude;
+      data.longitude = geolocation?.longitude;
+      data.latitude = geolocation?.latitude;
     }
 
     try {
@@ -219,14 +219,15 @@ function UpdateAddress({ editAddressData }) {
             ))}
           </select>
         </div>
-        {geolocation && (
+        {JSON.stringify(geolocation) && (
           <div>
             <p>
-              Latitude: {geolocation.latitude || (address && address.latitude)}
+              Latitude:{" "}
+              {geolocation?.latitude || (address && address?.latitude) || ""}
             </p>
             <p>
               Longitude:
-              {geolocation.longitude || (address && address.longitude)}
+              {geolocation?.longitude || (address && address?.longitude) || ""}
             </p>
           </div>
         )}

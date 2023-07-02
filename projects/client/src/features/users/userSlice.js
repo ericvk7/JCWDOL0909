@@ -123,7 +123,6 @@ export function changePassword(data) {
 
 export function checkLogin(token) {
   return async (dispatch) => {
-    debugger;
     try {
       let response = await Axios.post(
         "http://localhost:8000/auth/check-login",
