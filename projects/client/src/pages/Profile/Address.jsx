@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import MainAddress from "./mainAddress";
 import AddressForm from "./addAddress";
+import Swal from "sweetalert2";
 
 function Address() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -13,6 +14,7 @@ function Address() {
   const [addressList, setAddressList] = useState([]);
   const userToken = localStorage.getItem("user_token");
   const [showModal, setShowModal] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   useEffect(() => {
     fetchAddressData();
@@ -21,7 +23,7 @@ function Address() {
   const fetchAddressData = async () => {
     try {
       const response = await Axios.get(
-        "http://localhost:8000/user/fetchAddress",
+        "http://localhost:8000/address/fetchAddress",
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -36,6 +38,32 @@ function Address() {
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleDeleteAddress = async (addressId) => {
+    try {
+      const response = await Axios.delete(
+        `http://localhost:8000/address/deleteAddress?id_address=${addressId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        Swal.fire("Success", "Address deleted successfully", "success");
+        // Refresh address list after deletion
+        fetchAddressData();
+      } else {
+        Swal.fire("success", response.data.message, "success");
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
+  const handleAddressClick = async (addressId) => {
+    navigate(`/address/${addressId}`);
   };
 
   return (
@@ -61,7 +89,7 @@ function Address() {
             <div>
               <MainAddress />
               {addressList.map((address) => (
-                <div key={address.id}>
+                <div key={address.id_address}>
                   <div className="flex justify-between items-center py-4">
                     <div className="flex items-center space-x-2 justify-start">
                       <div className="text-base">{address.name}</div>
@@ -76,10 +104,16 @@ function Address() {
                     </div>
                   </div>
                   <div className="flex items-center space-x-2 mt-4 mb-4">
-                    <button className="px-5 py-2 hover:bg-yellow-400 bg-blue-900  text-white rounded-md transition duration-300">
+                    <button
+                      onClick={() => handleAddressClick(address.id_address)}
+                      className="px-5 py-2 hover:bg-yellow-400 bg-blue-900  text-white rounded-md transition duration-300"
+                    >
                       Edit
                     </button>
-                    <button className="px-5 py-2 hover:bg-yellow-400 bg-blue-900 text-white rounded-md transition duration-300">
+                    <button
+                      onClick={() => handleDeleteAddress(address.id_address)}
+                      className="px-5 py-2 hover:bg-yellow-400 bg-blue-900 text-white rounded-md transition duration-300"
+                    >
                       Delete
                     </button>
                   </div>
@@ -107,7 +141,7 @@ function Address() {
       {showModal && (
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
           <AddressForm closeModal={handleCloseModal} />{" "}
-          {/* Meneruskan prop handleCloseModal */}
+          {/* Passing prop handleCloseModal */}
         </div>
       )}
     </div>

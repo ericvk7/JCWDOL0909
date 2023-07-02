@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useParams } from "react-router-dom";
 
-function UpdateAddress({ addressId, editAddressData }) {
+function UpdateAddress({ editAddressData }) {
+  debugger;
+  const { id } = useParams();
+  const [address, setAddress] = useState(null);
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedProvinceId, setSelectedProvinceId] = useState("");
@@ -15,6 +19,30 @@ function UpdateAddress({ addressId, editAddressData }) {
   const [postalCode, setPostalCode] = useState("");
   const [privateAddress, setPrivateAddress] = useState(false);
   const userToken = localStorage.getItem("user_token");
+
+  useEffect(() => {
+    debugger;
+    const fetchAddressData = async () => {
+      try {
+        const addressResponse = await axios.get(
+          `http://localhost:8000/address/fetchAddressById?idAddress=${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        const address = addressResponse.data;
+        setAddress(address[0]);
+        console.log(address);
+      } catch (error) {
+        console.log(error);
+        alert(error.message);
+      }
+    };
+
+    fetchAddressData();
+  }, [id]);
 
   useEffect(() => {
     if (editAddressData) {
@@ -47,9 +75,14 @@ function UpdateAddress({ addressId, editAddressData }) {
       city: selectedCity ? selectedCity.city_name : "",
     };
 
+    if (geolocation) {
+      data.longitude = geolocation.longitude;
+      data.latitude = geolocation.latitude;
+    }
+
     try {
-      const response = await axios.put(
-        `http://localhost:8000/user/editAddress?id_address=${addressId}`,
+      const response = await axios.patch(
+        `http://localhost:8000/address/editAddress?idAddress=${id}`,
         data,
         {
           headers: {
@@ -141,7 +174,7 @@ function UpdateAddress({ addressId, editAddressData }) {
               className="border border-gray-300 p-2 rounded-md w-full"
               autoComplete="name"
               maxLength="30"
-              value={fullName}
+              value={fullName || (address && address.name) || ""}
               onChange={(e) => setFullName(e.target.value)}
             />
           </div>
@@ -151,22 +184,19 @@ function UpdateAddress({ addressId, editAddressData }) {
               placeholder="Phone Number"
               className="border border-gray-300 p-2 rounded-md w-full"
               autoComplete="user-address-phone"
-              value={phoneNumber}
+              value={phoneNumber || (address && address.phoneNumber) || ""}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
         </div>
         <div className="mb-4 w-full max-w-md">
-          <label htmlFor="province" className="text-lg font-bold mb-2">
-            Provinsi
-          </label>
           <select
             id="province"
             className="border border-gray-300 p-2 rounded-md w-full"
             value={selectedProvinceId}
             onChange={handleProvinceChange}
           >
-            <option value="">Pilih Provinsi</option>
+            <option value="">{address && address.province}</option>
             {provinces.map((province) => (
               <option key={province.province_id} value={province.province_id}>
                 {province.province}
@@ -175,16 +205,13 @@ function UpdateAddress({ addressId, editAddressData }) {
           </select>
         </div>
         <div className="mb-4 w-full max-w-md">
-          <label htmlFor="city" className="text-lg font-bold mb-2">
-            Kota
-          </label>
           <select
             id="city"
             className="border border-gray-300 p-2 rounded-md w-full"
             value={selectedCityId}
             onChange={handleCityChange}
           >
-            <option value="">Pilih Kota</option>
+            <option value="">{address && address.city}</option>
             {cities.map((city) => (
               <option key={city.city_id} value={city.city_id}>
                 {city.city_name}
@@ -194,18 +221,23 @@ function UpdateAddress({ addressId, editAddressData }) {
         </div>
         {geolocation && (
           <div>
-            <p>Latitude: {geolocation.latitude}</p>
-            <p>Longitude: {geolocation.longitude}</p>
+            <p>
+              Latitude: {geolocation.latitude || (address && address.latitude)}
+            </p>
+            <p>
+              Longitude:
+              {geolocation.longitude || (address && address.longitude)}
+            </p>
           </div>
         )}
         <div className="mb-4 w-full max-w-md">
           <input
             type="text"
-            placeholder="Postal Code"
+            placeholder="postal code"
             className="border border-gray-300 p-2 rounded-md w-full"
             autoComplete="postal-code"
             maxLength="10"
-            value={postalCode}
+            value={postalCode || (address && address.postalCode) || ""}
             onChange={(e) => setPostalCode(e.target.value)}
           />
         </div>
@@ -216,7 +248,7 @@ function UpdateAddress({ addressId, editAddressData }) {
             className="border border-gray-300 p-2 rounded-md w-full"
             autoComplete="user-street-address"
             maxLength="160"
-            value={streetAddress}
+            value={streetAddress || (address && address.address) || ""}
             onChange={(e) => setStreetAddress(e.target.value)}
           />
         </div>
@@ -227,21 +259,13 @@ function UpdateAddress({ addressId, editAddressData }) {
             className="border border-gray-300 p-2 rounded-md w-full"
             autoComplete="user-address-additional-details"
             maxLength="160"
-            value={additionalDetails}
+            value={
+              additionalDetails || (address && address.additionalDetails) || ""
+            }
             onChange={(e) => setAdditionalDetails(e.target.value)}
           />
         </div>
-        <div className="mb-4">
-          <label htmlFor="private-address" className="text-lg font-bold">
-            Private Address
-          </label>
-          <input
-            type="checkbox"
-            id="private-address"
-            checked={privateAddress}
-            onChange={(e) => setPrivateAddress(e.target.checked)}
-          />
-        </div>
+
         <button
           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           onClick={handleSubmit}

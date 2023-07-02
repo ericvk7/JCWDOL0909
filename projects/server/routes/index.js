@@ -4,6 +4,7 @@ const categoryRoutes = require("./categoryRoutes");
 const userRoutes = require("./userRoutes");
 const rajaongkirRoutes = require("./rajaOngkirRoutes");
 const opencageRoutes = require("./opencageRoutes");
+const addressRoutes = require("./addressRoutes");
 
 module.exports = {
   authRoutes,
@@ -12,4 +13,5 @@ module.exports = {
   userRoutes,
   rajaongkirRoutes,
   opencageRoutes,
+  addressRoutes,
 };

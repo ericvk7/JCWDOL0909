@@ -35,7 +35,7 @@ function AddressForm({ closeModal }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/addAddress",
+        "http://localhost:8000/address/addAddress",
         data,
         {
           headers: {

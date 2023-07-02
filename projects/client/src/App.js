@@ -55,6 +55,7 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/product" element={<Products />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/address/:id" element={<UpdateAddress />} />
         <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
         <Route path="/user/changePassword" element={<ChangePassword />} />
         <Route path="*" element={<NotFound />} />

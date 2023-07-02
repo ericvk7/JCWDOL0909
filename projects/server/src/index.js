@@ -10,6 +10,7 @@ const {
   userRoutes,
   rajaongkirRoutes,
   opencageRoutes,
+  addressRoutes,
 } = require("../routes");
 
 const PORT = process.env.PORT || 8000;
@@ -29,6 +30,7 @@ app.use("/category", categoryRoutes);
 app.use("/user", userRoutes);
 app.use("/rajaOngkir", rajaongkirRoutes);
 app.use("/opencage", opencageRoutes);
+app.use("/address", addressRoutes);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
