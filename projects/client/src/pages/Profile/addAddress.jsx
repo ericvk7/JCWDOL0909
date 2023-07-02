@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function AddressForm() {
+function AddressForm({ closeModal }) {
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedProvinceId, setSelectedProvinceId] = useState("");
@@ -13,7 +13,6 @@ function AddressForm() {
   const [streetAddress, setStreetAddress] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
   const [postalCode, setPostalCode] = useState("");
-  const [privateAddress, setPrivateAddress] = useState(false);
   const userToken = localStorage.getItem("user_token");
 
   const handleSaveAddress = async () => {
@@ -28,7 +27,6 @@ function AddressForm() {
       address: streetAddress,
       additionalDetails,
       postalCode,
-      privateAddress,
       longitude: geolocation.longitude,
       latitude: geolocation.latitude,
       province: selectedProvince ? selectedProvince.province : "",
@@ -119,8 +117,12 @@ function AddressForm() {
     handleSaveAddress();
   };
 
+  const handleCancel = () => {
+    closeModal(); // Memanggil closeModal untuk menutup modal
+  };
+
   return (
-    <div className="flex flex-col items-center my-24">
+    <div className="flex flex-col items-center bg-white my-24">
       <div className="border border-gray-300 rounded-md p-8 w-full max-w-md">
         <div className="flex justify-between mb-4">
           <div className="w-1/2 mr-2">
@@ -146,9 +148,6 @@ function AddressForm() {
           </div>
         </div>
         <div className="mb-4 w-full max-w-md">
-          <label htmlFor="province" className="text-lg font-bold mb-2">
-            Provinsi
-          </label>
           <select
             id="province"
             className="border border-gray-300 p-2 rounded-md w-full"
@@ -164,9 +163,6 @@ function AddressForm() {
           </select>
         </div>
         <div className="mb-4 w-full max-w-md">
-          <label htmlFor="city" className="text-lg font-bold mb-2">
-            Kota
-          </label>
           <select
             id="city"
             className="border border-gray-300 p-2 rounded-md w-full"
@@ -219,18 +215,12 @@ function AddressForm() {
             onChange={(e) => setAdditionalDetails(e.target.value)}
           />
         </div>
-        <div className="mb-4 w-full">
-          <input
-            type="checkbox"
-            id="private-address"
-            className="mr-2"
-            checked={privateAddress}
-            onChange={(e) => setPrivateAddress(e.target.checked)}
-          />
-          <label htmlFor="private-address">Set as main address</label>
-        </div>
+
         <div className="flex justify-end w-full">
-          <button className="px-4 py-2 bg-gray-200 text-gray-800 rounded-sm mr-2 transition duration-300 ease-in-out hover:bg-gray-300 hover:text-gray-900">
+          <button
+            onClick={handleCancel}
+            className="px-4 py-2 bg-gray-200 text-gray-800 rounded-sm mr-2 transition duration-300 ease-in-out hover:bg-gray-300 hover:text-gray-900"
+          >
             Cancel
           </button>
           <button

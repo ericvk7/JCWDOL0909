@@ -210,14 +210,21 @@ module.exports = {
   fetchAddress: async (req, res) => {
     try {
       const id = req.user.id;
-      const getAddresses = await query(
-        `SELECT * FROM addresses WHERE id_user = ${db.escape(id)}`
-      );
+      const getAddresses = await query(`
+        SELECT *
+        FROM addresses
+        WHERE id_user = ${db.escape(id)} AND id_address NOT IN (
+          SELECT id_address
+          FROM users WHERE id_user = ${db.escape(id)}
+        )
+      `);
       return res.status(200).send(getAddresses);
     } catch (error) {
       console.log(error);
+      return res.status(500).send("Internal Server Error");
     }
   },
+
   fetchMainAddress: async (req, res) => {
     try {
       const idUser = req.user.id;

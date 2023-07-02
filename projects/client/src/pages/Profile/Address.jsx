@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import address from "../../img/address.png";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Axios from "axios";
+import MainAddress from "./mainAddress";
+import AddressForm from "./addAddress";
 
 function Address() {
   const userGlobal = useSelector((state) => state.users.user);
+  const navigate = useNavigate();
   const [addressList, setAddressList] = useState([]);
   const userToken = localStorage.getItem("user_token");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchAddressData();
@@ -29,6 +34,10 @@ function Address() {
     }
   };
 
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <div>
       <section className="p-6 mx-3 bg-white border-2 rounded-md shadow-md mt-4">
@@ -37,7 +46,12 @@ function Address() {
         </h2>
         <div className="bg-white border-2 justify-center rounded-md shadow-md p-6 mx-3 mt-4">
           <div className="flex justify-end">
-            <button className="flex items-center justify-center bg-sky-700 hover:bg-yellow-500 text-white rounded-sm p-2 mt-4">
+            <button
+              onClick={() => {
+                setShowModal(true);
+              }}
+              className="flex items-center justify-center bg-sky-700 hover:bg-yellow-500 text-white rounded-sm p-2 mt-4"
+            >
               <FaPlus className="mr-3" />
               Add a new address
             </button>
@@ -45,9 +59,10 @@ function Address() {
 
           {userGlobal.address > 0 ? (
             <div>
+              <MainAddress />
               {addressList.map((address) => (
                 <div key={address.id}>
-                  <div className="flex  justify-between items-center py-4">
+                  <div className="flex justify-between items-center py-4">
                     <div className="flex items-center space-x-2 justify-start">
                       <div className="text-base">{address.name}</div>
                       <div>{`(+62) ${address.phoneNumber.substring(1)}`}</div>
@@ -88,6 +103,13 @@ function Address() {
           )}
         </div>
       </section>
+
+      {showModal && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
+          <AddressForm closeModal={handleCloseModal} />{" "}
+          {/* Meneruskan prop handleCloseModal */}
+        </div>
+      )}
     </div>
   );
 }

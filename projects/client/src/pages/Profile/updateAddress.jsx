@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-function UpdateAddress({ addressId }) {
+function UpdateAddress({ addressId, editAddressData }) {
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
   const [selectedProvinceId, setSelectedProvinceId] = useState("");
@@ -15,6 +15,18 @@ function UpdateAddress({ addressId }) {
   const [postalCode, setPostalCode] = useState("");
   const [privateAddress, setPrivateAddress] = useState(false);
   const userToken = localStorage.getItem("user_token");
+
+  useEffect(() => {
+    if (editAddressData) {
+      setFullName(editAddressData.name);
+      setPhoneNumber(editAddressData.phoneNumber);
+      setStreetAddress(editAddressData.address);
+      setAdditionalDetails(editAddressData.additionalDetails);
+      setPostalCode(editAddressData.postalCode);
+      setSelectedProvinceId(editAddressData.selectedProvinceId);
+      setSelectedCityId(editAddressData.selectedCityId);
+    }
+  }, [editAddressData]);
 
   const handleEditAddress = async () => {
     const selectedProvince = provinces.find(
@@ -45,14 +57,13 @@ function UpdateAddress({ addressId }) {
           },
         }
       );
-      if (!response.data.success) {
-        Swal.fire(response.data.message);
+      if (response.data.success) {
+        Swal.fire("Success", "Address updated successfully", "success");
       } else {
-        Swal.fire(response.data.message);
+        Swal.fire("Error", response.data.message, "error");
       }
     } catch (error) {
-      Swal.fire(error.message);
-      console.error(error.message);
+      Swal.fire("Error", error.message, "error");
     }
   };
 
