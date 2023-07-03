@@ -8,8 +8,8 @@ function UpdateAddress({ editAddressData }) {
   const [address, setAddress] = useState(null);
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
-  const [selectedProvinceId, setSelectedProvinceId] = useState("");
-  const [selectedCityId, setSelectedCityId] = useState("");
+  const [selectedProvinceId, setSelectedProvinceId] = useState(null);
+  const [selectedCityId, setSelectedCityId] = useState(null);
   const [geolocation, setGeolocation] = useState(null);
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -196,7 +196,7 @@ function UpdateAddress({ editAddressData }) {
           <select
             id="province"
             className="border border-gray-300 p-2 rounded-md w-full"
-            value={selectedProvinceId || (address && address.province)}
+            value={selectedProvinceId || (address && address.province) || ""}
             onChange={handleProvinceChange}
           >
             <option value="">{address && address.province}</option>
@@ -211,7 +211,7 @@ function UpdateAddress({ editAddressData }) {
           <select
             id="city"
             className="border border-gray-300 p-2 rounded-md w-full"
-            value={selectedCityId || (address && address.city)}
+            value={selectedCityId || (address && address.city) || ""}
             onChange={handleCityChange}
           >
             <option value="">{address && address.city}</option>
