@@ -68,11 +68,14 @@ function UpdateAddress({ editAddressData }) {
         additionalDetails || (address && address.additionalDetails) || "",
       postalCode: postalCode || (address && address.postalCode) || "",
       privateAddress,
-      longitude:
-        geolocation?.longitude || (address && address.longitude) || null,
-      latitude: geolocation?.latitude || (address && address.latitude) || null,
-      province: selectedProvince ? selectedProvince.province : "",
-      city: selectedCity ? selectedCity.city_name : "",
+      longitude: geolocation?.longitude || (address && address.longitude) || "",
+      latitude: geolocation?.latitude || (address && address.latitude) || "",
+      province: selectedProvince
+        ? selectedProvince.province || (address && address.province)
+        : "",
+      city: selectedCity
+        ? selectedCity.city_name || (address && address.city)
+        : "",
     };
 
     if (geolocation) {
@@ -82,7 +85,7 @@ function UpdateAddress({ editAddressData }) {
 
     try {
       const response = await axios.patch(
-        `http://localhost:8000/address/editAddress?idAddress=${id}`,
+        `http://localhost:8000/address/editAddress?id_address=${id}`,
         data,
         {
           headers: {
@@ -90,10 +93,10 @@ function UpdateAddress({ editAddressData }) {
           },
         }
       );
-      if (response.data.success) {
-        Swal.fire("Success", "Address updated successfully", "success");
+      if (!response.data.success) {
+        Swal.fire(response.data.message);
       } else {
-        Swal.fire("Error", response.data.message, "error");
+        Swal.fire("success", response.data.message, "success");
       }
     } catch (error) {
       Swal.fire("Error", error.message, "error");
@@ -193,7 +196,7 @@ function UpdateAddress({ editAddressData }) {
           <select
             id="province"
             className="border border-gray-300 p-2 rounded-md w-full"
-            value={selectedProvinceId}
+            value={selectedProvinceId || (address && address.province)}
             onChange={handleProvinceChange}
           >
             <option value="">{address && address.province}</option>
@@ -208,7 +211,7 @@ function UpdateAddress({ editAddressData }) {
           <select
             id="city"
             className="border border-gray-300 p-2 rounded-md w-full"
-            value={selectedCityId}
+            value={selectedCityId || (address && address.city)}
             onChange={handleCityChange}
           >
             <option value="">{address && address.city}</option>
