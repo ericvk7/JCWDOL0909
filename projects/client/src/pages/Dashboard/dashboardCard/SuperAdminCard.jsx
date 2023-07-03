@@ -1,138 +1,552 @@
-import React, { useEffect } from "react";
-import { Helmet } from "react-helmet";
-import Chart from "chart.js";
+// import React from "react";
+// import Chart from "react-apexcharts";
 
+
+// function SuperAdminCard() {
+//   const options = {
+//     chart: {
+//       id: "basic-bar"
+//     },
+//     xaxis: {
+//       categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999]
+//     }
+//   };
+
+//   const series = [
+//     {
+//       name: "series-1",
+//       data: [30, 40, 45, 50, 49, 60, 70, 91]
+//     }
+//   ];
+
+//   return (
+//     <div className="app">
+//       <div className="row">
+//         <div className="mixed-chart">
+//           <Chart
+//             options={options}
+//             series={series}
+//             type="bar"
+//             width="500"
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+
+// export default SuperAdminCard;
+
+
+// import React, { useEffect, useRef } from 'react';
+// import ApexCharts from 'react-apexcharts';
+// import 'apexcharts/dist/apexcharts.css';
+
+
+
+// function SuperAdminCard() {
+//     const [chartOptions, setChartOptions] = React.useState({});
+//     const chartRef = useRef(null);
+    
+//     // Your getMainChartOptions function goes here...
+//     const getMainChartOptions = () => {
+//         let mainChartColors = {}
+    
+//             mainChartColors = {
+//             borderColor: '#F3F4F6',
+//             labelColor: '#6B7280',
+//             opacityFrom: 0.45,
+//             opacityTo: 0,
+//         }
+        
+//         return {
+//             chart: {
+//                 height: 420,
+//                 type: 'area',
+//                 fontFamily: 'Inter, sans-serif',
+//                 foreColor: mainChartColors.labelColor,
+//                 toolbar: {
+//                     show: false
+//                 }
+//             },
+//             fill: {
+//                 type: 'gradient',
+//                 gradient: {
+//                     enabled: true,
+//                     opacityFrom: mainChartColors.opacityFrom,
+//                     opacityTo: mainChartColors.opacityTo
+//                 }
+//             },
+//             dataLabels: {
+//                 enabled: false
+//             },
+//             tooltip: {
+//                 style: {
+//                     fontSize: '14px',
+//                     fontFamily: 'Inter, sans-serif',
+//                 },
+//             },
+//             grid: {
+//                 show: true,
+//                 borderColor: mainChartColors.borderColor,
+//                 strokeDashArray: 1,
+//                 padding: {
+//                     left: 35,
+//                     bottom: 15
+//                 }
+//             },
+//             series: [
+//                 {
+//                     name: 'Revenue',
+//                     data: [6356, 6218, 6156, 6526, 6356, 6256, 6056],
+//                     color: '#1A56DB'
+//                 },
+//                 {
+//                     name: 'Revenue (previous period)',
+//                     data: [6556, 6725, 6424, 6356, 6586, 6756, 6616],
+//                     color: '#FDBA8C'
+//                 }
+//             ],
+//             markers: {
+//                 size: 5,
+//                 strokeColors: '#ffffff',
+//                 hover: {
+//                     size: undefined,
+//                     sizeOffset: 3
+//                 }
+//             },
+//             xaxis: {
+//                 categories: ['01 Feb', '02 Feb', '03 Feb', '04 Feb', '05 Feb', '06 Feb', '07 Feb'],
+//                 labels: {
+//                     style: {
+//                         colors: [mainChartColors.labelColor],
+//                         fontSize: '14px',
+//                         fontWeight: 500,
+//                     },
+//                 },
+//                 axisBorder: {
+//                     color: mainChartColors.borderColor,
+//                 },
+//                 axisTicks: {
+//                     color: mainChartColors.borderColor,
+//                 },
+//                 crosshairs: {
+//                     show: true,
+//                     position: 'back',
+//                     stroke: {
+//                         color: mainChartColors.borderColor,
+//                         width: 1,
+//                         dashArray: 10,
+//                     },
+//                 },
+//             },
+//             yaxis: {
+//                 labels: {
+//                     style: {
+//                         colors: [mainChartColors.labelColor],
+//                         fontSize: '14px',
+//                         fontWeight: 500,
+//                     },
+//                     formatter: function (value) {
+//                         return '$' + value;
+//                     }
+//                 },
+//             },
+//             legend: {
+//                 fontSize: '14px',
+//                 fontWeight: 500,
+//                 fontFamily: 'Inter, sans-serif',
+//                 labels: {
+//                     colors: [mainChartColors.labelColor]
+//                 },
+//                 itemMargin: {
+//                     horizontal: 10
+//                 }
+//             },
+//             responsive: [
+//                 {
+//                     breakpoint: 1024,
+//                     options: {
+//                         xaxis: {
+//                             labels: {
+//                                 show: false
+//                             }
+//                         }
+//                     }
+//                 }
+//             ]
+//         };
+//     }
+//     // useEffect to initialize the chart on component mount
+//     useEffect(() => {
+//       setChartOptions(getMainChartOptions());
+//     }, []);
+    
+//     // Return the JSX with the chart component
+//     return (
+//       <div>
+//         <ApexCharts
+//           ref={chartRef}
+//           options={chartOptions}
+//           series={chartOptions?.series}
+//           type="area"
+//           height={420}
+//           />
+    
+//       </div>
+//     );
+//   }
+  
+//   export default SuperAdminCard;
+  
+
+// import React, { useEffect } from 'react';
+// import ApexCharts from 'apexcharts';
+
+// function SuperAdminCard() {
+// const MainChart = () => {
+//   useEffect(() => {
+//     const getMainChartOptions = () => {
+//       let mainChartColors = {};
+
+//       if (document.documentElement.classList.contains('dark')) {
+//         mainChartColors = {
+//           borderColor: '#374151',
+//           labelColor: '#9CA3AF',
+//           opacityFrom: 0,
+//           opacityTo: 0.15,
+//         };
+//       } else {
+//         mainChartColors = {
+//           borderColor: '#F3F4F6',
+//           labelColor: '#6B7280',
+//           opacityFrom: 0.45,
+//           opacityTo: 0,
+//         };
+//       }
+
+//       return {
+//         chart: {
+//           height: 420,
+//           type: 'area',
+//           fontFamily: 'Inter, sans-serif',
+//           foreColor: mainChartColors.labelColor,
+//           toolbar: {
+//             show: false,
+//           },
+//         },
+//         fill: {
+//           type: 'gradient',
+//           gradient: {
+//             enabled: true,
+//             opacityFrom: mainChartColors.opacityFrom,
+//             opacityTo: mainChartColors.opacityTo,
+//           },
+//         },
+//         dataLabels: {
+//           enabled: false,
+//         },
+//         tooltip: {
+//           style: {
+//             fontSize: '14px',
+//             fontFamily: 'Inter, sans-serif',
+//           },
+//         },
+//         grid: {
+//           show: true,
+//           borderColor: mainChartColors.borderColor,
+//           strokeDashArray: 1,
+//           padding: {
+//             left: 35,
+//             bottom: 15,
+//           },
+//         },
+//         series: [
+//           {
+//             name: 'Revenue',
+//             data: [6356, 6218, 6156, 6526, 6356, 6256, 6056],
+//             color: '#1A56DB',
+//           },
+//           {
+//             name: 'Revenue (previous period)',
+//             data: [6556, 6725, 6424, 6356, 6586, 6756, 6616],
+//             color: '#FDBA8C',
+//           },
+//         ],
+//         markers: {
+//           size: 5,
+//           strokeColors: '#ffffff',
+//           hover: {
+//             size: undefined,
+//             sizeOffset: 3,
+//           },
+//         },
+//         xaxis: {
+//           categories: ['01 Feb', '02 Feb', '03 Feb', '04 Feb', '05 Feb', '06 Feb', '07 Feb'],
+//           labels: {
+//             style: {
+//               colors: [mainChartColors.labelColor],
+//               fontSize: '14px',
+//               fontWeight: 500,
+//             },
+//           },
+//           axisBorder: {
+//             color: mainChartColors.borderColor,
+//           },
+//           axisTicks: {
+//             color: mainChartColors.borderColor,
+//           },
+//           crosshairs: {
+//             show: true,
+//             position: 'back',
+//             stroke: {
+//               color: mainChartColors.borderColor,
+//               width: 1,
+//               dashArray: 10,
+//             },
+//           },
+//         },
+//         yaxis: {
+//           labels: {
+//             style: {
+//               colors: [mainChartColors.labelColor],
+//               fontSize: '14px',
+//               fontWeight: 500,
+//             },
+//             formatter: function (value) {
+//               return '$' + value;
+//             },
+//           },
+//         },
+//         legend: {
+//           fontSize: '14px',
+//           fontWeight: 500,
+//           fontFamily: 'Inter, sans-serif',
+//           labels: {
+//             colors: [mainChartColors.labelColor],
+//           },
+//           itemMargin: {
+//             horizontal: 10,
+//           },
+//         },
+//         responsive: [
+//           {
+//             breakpoint: 600,
+//             options: {
+//               chart: {
+//                 height: 320,
+//               },
+//               yaxis: {
+//                 labels: {
+//                   style: {
+//                     fontSize: '12px',
+//                   },
+//                 },
+//               },
+//             },
+//           },
+//         ],
+//       };
+//     };
+
+//     const renderMainChart = () => {
+//       const mainChartOptions = getMainChartOptions();
+//       const mainChartElement = document.getElementById('main-chart');
+
+//       if (mainChartElement) {
+//         new ApexCharts(mainChartElement, mainChartOptions).render();
+//       }
+//     };
+
+//     renderMainChart();
+
+//     window.addEventListener('dark-mode-toggle', renderMainChart);
+
+//     return () => {
+//       window.removeEventListener('dark-mode-toggle', renderMainChart);
+//     };
+//   }, []);
+
+//   return (
+//     <div id="main-chart"></div>
+//   );
+// };
+// }
+
+// export default SuperAdminCart;
+
+import React, { useEffect } from 'react';
+import ApexCharts from 'apexcharts';
 
 function SuperAdminCard() {
-    useEffect(() => {
-        const chart = new Chart(document.getElementById("myChart"), {
-          type: "line",
-          data: {
-            labels: [
-              "January",
-              "February",
-              "March",
-              "April",
-              "May",
-              "June",
-              "July",
-              "Aug",
-              "Sep",
-              "Nov",
-              "Dec",
-            ],
-            datasets: [
-              {
-                label: "16 Mar 2018",
-                borderColor: "#4A5568",
-                data: [600, 400, 620, 300, 200, 600, 230, 300, 200, 200, 100, 1200],
-                fill: false,
-                pointBackgroundColor: "#4A5568",
-                borderWidth: "3",
-                pointBorderWidth: "4",
-                pointHoverRadius: "6",
-                pointHoverBorderWidth: "8",
-                pointHoverBorderColor: "rgb(74,85,104,0.2)",
-              },
-            ],
-          },
-          options: {
-            legend: {
-              position: false,
-            },
-            scales: {
-              yAxes: [
-                {
-                  gridLines: {
-                    display: false,
+  useEffect(() => {
+    const getMainChartOptions = () => {
+        let mainChartColors = {};
+              if (document.documentElement.classList.contains('dark')) {
+                mainChartColors = {
+                  borderColor: '#374151',
+                  labelColor: '#9CA3AF',
+                  opacityFrom: 0,
+                  opacityTo: 0.15,
+                };
+              } else {
+                mainChartColors = {
+                  borderColor: '#F3F4F6',
+                  labelColor: '#6B7280',
+                  opacityFrom: 0.45,
+                  opacityTo: 0,
+                };
+              }
+        
+              return {
+                chart: {
+                  height: 420,
+                  type: 'area',
+                  fontFamily: 'Inter, sans-serif',
+                  foreColor: mainChartColors.labelColor,
+                  toolbar: {
+                    show: false,
                   },
-                  display: false,
                 },
-              ],
-            },
-          },
-        });
-      }, []);
-    
-      return (
-        <>
-          <Helmet>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-            <script defer src="https://cdn.tuk.dev/dev/light-dark-switch.js"></script>
-          </Helmet>
-          <div className="flex items-center justify-center py-8 px-4">
-            <div className="w-11/12 lg:w-2/3">
-              <div className="flex flex-col justify-between h-full">
-                <div>
-                  <div className="lg:flex w-full justify-between">
-                    <h3 className="text-gray-600 dark:text-gray-400 leading-5 text-base md:text-xl font-bold">
-                      Selling Overview
-                    </h3>
-                    <div className="flex items-center justify-between lg:justify-start mt-2 md:mt-4 lg:mt-0">
-                      <div className="flex items-center">
-                        <button className="py-2 px-4 bg-gray-100 dark:bg-gray-700 focus:outline-none ease-in duration-150 text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-200">
-                          Dollars
-                        </button>
-                        <button className="py-2 px-4 bg-indigo-500 focus:outline-none text-white ease-in duration-150 text-xs hover:bg-indigo-600">
-                          Tickets
-                        </button>
-                      </div>
-                      <div className="lg:ml-14">
-                        <div className="bg-gray-100 dark:bg-gray-700 ease-in duration-150 hover:bg-gray-200 pb-2 pt-1 px-3 rounded-sm">
-                          <select className="text-xs text-gray-600 dark:text-gray-400 bg-transparent focus:outline-none">
-                            <option className="leading-1">Year</option>
-                            <option className="leading-1">2020</option>
-                            <option className="leading-1">2019</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-end mt-6">
-                    <h3 className="text-indigo-500 leading-5 text-lg md:text-2xl">
-                      $65,875
-                    </h3>
-                    <div className="flex items-center md:ml-4 ml-1">
-                      <p className="text-indigo-500 text-xs md:text-base">17%</p>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width={12}
-                        height={12}
-                        viewBox="0 0 12 12"
-                        fill="none"
-                      >
-                        <path
-                          d="M6 2.5V9.5"
-                          stroke="#4338CA"
-                          strokeWidth="0.75"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M8 4.5L6 2.5"
-                          stroke="#4338CA"
-                          strokeWidth="0.75"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M4 4.5L6 2.5"
-                          stroke="#4338CA"
-                          strokeWidth="0.75"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <canvas id="myChart" width={1025} height={400} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      );
-    }
-export default SuperAdminCard
+                fill: {
+                  type: 'gradient',
+                  gradient: {
+                    enabled: true,
+                    opacityFrom: mainChartColors.opacityFrom,
+                    opacityTo: mainChartColors.opacityTo,
+                  },
+                },
+                dataLabels: {
+                  enabled: false,
+                },
+                tooltip: {
+                  style: {
+                    fontSize: '14px',
+                    fontFamily: 'Inter, sans-serif',
+                  },
+                },
+                grid: {
+                  show: true,
+                  borderColor: mainChartColors.borderColor,
+                  strokeDashArray: 1,
+                  padding: {
+                    left: 35,
+                    bottom: 15,
+                  },
+                },
+                series: [
+                  {
+                    name: 'Revenue',
+                    data: [6356, 6218, 6156, 6526, 6356, 6256, 6056],
+                    color: '#1A56DB',
+                  },
+                  {
+                    name: 'Revenue (previous period)',
+                    data: [6556, 6725, 6424, 6356, 6586, 6756, 6616],
+                    color: '#FDBA8C',
+                  },
+                ],
+                markers: {
+                  size: 5,
+                  strokeColors: '#ffffff',
+                  hover: {
+                    size: undefined,
+                    sizeOffset: 3,
+                  },
+                },
+                xaxis: {
+                  categories: ['01 Feb', '02 Feb', '03 Feb', '04 Feb', '05 Feb', '06 Feb', '07 Feb'],
+                  labels: {
+                    style: {
+                      colors: [mainChartColors.labelColor],
+                      fontSize: '14px',
+                      fontWeight: 500,
+                    },
+                  },
+                  axisBorder: {
+                    color: mainChartColors.borderColor,
+                  },
+                  axisTicks: {
+                    color: mainChartColors.borderColor,
+                  },
+                  crosshairs: {
+                    show: true,
+                    position: 'back',
+                    stroke: {
+                      color: mainChartColors.borderColor,
+                      width: 1,
+                      dashArray: 10,
+                    },
+                  },
+                },
+                yaxis: {
+                  labels: {
+                    style: {
+                      colors: [mainChartColors.labelColor],
+                      fontSize: '14px',
+                      fontWeight: 500,
+                    },
+                    formatter: function (value) {
+                      return '$' + value;
+                    },
+                  },
+                },
+                legend: {
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  fontFamily: 'Inter, sans-serif',
+                  labels: {
+                    colors: [mainChartColors.labelColor],
+                  },
+                  itemMargin: {
+                    horizontal: 10,
+                  },
+                },
+                responsive: [
+                  {
+                    breakpoint: 600,
+                    options: {
+                      chart: {
+                        height: 320,
+                      },
+                      yaxis: {
+                        labels: {
+                          style: {
+                            fontSize: '12px',
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
+              };
+            };
+
+    const renderMainChart = () => {
+      const mainChartOptions = getMainChartOptions();
+      const mainChartElement = document.getElementById('main-chart');
+
+      if (mainChartElement) {
+        new ApexCharts(mainChartElement, mainChartOptions).render();
+      }
+    };
+
+    renderMainChart();
+
+    window.addEventListener('dark-mode-toggle', renderMainChart);
+
+    return () => {
+      window.removeEventListener('dark-mode-toggle', renderMainChart);
+    };
+  }, []);
+
+  const MainChart = () => {
+    return <div id="main-chart"></div>;
+  };
+
+  return <MainChart />;
+}
+
+export default SuperAdminCard;
+

@@ -67,7 +67,6 @@ function App() {
               path="/user/resetPassword/:token"
               element={<ResetPassword />}
             />
-            <Route path="/" element={<Products />} />
           </>
         )}
 
@@ -82,6 +81,7 @@ function App() {
           </>
         )}
 
+        <Route path="/" element={<Products />} />
         <Route path="/user/register" element={<Register />} />
         <Route path="/user/login" element={<Login />} />
         <Route path="/product" element={<Products />} />
