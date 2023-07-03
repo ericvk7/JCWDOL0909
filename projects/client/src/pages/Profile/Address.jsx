@@ -76,6 +76,7 @@ function Address() {
 
   const handleSetMainAddress = async (addressId) => {
     try {
+      debugger;
       const result = await Swal.fire({
         title: "Are you sure?",
         text: "You are about to set this address as a main address.",
@@ -90,6 +91,7 @@ function Address() {
       if (result.isConfirmed) {
         const response = await Axios.patch(
           `http://localhost:8000/address/setMainAddress?id_address=${addressId}`,
+          {},
           {
             headers: {
               Authorization: `Bearer ${userToken}`,

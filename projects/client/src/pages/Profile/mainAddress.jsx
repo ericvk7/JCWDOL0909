@@ -19,6 +19,7 @@ function MainAddress() {
 
   const fetchAddressData = async () => {
     try {
+      debugger;
       const response = await Axios.get(
         "http://localhost:8000/address/fetchMainAddress",
         {
