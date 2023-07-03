@@ -42,20 +42,66 @@ function Address() {
 
   const handleDeleteAddress = async (addressId) => {
     try {
-      const response = await Axios.delete(
-        `http://localhost:8000/address/deleteAddress?id_address=${addressId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to delete this address.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel",
+      });
+
+      if (result.isConfirmed) {
+        const response = await Axios.delete(
+          `http://localhost:8000/address/deleteAddress?id_address=${addressId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+
+        if (!response.data.success) {
+          Swal.fire(response.data.message);
+        } else {
+          Swal.fire("Success", response.data.message, "success");
         }
-      );
-      if (response.data.success) {
-        Swal.fire("Success", "Address deleted successfully", "success");
-        // Refresh address list after deletion
-        fetchAddressData();
-      } else {
-        Swal.fire("success", response.data.message, "success");
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
+  const handleSetMainAddress = async (addressId) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to set this address as a main address.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, set it!",
+        cancelButtonText: "No, cancel",
+      });
+
+      if (result.isConfirmed) {
+        const response = await Axios.patch(
+          `http://localhost:8000/address/setMainAddress?id_address=${addressId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+
+        if (!response.data.success) {
+          Swal.fire(response.data.message);
+        } else {
+          Swal.fire("Success", response.data.message, "success");
+        }
       }
     } catch (error) {
       Swal.fire("Error", error.message, "error");
@@ -78,9 +124,8 @@ function Address() {
               onClick={() => {
                 setShowModal(true);
               }}
-              className="flex items-center justify-center bg-sky-700 hover:bg-yellow-500 text-white rounded-sm p-2 mt-4"
+              className="px-4 py-2 w-44 bg-white hover:bg-sky-700 hover:text-white text-slate-600 border-2 rounded-md transition duration-300"
             >
-              <FaPlus className="mr-3" />
               Add a new address
             </button>
           </div>
@@ -95,6 +140,12 @@ function Address() {
                       <div className="text-base">{address.name}</div>
                       <div>{`(+62) ${address.phoneNumber.substring(1)}`}</div>
                     </div>
+                    <button
+                      onClick={() => handleSetMainAddress(address.id_address)}
+                      className="px-4 py-2 bg-white hover:bg-sky-700 hover:text-white text-slate-600 border-2 rounded-md transition duration-300"
+                    >
+                      Set as Main Address
+                    </button>
                   </div>
                   <div className="py-2">
                     <div className="text-sm mb-2">{address.address}</div>

@@ -16,7 +16,6 @@ function UpdateAddress({ editAddressData }) {
   const [streetAddress, setStreetAddress] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
   const [postalCode, setPostalCode] = useState("");
-  const [privateAddress, setPrivateAddress] = useState(false);
   const userToken = localStorage.getItem("user_token");
 
   useEffect(() => {
@@ -67,7 +66,6 @@ function UpdateAddress({ editAddressData }) {
       additionalDetails:
         additionalDetails || (address && address.additionalDetails) || "",
       postalCode: postalCode || (address && address.postalCode) || "",
-      privateAddress,
       longitude: geolocation?.longitude || (address && address.longitude) || "",
       latitude: geolocation?.latitude || (address && address.latitude) || "",
       province: selectedProvince
