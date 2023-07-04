@@ -1,6 +1,6 @@
 import React from "react";
-import Sidebar from "../../components/Sidebar";
-import AdminLayout from "../../components/AdminLayout";
+import Sidebar from "../../../components/Sidebar";
+import AdminLayout from "../../../components/AdminLayout";
 import { useSelector } from "react-redux";
 import SuperAdminCard from "./dashboardCard/SuperAdminCard";
 
