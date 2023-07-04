@@ -22,7 +22,7 @@ import ProfilePictureUpload from "./pages/Profile/ProfilePicture";
 import LoginAdmin from "./pages/Admin/LoginAdmin/LoginAdmin";
 import CreateAdmin from "./pages/Admin/CreateAdmin/CreateAdmin";
 import BlankPage from "./pages/Error/BlankPage";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
 
