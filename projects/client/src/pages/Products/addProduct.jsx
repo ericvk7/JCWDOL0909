@@ -9,7 +9,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
-  const userToken = localStorage.getItem("user_token");
+  const userToken = localStorage.getItem("admin_token");
 
   const HandleSubmit = async (event) => {
     event.preventDefault();
@@ -25,7 +25,7 @@ const AddProduct = () => {
 
     try {
       const response = await Axios.post(
-        "http://localhost:8000/products/addproduct",
+        "http://localhost:8000/admin/addProduct",
         formData,
         {
           headers: {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-const userToken = localStorage.getItem("user_token");
+const userToken = localStorage.getItem("admin_token");
 
 function AddCategory() {
   const [category, setCategory] = useState({
@@ -11,7 +11,7 @@ function AddCategory() {
   const addCategory = () => {
     axios
       .post(
-        "http://localhost:8000/category",
+        "http://localhost:8000/admin/addCategory",
         {
           categoryName: category.name,
         },
@@ -30,7 +30,7 @@ function AddCategory() {
         console.log(error);
         Swal.fire({
           icon: "error",
-          text: "category already exist!",
+          text: "Category already exist!",
         });
       });
   };

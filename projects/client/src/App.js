@@ -25,6 +25,7 @@ import BlankPage from "./pages/Error/BlankPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
+import EditProductForm from "./pages/Admin/Product/EditProductForm";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -47,7 +48,6 @@ function App() {
     if (userToken) {
       dispatch(checkLogin(userToken));
     } else if (adminToken) {
-      console.log("masuk");
       dispatch(checkLoginAdmin(adminToken));
     }
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
@@ -97,6 +97,7 @@ function App() {
         <Route path="/blankPage" element={<BlankPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin/addProduct" element={<AddProductForm />} />
+        <Route path="/admin/editProduct" element={<EditProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
 

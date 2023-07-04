@@ -9,9 +9,6 @@ function AddProductForm() {
       <div>
         <ProductTab />
       </div>
-      <div>
-        <AddProduct />
-      </div>
     </AdminLayout>
   );
 }
