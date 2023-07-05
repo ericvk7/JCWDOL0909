@@ -97,9 +97,155 @@ function SuperAdminCard() {
     };
   }, []); // Empty dependency array to ensure useEffect runs only once
 
+  useEffect(() => {
+    const columnChartOptions = {
+      series: [{
+        name: "User's Growth",
+        data: [50, 70, 60, 40],
+      }],
+      chart: {
+        height: 350,
+        type: 'bar',
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 10,
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        },
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+          return val + ' transactions';
+        },
+        offsetY: -20,
+        style: {
+          fontSize: '12px',
+          colors: ['#304758'],
+        },
+      },
+      xaxis: {
+        categories: ['Branch A', 'Branch B', 'Branch C', 'Branch D'],
+        position: 'top',
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+        crosshairs: {
+          fill: {
+            type: 'gradient',
+            gradient: {
+              colorFrom: '#D8E3F0',
+              colorTo: '#BED1E6',
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5,
+            },
+          },
+        },
+        tooltip: {
+          enabled: true,
+        },
+      },
+      yaxis: {
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+        labels: {
+          show: false,
+          formatter: function (val) {
+            return val + '%';
+          },
+        },
+      },
+      title: {
+        text: `Total Transaction in ${currentYear}`,
+        floating: true,
+        offsetY: 330,
+        align: 'center',
+        style: {
+          color: '#444',
+        },
+      },
+    };
+
+    const columnChart = new ApexCharts(document.querySelector('#columnChart'), columnChartOptions);
+    columnChart.render();
+
+    return () => {
+      columnChart.destroy();
+    };
+  }, []);
+
+  useEffect(() => {
+    const donutChartOptions = {
+      series: [44, 55, 41, 17],
+      chart: {
+        height: 350,
+        type: 'donut',
+      },
+      plotOptions: {
+        pie: {
+          startAngle: -90,
+          endAngle: 270
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function(val, opts) {
+          return opts.w.globals.series[opts.seriesIndex] + ' users';
+        }
+      },
+      fill: {
+        type: 'gradient',
+      },
+      legend: {
+        formatter: function(val, opts) {
+          // Manually input legend labels here
+          const legendLabels = ['Branch A', 'Branch B', 'Branch C', 'Branch D'];
+          return legendLabels[opts.seriesIndex];
+        }
+      },
+      title: {
+        text: 'Total Users'
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    };
+
+    const donutChart = new ApexCharts(document.querySelector('#donutChart'), donutChartOptions);
+    donutChart.render();
+
+    return () => {
+      donutChart.destroy();
+    };
+  }, []);
+
   return (
-    <div style={{ backgroundColor: '#fff', padding: '10px', borderRadius: '8px' }} className='p-6 mx-4 bg-white border-2 rounded-lg shadow-md
+    <div>
+      <div className='p-6 mx-4 bg-white border-2 rounded-lg shadow-md
     ' id="lineChart" />
+      <div className='p-6 mx-4 bg-white border-2 rounded-lg shadow-md
+    ' id="columnChart" />
+      <div className='p-6 mx-4 bg-white border-2 rounded-lg shadow-md
+    ' id="donutChart" />
+    </div>
   );
 }
 
