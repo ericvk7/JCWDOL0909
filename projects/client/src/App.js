@@ -51,7 +51,6 @@ function App() {
       dispatch(checkLoginAdmin(adminToken));
     }
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
-  console.log(adminToken);
 
   return (
     <div>
@@ -59,32 +58,32 @@ function App() {
         (userGlobal.id > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
 
       <Routes>
-        {!adminGlobal.id && (
-          <>
-            <Route path="/user/register" element={<Register />} />
-            <Route path="/user/login" element={<Login />} />
-            <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
-            <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
-            <Route
-              path="/user/resetPassword/:token"
-              element={<ResetPassword />}
-            />
-            <Route path="/product" element={<Products />} />
-            <Route path="/product/:id" element={<ProductDetailPage />} />
-            <Route path="/" element={<Products />} />
-          </>
-        )}
+        {/* {!adminGlobal.id && ( */}
+        <>
+          <Route path="/user/register" element={<Register />} />
+          <Route path="/user/login" element={<Login />} />
+          <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
+          <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
+          <Route
+            path="/user/resetPassword/:token"
+            element={<ResetPassword />}
+          />
+        </>
+        {/* )} */}
 
-        {userGlobal.id > 0 && (
-          <>
-            <Route path="/user/changePassword" element={<ChangePassword />} />
-            <Route path="/user/profile" element={<Profile />} />
-            <Route
-              path="/user/profilePicture"
-              element={<ProfilePictureUpload />}
-            />
-          </>
-        )}
+        {/* {userGlobal.id > 0 && ( */}
+        <>
+          <Route path="/product" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetailPage />} />
+          <Route path="/" element={<Products />} />
+          <Route path="/user/changePassword" element={<ChangePassword />} />
+          <Route path="/user/profile" element={<Profile />} />
+          <Route
+            path="/user/profilePicture"
+            element={<ProfilePictureUpload />}
+          />
+        </>
+        {/* )} */}
 
         <Route path="/notfound" element={<NotFound />} />
         <Route path="*" element={<NotFound />} />
