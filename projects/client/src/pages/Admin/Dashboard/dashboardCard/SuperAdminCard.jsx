@@ -1,11 +1,40 @@
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTotalProductsSoldBranch, fetchTotalTransactionBranch, fetchTotalUsersBranch } from '../../../../features/admins/adminSlice';
 
 function SuperAdminCard() {
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
+  const totalProductsSoldBranch = useSelector((state) => state.admins.totalProductsSoldBranch)
+  const totalTransactionBranch = useSelector((state) => state.admins.totalTransactionBranch)
+  const totalUsersBranch = useSelector((state) => state.admins.totalUsersBranch)
+  const dispatch = useDispatch()
+  const productSeries = totalTransactionBranch
+  .map((item) => item.sold);
+  const transactionSeries = totalTransactionBranch
+  .slice(0, totalTransactionBranch.length - 1)
+  .map((item) => item.total_transactions);
+  const userSeries = totalTransactionBranch
+  .map((item) => item.total_user);
 
+  
+  
+  useEffect(() => {
+    dispatch(fetchTotalProductsSoldBranch());
+  }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(fetchTotalTransactionBranch());
+  }, [dispatch]);
+  
+  useEffect(() => {
+    dispatch(fetchTotalUsersBranch());
+  }, [dispatch]);
+  
+  console.log('Jumlah: ', userSeries)
+ 
   useEffect(() => {
     const lineChartOptions = {
       series: [
@@ -100,8 +129,8 @@ function SuperAdminCard() {
   useEffect(() => {
     const columnChartOptions = {
       series: [{
-        name: "User's Growth",
-        data: [50, 70, 60, 40],
+        name: "Transactions",
+        data: transactionSeries,
       }],
       chart: {
         height: 350,
@@ -161,7 +190,7 @@ function SuperAdminCard() {
         labels: {
           show: false,
           formatter: function (val) {
-            return val + '%';
+            return val;
           },
         },
       },
