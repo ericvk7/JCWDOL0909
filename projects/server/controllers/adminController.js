@@ -117,32 +117,45 @@ module.exports = {
   },
   totalProductsSoldBranch: async (req, res) => {
     try {
-      const totals = await query('SELECT transactions.id_branch, SUM(transaction_products.quantity) AS total_sold FROM transactions JOIN transaction_products ON transactions.id_transaction = transaction_products.id_transaction_product GROUP BY transactions.id_branch;')
-      return res.status(200).send(totals)
+      const totals = await query(
+        `SELECT transactions.id_branch, SUM(transaction_products.quantity) AS total_sold FROM transactions JOIN transaction_products ON transactions.id_transaction = transaction_products.id_transaction_product GROUP BY transactions.id_branch;`
+      );
+      return res.status(200).send(totals);
     } catch (error) {
-      console.error('Error occurred while calculating total transactions per branch:', error);
-      res.status(500).send('Internal Server Error');
+      console.error(
+        "Error occurred while calculating total transactions per branch:",
+        error
+      );
+      res.status(500).send("Internal Server Error");
     }
   },
   totalTransactionsBranch: async (req, res) => {
     try {
-
       // Query to fetch the total transactions per branch
-      const totals = await query('SELECT id_branch, COUNT(id_transaction) AS total_transactions FROM transactions GROUP BY id_branch');
+      const totals = await query(
+        "SELECT id_branch, COUNT(id_transaction) AS total_transactions FROM transactions GROUP BY id_branch"
+      );
       return res.status(200).send(totals);
-
     } catch (error) {
-      console.error('Error occurred while calculating total transactions per branch:', error);
-      res.status(500).send('Internal Server Error');
+      console.error(
+        "Error occurred while calculating total transactions per branch:",
+        error
+      );
+      res.status(500).send("Internal Server Error");
     }
   },
   totalUsersBranch: async (req, res) => {
     try {
-      const totals = await query('SELECT transactions.id_branch, COUNT(transactions.id_user) AS total_user FROM transactions GROUP BY transactions.id_branch;')
-      return res.status(200).send(totals)
+      const totals = await query(
+        "SELECT transactions.id_branch, COUNT(transactions.id_user) AS total_user FROM transactions GROUP BY transactions.id_branch;"
+      );
+      return res.status(200).send(totals);
     } catch (error) {
-      console.error('Error occurred while calculating total transactions per branch:', error);
-      res.status(500).send('Internal Server Error');
+      console.error(
+        "Error occurred while calculating total transactions per branch:",
+        error
+      );
+      res.status(500).send("Internal Server Error");
     }
   },
 };

@@ -11,9 +11,9 @@ export const adminSlice = createSlice({
       email: "",
       id_role: "",
     },
-    totalProductsSoldBranch:[],
+    totalProductsSoldBranch: [],
     totalTransactionBranch: [],
-    totalUsersBranch:[]
+    totalUsersBranch: [],
   },
   reducers: {
     setAdmin: (state, action) => {
@@ -28,18 +28,24 @@ export const adminSlice = createSlice({
       };
     },
     setTotalProductsSoldBranch: (state, action) => {
-      state.totalProductsSoldBranch = action.payload
+      state.totalProductsSoldBranch = action.payload;
     },
     setTotalTransactionBranch: (state, action) => {
-      state.totalTransactionBranch = action.payload
+      state.totalTransactionBranch = action.payload;
     },
     setTotalUsersBranch: (state, action) => {
-      state.totalUsersBranch = action.payload
-    }
+      state.totalUsersBranch = action.payload;
+    },
   },
 });
 
-export const { setAdmin, resetAdmin,setTotalProductsSoldBranch, setTotalTransactionBranch, setTotalUsersBranch } = adminSlice.actions;
+export const {
+  setAdmin,
+  resetAdmin,
+  setTotalProductsSoldBranch,
+  setTotalTransactionBranch,
+  setTotalUsersBranch,
+} = adminSlice.actions;
 export default adminSlice.reducer;
 const userToken = localStorage.getItem("user_token");
 
@@ -92,35 +98,48 @@ export function checkLoginAdmin(token) {
   };
 }
 
-export function fetchTotalProductsSoldBranch(){
+export function fetchTotalProductsSoldBranch() {
   return async (dispatch) => {
     try {
-      const response = await Axios.get('http://localhost:8000/admin/totalproductssoldbranch')
-      dispatch(setTotalProductsSoldBranch(response.data))
+      const response = await Axios.get(
+        "http://localhost:8000/admin/totalproductssoldbranch"
+      );
+      dispatch(setTotalProductsSoldBranch(response.data));
+      console.log("fetchTotalProductsSoldBranch successful");
     } catch (error) {
-      console.log("Failed to fetch Total Products Sold by Branch: ", error.message); 
+      console.log(
+        "Failed to fetch Total Products Sold by Branch: ",
+        error.message
+      );
     }
-  }
+  };
 }
 
-export function fetchTotalTransactionBranch(){
+export function fetchTotalTransactionBranch() {
   return async (dispatch) => {
     try {
-      const response = await Axios.get('http://localhost:8000/admin/totaltransactionsbranch')
-      dispatch(setTotalTransactionBranch(response.data))
+      const response = await Axios.get(
+        "http://localhost:8000/admin/totaltransactionsbranch"
+      );
+      dispatch(setTotalTransactionBranch(response.data));
     } catch (error) {
-      console.log("Failed to fetch Total Transactions by Branch: ", error.message); 
+      console.log(
+        "Failed to fetch Total Transactions by Branch: ",
+        error.message
+      );
     }
-  }
+  };
 }
 
-export function fetchTotalUsersBranch(){
+export function fetchTotalUsersBranch() {
   return async (dispatch) => {
     try {
-      const response = await Axios.get('http://localhost:8000/admin/totalusersbranch')
-      dispatch(setTotalUsersBranch(response.data))
+      const response = await Axios.get(
+        "http://localhost:8000/admin/totalusersbranch"
+      );
+      dispatch(setTotalUsersBranch(response.data));
     } catch (error) {
-      console.log("Failed to fetch Total Users by Branch: ", error.message); 
+      console.log("Failed to fetch Total Users by Branch: ", error.message);
     }
-  }
+  };
 }

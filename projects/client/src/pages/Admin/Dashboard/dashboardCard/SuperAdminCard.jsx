@@ -7,16 +7,15 @@ function SuperAdminCard() {
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
+  const dispatch = useDispatch()
   const totalProductsSoldBranch = useSelector((state) => state.admins.totalProductsSoldBranch)
   const totalTransactionBranch = useSelector((state) => state.admins.totalTransactionBranch)
   const totalUsersBranch = useSelector((state) => state.admins.totalUsersBranch)
-  const dispatch = useDispatch()
-  const productSeries = totalTransactionBranch
-  .map((item) => item.sold);
+  const productSeries = totalProductsSoldBranch
+  .map((item) => item.total_sold);
   const transactionSeries = totalTransactionBranch
-  .slice(0, totalTransactionBranch.length - 1)
   .map((item) => item.total_transactions);
-  const userSeries = totalTransactionBranch
+  const userSeries = totalUsersBranch
   .map((item) => item.total_user);
 
   
@@ -28,6 +27,7 @@ function SuperAdminCard() {
   useEffect(() => {
     dispatch(fetchTotalTransactionBranch());
   }, [dispatch]);
+
   
   useEffect(() => {
     dispatch(fetchTotalUsersBranch());
