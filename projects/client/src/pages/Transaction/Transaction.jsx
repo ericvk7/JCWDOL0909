@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 function Transaction() {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ function Transaction() {
     0
   );
   const shippingCost = 15000;
+
+  const transactionDate = moment().format("DD-MM-YYYY");
 
   // Calculate the total price
   const total = subtotal + shippingCost;
@@ -103,7 +106,7 @@ function Transaction() {
               <div className="flex flex-col rounded-lg bg-white sm:flex-row">
                 <img
                   className="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                  //   src={`http://localhost:8000/${product.image}`}
+                  src={`http://localhost:8000/${item.image}`}
                   alt=""
                 />
                 <div className="flex w-full flex-col px-4 py-4">
@@ -174,8 +177,20 @@ function Transaction() {
           </form>
         </div>
         <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
-          <p className="text-xl font-medium">Order Details</p>
-          <p className="text-gray-400">Check your order details.</p>
+          <div className="flex flex-row justify-between">
+            <div>
+              <p className="text-xl font-medium">Order Details</p>
+              <p className="text-gray-400">Check your order details.</p>
+            </div>
+            <div>
+              <p className="text-xl font-medium">Order ID</p>
+              <p className="text-gray-400">#0001</p>
+            </div>
+            <div>
+              <p className="text-xl font-medium">Transaction Date</p>
+              <p className="text-gray-400">{transactionDate}</p>
+            </div>
+          </div>
           <div className="">
             {/* <!-- Total --> */}
             <div className="mt-6 border-t border-b py-2">

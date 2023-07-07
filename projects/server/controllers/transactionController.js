@@ -36,4 +36,25 @@ module.exports = {
       res.status(error.status || 500).send(error);
     }
   },
+
+  createTransaction: async (req, res) => {
+    try {
+      const { email, password, phoneNumber } = req.body;
+      const idUser = req.user.id;
+
+      let getUserQuery = `SELECT * FROM users WHERE id_user=${db.escape(
+        idUser
+      )}`;
+      let isUserExist = await query(getUserQuery);
+      if (isUserExist.length < 0) {
+        return res.status(200).send({ message: "User does not exist" });
+      }
+      const createTransaction = await query(
+        `SELECT * FROM transactions_status`
+      );
+      return res.status(200).send(createTransaction);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
 };

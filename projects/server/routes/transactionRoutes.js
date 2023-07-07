@@ -13,5 +13,6 @@ router.get(
   "/fetchTransactionStatus",
   transactionController.fetchTransactionStatus
 );
+router.post("/createTransaction", transactionController.createTransaction);
 
 module.exports = router;
