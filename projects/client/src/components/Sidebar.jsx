@@ -44,10 +44,10 @@ function Sidebar() {
   };
 
   return (
-    <div className="border w-80">
+    <div className="border w-80 ">
       <div
         id="Main"
-        className="xl:rounded-r transform  xl:translate-x-0  ease-in-out transition duration-500 flex justify-start items-start w-80 bg-gray-900 flex-col py-14 px-8"
+        className="xl:rounded-r transform  xl:translate-x-0 h-full ease-in-out transition duration-500 flex justify-start items-start w-80 bg-gray-900 flex-col py-14 px-8"
       >
         <div className="flex justify-between  items-center space-x-3 pl-4 mb-10">
           <img

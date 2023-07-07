@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddProductForm from "../pages/Products/addProduct";
-import EditProductForm from "../pages/Admin/Product/EditProductForm";
+import ProductForm from "../pages/Admin/Product/ProductForm";
 
 function ProductTab() {
   const [activeTab, setActiveTab] = useState("addProduct"); // Ubah nilai awal menjadi "addProduct"
@@ -84,7 +84,7 @@ function ProductTab() {
       )}
       {activeTab === "editProduct" && (
         <div>
-          <EditProductForm />
+          <ProductForm />
         </div>
       )}
       {/* Render other pages for different tabs */}

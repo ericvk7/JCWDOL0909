@@ -217,7 +217,6 @@ module.exports = {
   fetchCategoryById: async (req, res) => {
     try {
       const idCategory = req.params.id;
-      console.log(idCategory);
       const category = await query(
         `SELECT * FROM categories WHERE id_category = ${db.escape(idCategory)}`
       );
@@ -236,6 +235,78 @@ module.exports = {
       return res.status(200).send("Category Deleted Successfully.");
     } catch (error) {
       res.status(error.status || 500).send(error);
+    }
+  },
+
+  fetchProductByBranchId: async (req, res) => {
+    try {
+      const idBranch = req.params.id;
+      const category = await query(
+        `SELECT * FROM products WHERE id_branch = ${db.escape(idBranch)}`
+      );
+      return res.status(200).send(category);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
+  deleteProduct: async (req, res) => {
+    try {
+      const idProduct = req.params.id;
+      await query(
+        `DELETE FROM products WHERE id_product = ${db.escape(idProduct)}`
+      );
+      return res.status(200).send("Product Deleted Successfully.");
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
+  fetchProductById: async (req, res) => {
+    try {
+      const idProduct = parseInt(req.params.id);
+      const product = await query(
+        `SELECT * FROM products WHERE id_product = ${db.escape(idProduct)}`
+      );
+
+      if (product.length === 0) {
+        return res.status(404).send("Product not found");
+      }
+
+      return res.status(200).send(product[0]);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
+  editProduct: async (req, res) => {
+    try {
+      const { categoryName } = req.body;
+      const idProduct = req.params.id;
+      const category = await query(
+        `SELECT * FROM products WHERE id_product = ${db.escape(idProduct)}`
+      );
+      if (category.length <= 0) {
+        return res.status(404).send("Product not found");
+      }
+      const getCategoryQuery = `SELECT * FROM products WHERE name = ${db.escape(
+        categoryName
+      )}`;
+      const categoryExist = await query(getCategoryQuery);
+      if (categoryExist.length > 0) {
+        return res.status(400).send("Product already exists!");
+      }
+      const updateCategoryQuery = `UPDATE products SET
+        name = ${db.escape(categoryName)}
+        WHERE id_product = ${db.escape(idProduct)}`;
+      await query(updateCategoryQuery);
+      const updatedProduct = await query(
+        `SELECT * FROM products WHERE id_product = ${db.escape(idProduct)}`
+      );
+      res.status(200).send("Product Updated Successfully");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send(error.message || "Internal Server Error");
     }
   },
 };

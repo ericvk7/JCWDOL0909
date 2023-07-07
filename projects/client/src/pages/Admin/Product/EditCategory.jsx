@@ -66,13 +66,13 @@ function EditCategory() {
           },
         }
       );
-      fetchCategoryData(); // Refresh the category data
       if (response.data.success) {
-        setEditMode(false); // Exit edit mode
         Swal.fire("Error", response.data, "error");
       } else {
+        setEditMode(false); // Exit edit mode
         Swal.fire("Success", response.data, "success");
       }
+      fetchCategoryData(); // Refresh the category data
     } catch (error) {
       Swal.fire("Error", error.message, "error");
     }

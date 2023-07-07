@@ -9,7 +9,7 @@ const AddProduct = () => {
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
-  const userToken = localStorage.getItem("admin_token");
+  const adminToken = localStorage.getItem("admin_token");
 
   const HandleSubmit = async (event) => {
     event.preventDefault();
@@ -29,7 +29,7 @@ const AddProduct = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${userToken}`,
+            Authorization: `Bearer ${adminToken}`,
           },
         }
       );
