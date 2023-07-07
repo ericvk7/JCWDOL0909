@@ -8,7 +8,7 @@ export const usersSlice = createSlice({
     user: {
       id: "",
       email: "",
-      phone_number: "",
+      phoneNumber: "",
       name: "",
       gender: "",
       birthday: "",
@@ -25,7 +25,7 @@ export const usersSlice = createSlice({
       state.user = {
         id: "",
         email: "",
-        phone_number: "",
+        phoneNumber: "",
         name: "",
         gender: "",
         birthday: "",
@@ -38,6 +38,7 @@ export const usersSlice = createSlice({
 
 export const { setUser, resetUser } = usersSlice.actions;
 export default usersSlice.reducer;
+const userToken = localStorage.getItem("user_token");
 
 export function fetchUsersData() {
   return async (dispatch) => {
@@ -82,47 +83,26 @@ export function changePassword(data) {
     try {
       let response = await Axios.post(
         "http://localhost:8000/auth/changePassword",
-        data
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
       );
       console.log(response);
       if (response) {
-        Swal.fire(response.data.message, "Password has been changed");
+        Swal.fire(response.data);
       }
     } catch (error) {
-      console.error(error);
-      if (error.response && error.response.data) {
-        Swal.fire("User does not exist", error.response.data.message, "error");
-      } else {
-        Swal.fire(
-          "Error",
-          "An error occurred. Please try again later.",
-          "error"
-        );
-      }
+      Swal.fire(error.message);
     }
   };
 }
 
-// export function loginUser(data) {
-//   return async (dispatch) => {
-//     console.log(data);
-//     try {
-//       let response = await Axios.post("http://localhost:8000/auth/login", data);
-//       console.log(response);
-//       if (response) {
-//         dispatch(setUser(response.data.data));
-//         localStorage.setItem("user_token", response.data.token);
-//         Swal.fire(response.data.message, "success");
-//       }
-//     } catch (error) {
-//       console.error(error);
-//       Swal.fire("Error", "An error occurred. Please try again later.", "error");
-//     }
-//   };
-// }
-
 export function checkLogin(token) {
   return async (dispatch) => {
+    debugger;
     try {
       let response = await Axios.post(
         "http://localhost:8000/auth/check-login",
@@ -144,7 +124,7 @@ export function checkLogin(token) {
   };
 }
 
-export function loginUser1(data) {
+export function loginUser(data) {
   return async (dispatch) => {
     try {
       const response = await Axios.post(
@@ -158,10 +138,10 @@ export function loginUser1(data) {
           Swal.fire(response.data.message);
         }
       } else {
-        alert(response.data.message);
+        Swal.fire(response.data.message);
       }
     } catch (error) {
-      alert(error);
+      Swal.fire(error);
       console.log(error);
     }
   };
@@ -178,7 +158,7 @@ export function verifyEmail(data) {
         Swal.fire("Kami telah mengirim link untuk aktivasi akun Anda.");
       }
     } catch (error) {
-      alert(error);
+      Swal.fire(error);
       console.error(error);
     }
   };
@@ -229,7 +209,6 @@ export function editProfile(data) {
   return async (dispatch) => {
     try {
       const userToken = localStorage.getItem("user_token");
-
       const response = await Axios.patch(
         `http://localhost:8000/user/edit`, // Ubah endpoint sesuai kebutuhan
         data,
@@ -240,8 +219,6 @@ export function editProfile(data) {
         }
       );
       // Dispatch action untuk memperbarui data pengguna di Redux state
-      dispatch(setUser(data));
-      console.log(data);
       Swal.fire("Profile updated successfully"); // Menampilkan notifikasi sukses
     } catch (error) {
       Swal.fire(error.message); // Menampilkan notifikasi error

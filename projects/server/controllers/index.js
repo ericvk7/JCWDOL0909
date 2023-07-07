@@ -14,4 +14,5 @@ module.exports = {
   rajaOngkirController,
   opencageController,
   addressController,
+  adminController,
 };

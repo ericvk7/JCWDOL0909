@@ -115,7 +115,7 @@ module.exports = {
         data: {
           id: isEmailExist[0].id_user,
           email: isEmailExist[0].email,
-          phone_number: isEmailExist[0].phone_number,
+          phoneNumber: isEmailExist[0].phoneNumber,
           isVerified: isEmailExist[0].isVerified,
           name: isEmailExist[0].name,
           gender: isEmailExist[0].gender,
@@ -132,31 +132,42 @@ module.exports = {
 
   changePassword: async (req, res) => {
     try {
-      const { email, newPassword, confirmPassword } = req.body;
+      const { oldPassword, newPassword, confirmPassword } = req.body;
+      const idUser = req.user.id;
 
-      // Verifikasi email pengguna
+      // Retrieve the user's email and password from the database
       const user = await query(
-        `SELECT * FROM users WHERE email = ${db.escape(email)}`
+        `SELECT * FROM users WHERE id_user = ${db.escape(idUser)}`
       );
 
       if (user.length === 0) {
         return res.status(400).send("User does not exist");
       }
 
-      // Validasi input password baru dan konfirmasi password
+      // Verify the old password
+      const isPasswordValid = await bcrypt.compare(
+        oldPassword,
+        user[0].password
+      );
+
+      if (!isPasswordValid) {
+        return res.status(200).send("Invalid password");
+      }
+
+      // Validate the new password and confirm password
       if (newPassword !== confirmPassword) {
         return res.status(400).send("Passwords do not match");
       }
 
-      // Hash password baru
+      // Hash the new password
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(newPassword, salt);
 
-      // Update password di database
+      // Update the password in the database
       await query(
         `UPDATE users SET password = ${db.escape(
           hashPassword
-        )} WHERE email = ${db.escape(email)}`
+        )} WHERE id_user = ${db.escape(idUser)}`
       );
 
       return res.status(200).send("Password updated successfully");
@@ -200,7 +211,7 @@ module.exports = {
           id: users[0].id_user,
           name: users[0].name,
           email: users[0].email,
-          phone_number: users[0].phone_number,
+          phoneNumber: users[0].phoneNumber,
           gender: users[0].gender,
           birthday: formattedBirthday,
           imagePath: users[0].profilePicture,

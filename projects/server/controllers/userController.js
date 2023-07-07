@@ -22,7 +22,7 @@ module.exports = {
         UPDATE users SET
           email = COALESCE(${db.escape(email)}, email),
           name = COALESCE(${db.escape(name)}, name),
-          phone_number = COALESCE(${db.escape(phone_number)}, phone_number),
+          phoneNumber = COALESCE(${db.escape(phoneNumber)}, phoneNumber),
           gender = COALESCE(${db.escape(gender)}, gender),
           birthday = COALESCE(STR_TO_DATE(${db.escape(
             formattedBirthday

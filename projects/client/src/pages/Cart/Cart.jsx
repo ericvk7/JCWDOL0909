@@ -4,40 +4,78 @@ import {
   decreaseQuantity,
   increaseQuantity,
 } from "../../features/cart/cartSlice";
+import Swal from "sweetalert2";
+import emptyCart from "../../img/EmptyCart_3-Copy-removebg-preview.png";
 
 function Cart() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
   const handleRemoveItem = (id) => {
-    dispatch(removeItem(id));
+    Swal.fire({
+      title: "Are you sure?",
+      text: "This item will be removed from your cart.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, remove it!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(removeItem(id));
+        Swal.fire(
+          "Removed!",
+          "The item has been removed from your cart.",
+          "success"
+        );
+      }
+    });
   };
 
   const handleDecreaseQuantity = (id) => {
     const item = cartItems.find((item) => item.id_product === id);
     if (item.quantity === 1) {
-      handleRemoveItem(id);
+      Swal.fire({
+        title: "Are you sure?",
+        text: "This item will be removed from your cart.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, remove it!",
+        cancelButtonText: "Cancel",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(removeItem(id));
+          Swal.fire(
+            "Removed!",
+            "The item has been removed from your cart.",
+            "success"
+          );
+        }
+      });
     } else {
       dispatch(decreaseQuantity(id));
     }
   };
 
   const handleIncreaseQuantity = (id) => {
-    alert(id);
+    // alert(id);
     dispatch(increaseQuantity(id));
   };
 
   const totalPrice = cartItems.reduce(
-    (total, item) => total + item.product_price * item.quantity,
+    (total, item) => total + item.price * item.quantity,
     0
   );
 
   return (
-    <div className="flex flex-col h-10 mx-auto max-w-2xl my-20">
-      <p className="text-lg font-bold text-white text-center">Shopping Cart</p>
-
+    <div className="flex flex-col h-30 mx-auto max-w-l mt-20">
       {cartItems.length === 0 ? (
-        <p className="text-lg text-white">Your cart is empty.</p>
+        <div className="flex flex-col items-center justify-center">
+          <img src={emptyCart} alt="Empty Cart" className="w-40 h-30" />
+          <p className="text-lg text-red-600 mt-4">Your cart is empty.</p>
+          <p className="text-sm text-gray-500 mt-2">
+            It looks like you haven't added any products to your cart.
+          </p>
+        </div>
       ) : (
         <ul className="divide-y divide-[#EDA415]">
           {cartItems.map((item) => (
@@ -45,12 +83,9 @@ function Cart() {
               <div className="ml-6 flex-1 flex flex-col justify-between">
                 <div className="flex">
                   <div className="flex-1">
-                    <h2 className="text-lg font-medium text-white">
-                      {item.product_name}
+                    <h2 className="text-lg font-medium text-[#EDA415]">
+                      {item.name}
                     </h2>
-                    <p className="mt-1 text-sm text-white-500">
-                      {item.product_description}
-                    </p>
                   </div>
                   <div className="ml-4 flex-shrink-0 flow-root">
                     <button
@@ -65,8 +100,8 @@ function Cart() {
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="flex">
                     <div className="flex-shrink-0">
-                      <p className="text-lg font-medium text-white">
-                        {item.product_price.toLocaleString("id-ID", {
+                      <p className="text-l font-medium">
+                        {item.price.toLocaleString("id-ID", {
                           style: "currency",
                           currency: "IDR",
                         })}
@@ -95,9 +130,9 @@ function Cart() {
               </div>
             </li>
           ))}
-          <div class="mt-6 flex items-center justify-between">
-            <p class="text-sm font-medium text-white">Total</p>
-            <p class="text-2xl font-semibold text-white">
+          <div className="mt-6 flex items-center justify-between">
+            <p className="text-sm font-medium text-[#EDA415]">Total</p>
+            <p className="text-l font-semibold">
               {" "}
               {totalPrice.toLocaleString("id-ID", {
                 style: "currency",
@@ -105,23 +140,23 @@ function Cart() {
               })}
             </p>
           </div>
-          <div class="mt-6 text-center">
+          <div className="mt-6 text-center">
             <button
               type="button"
-              class="group inline-flex w-full items-center justify-center rounded-md bg-[#EDA415] px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
+              className="group inline-flex w-full items-center justify-center rounded-md bg-[#EDA415] px-6 py-4 text-lg font-semibold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800"
             >
               Checkout
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="group-hover:ml-8 ml-4 h-6 w-6 transition-all"
+                className="group-hover:ml-8 ml-4 h-6 w-6 transition-all"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M13 7l5 5m0 0l-5 5m5-5H6"
                 />
               </svg>

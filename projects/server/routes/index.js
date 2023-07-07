@@ -14,4 +14,5 @@ module.exports = {
   rajaongkirRoutes,
   opencageRoutes,
   addressRoutes,
+  adminRoutes,
 };
