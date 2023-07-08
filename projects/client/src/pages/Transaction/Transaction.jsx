@@ -1,21 +1,50 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { setOrderId } from "../../features/transaction/transactionSlice";
 
 function Transaction() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
+  const orderDetails = useSelector((state) => state.transaction.orderDetails);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0
   );
-  const shippingCost = 15000;
 
+  const shippingCost = 15000;
   const transactionDate = moment().format("DD-MM-YYYY");
+
+  const generateOrderId = () => {
+    const timestamp = moment().format("YYYYMMDDHHmm");
+    const randomString = Math.random()
+      .toString(36)
+      .substring(2, 6)
+      .toUpperCase();
+    const orderId = `${timestamp}-${randomString}`;
+    return orderId;
+  };
+
+  useEffect(() => {
+    const orderId = generateOrderId();
+    dispatch(setOrderId(orderId));
+  }, [dispatch]);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   // Calculate the total price
   const total = subtotal + shippingCost;
+
+  const orderId = useSelector((state) => state.transaction.orderId);
 
   return (
     <>
@@ -128,7 +157,6 @@ function Transaction() {
                 id="radio_1"
                 type="radio"
                 name="radio"
-                checked
               />
               <span className="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
               <label
@@ -148,7 +176,7 @@ function Transaction() {
                 </div>
               </label>
             </div>
-            <div className="relative">
+            {/* <div className="relative">
               <input
                 className="peer hidden"
                 id="radio_2"
@@ -173,7 +201,7 @@ function Transaction() {
                   </p>
                 </div>
               </label>
-            </div>
+            </div> */}
           </form>
         </div>
         <div className="mt-10 bg-gray-50 px-4 pt-8 lg:mt-0">
@@ -184,7 +212,7 @@ function Transaction() {
             </div>
             <div>
               <p className="text-xl font-medium">Order ID</p>
-              <p className="text-gray-400">#0001</p>
+              <p className="text-gray-400">{orderId}</p>
             </div>
             <div>
               <p className="text-xl font-medium">Transaction Date</p>
@@ -210,12 +238,32 @@ function Transaction() {
           </div>
           <button
             className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-            onClick={() => {
-              navigate("/uploadPayment");
-            }}
+            onClick={openModal}
           >
             Place Order
           </button>
+
+          {/* Modal */}
+          {isModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+              <div className="bg-white shadow-lg p-8 rounded-lg border-2">
+                <h2 className="text-xl font-semibold mb-4">
+                  Order Confirmation
+                </h2>
+                <p>
+                  Your order has been placed successfully with ID: {orderId}
+                </p>
+                <div className="flex justify-center">
+                  <button
+                    className="mt-4 bg-gray-900 text-white px-4 py-2 rounded"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </>
