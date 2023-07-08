@@ -284,28 +284,31 @@ module.exports = {
 
   editProduct: async (req, res) => {
     try {
-      const { categoryName } = req.body;
+      const {
+        productName,
+        productPrice,
+        productStock,
+        productDescription,
+        id_category,
+      } = req.body;
       const idProduct = req.params.id;
-      const category = await query(
-        `SELECT * FROM products WHERE id_product = ${db.escape(idProduct)}`
-      );
-      if (category.length <= 0) {
+
+      const updateProductQuery = `
+        UPDATE products SET
+        name = COALESCE(${db.escape(productName)}, name),
+        price = COALESCE(${db.escape(productPrice)}, price),
+        stock = COALESCE(${db.escape(productStock)}, stock),
+        description = COALESCE(${db.escape(productDescription)}, description),
+        id_category = COALESCE(${db.escape(id_category)}, id_category)
+        WHERE id_product = ${db.escape(idProduct)}
+      `;
+
+      const result = await query(updateProductQuery);
+
+      if (result.affectedRows === 0) {
         return res.status(404).send("Product not found");
       }
-      const getCategoryQuery = `SELECT * FROM products WHERE name = ${db.escape(
-        categoryName
-      )}`;
-      const categoryExist = await query(getCategoryQuery);
-      if (categoryExist.length > 0) {
-        return res.status(400).send("Product already exists!");
-      }
-      const updateCategoryQuery = `UPDATE products SET
-        name = ${db.escape(categoryName)}
-        WHERE id_product = ${db.escape(idProduct)}`;
-      await query(updateCategoryQuery);
-      const updatedProduct = await query(
-        `SELECT * FROM products WHERE id_product = ${db.escape(idProduct)}`
-      );
+
       res.status(200).send("Product Updated Successfully");
     } catch (error) {
       console.error(error);

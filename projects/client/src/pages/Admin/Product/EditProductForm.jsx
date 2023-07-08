@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 function EditProductForm({ editProductData }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [productName, setProductName] = useState("");
+  const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [image, setImage] = useState(null);
@@ -16,33 +16,37 @@ function EditProductForm({ editProductData }) {
   const [previewImage, setPreviewImage] = useState("");
   const adminToken = localStorage.getItem("admin_token");
 
-  const HandleSubmit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(category);
 
     const formData = new FormData();
-    formData.append("productName", productName);
+    formData.append("productName", name);
     formData.append("productPrice", price);
     formData.append("productStock", stock);
-    formData.append("productDesc", description);
-    formData.append("file", image);
+    formData.append("productDescription", description);
     formData.append("id_category", category);
 
+    if (image) {
+      formData.append("file", image);
+    }
+
     try {
-      //   const response = await Axios.post(
-      //     "http://localhost:8000/admin/addProduct",
-      //     formData,
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${adminToken}`,
-      //       },
-      //     }
-      //   );
-      //   if (!response.data.success) {
-      //     throw new Error(response.data.message);
-      //   } else {
-      //     alert(response.data.message);
-      //   }
+      const response = await Axios.patch(
+        `http://localhost:8000/admin/editProduct/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
+      );
+      console.log(response);
+      console.log(formData);
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      } else {
+        alert(response.data.message);
+      }
     } catch (error) {
       console.error(error.message);
     }
@@ -50,20 +54,23 @@ function EditProductForm({ editProductData }) {
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    setImage(file);
+    if (file && file instanceof Blob) {
+      // Periksa apakah file adalah objek Blob
+      setImage(file);
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   useEffect(() => {
     if (product && product.image) {
       setPreviewImage(`http://localhost:8000/${product.image}`);
     } else {
-      setPreviewImage(""); // Mengubah nilainya menjadi string kosong
+      setPreviewImage("");
     }
   }, [product]);
 
@@ -78,11 +85,9 @@ function EditProductForm({ editProductData }) {
             },
           }
         );
-        const product = productResponse.data; // Update this line
-        setProduct(product);
-        setPreviewImage(product.image); // Assuming "image" is the property that contains the image URL
-
-        console.log(product);
+        const productData = productResponse.data;
+        setProduct(productData);
+        setPreviewImage(productData.image);
       } catch (error) {
         console.log(error);
         alert(error.message);
@@ -94,7 +99,7 @@ function EditProductForm({ editProductData }) {
 
   useEffect(() => {
     if (editProductData) {
-      setProductName(editProductData.productName);
+      setName(editProductData.productName);
       setPrice(editProductData.productPrice);
       setStock(editProductData.productStock);
       setDescription(editProductData.productDesc);
@@ -117,7 +122,7 @@ function EditProductForm({ editProductData }) {
       <section className="p-6 mx-4 bg-white border-2 rounded-lg shadow-md mt-2">
         <div className="py-8 px-4 mx-auto max-w-2xl lg:py-16">
           <h2 className="mb-4 text-xl font-bold text-black">Edit product</h2>
-          <form onSubmit={HandleSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
               <div className="sm:col-span-2">
                 <label
@@ -132,9 +137,8 @@ function EditProductForm({ editProductData }) {
                   id="name"
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Type product name"
-                  value={productName || (product && product.name) || ""}
-                  onChange={(event) => setProductName(event.target.value)}
-                  required
+                  value={name || (product && product.name) || ""}
+                  onChange={(event) => setName(event.target.value)}
                 />
               </div>
               <div className="w-full">
@@ -152,7 +156,6 @@ function EditProductForm({ editProductData }) {
                   placeholder="RP 10.000,00"
                   value={price || (product && product.price) || ""}
                   onChange={(event) => setPrice(event.target.value)}
-                  required
                 />
               </div>
               <div className="w-full">
@@ -170,7 +173,6 @@ function EditProductForm({ editProductData }) {
                   placeholder="Enter product stock"
                   value={stock || (product && product.stock) || ""}
                   onChange={(event) => setStock(event.target.value)}
-                  required
                 />
               </div>
 
@@ -186,7 +188,6 @@ function EditProductForm({ editProductData }) {
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   value={category}
                   onChange={(event) => setCategory(event.target.value)}
-                  required
                 >
                   <option value="">{product && product.category_name}</option>
                   {categories.map((category) => (
@@ -214,7 +215,6 @@ function EditProductForm({ editProductData }) {
                   placeholder="Type product description"
                   value={description || (product && product.description) || ""}
                   onChange={(event) => setDescription(event.target.value)}
-                  required
                 ></textarea>
               </div>
               <div className="sm:col-span-2">
@@ -231,9 +231,8 @@ function EditProductForm({ editProductData }) {
                   id="image"
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   onChange={handleImageChange}
-                  required
                 />
-                {!previewImage ? (
+                {previewImage ? (
                   <img
                     src={previewImage}
                     alt="Product Preview"
@@ -241,7 +240,7 @@ function EditProductForm({ editProductData }) {
                   />
                 ) : (
                   <img
-                    src={`http://localhost:8000/${product.image}`}
+                    src={`http://localhost:8000/${product && product.image}`}
                     alt="Product Preview"
                     className="mt-2 h-40 w-auto object-contain"
                   />
@@ -253,7 +252,7 @@ function EditProductForm({ editProductData }) {
                 type="submit"
                 className="inline-flex items-center justify-center px-4 py-2 hover:text-black border border-transparent text-sm font-medium rounded-md text-black bg-[#EDA415] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
-                Edit Product
+                Save
               </button>
             </div>
           </form>

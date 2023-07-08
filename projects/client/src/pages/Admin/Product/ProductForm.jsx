@@ -75,7 +75,7 @@ function ProductForm() {
 
     return products.map((product) => (
       <tr
-        key={product.id_branch}
+        key={product.id_product}
         className="border-b bg-gray-800 border-gray-700 hover:bg-gray-600 lg:text-lg"
       >
         <td className="px-6 py-4 text-white">{product.id_product}</td>
