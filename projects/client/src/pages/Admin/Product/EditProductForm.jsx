@@ -6,13 +6,14 @@ import { useParams } from "react-router-dom";
 function EditProductForm({ editProductData }) {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-  const [name, setName] = useState("");
+  const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState("");
+  const [previewImage, setPreviewImage] = useState("");
   const adminToken = localStorage.getItem("admin_token");
 
   const HandleSubmit = async (event) => {
@@ -20,7 +21,7 @@ function EditProductForm({ editProductData }) {
     console.log(category);
 
     const formData = new FormData();
-    formData.append("productName", name);
+    formData.append("productName", productName);
     formData.append("productPrice", price);
     formData.append("productStock", stock);
     formData.append("productDesc", description);
@@ -48,14 +49,29 @@ function EditProductForm({ editProductData }) {
   };
 
   const handleImageChange = (event) => {
-    setImage(event.target.files[0]);
+    const file = event.target.files[0];
+    setImage(file);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
+
+  useEffect(() => {
+    if (product && product.image) {
+      setPreviewImage(`http://localhost:8000/${product.image}`);
+    } else {
+      setPreviewImage(""); // Mengubah nilainya menjadi string kosong
+    }
+  }, [product]);
 
   useEffect(() => {
     const fetchProductData = async () => {
       try {
         const productResponse = await Axios.get(
-          `http://localhost:8000/admin/product/${id}`,
+          `http://localhost:8000/admin/product/getProductById?idProduct=${id}`,
           {
             headers: {
               Authorization: `Bearer ${adminToken}`,
@@ -64,6 +80,8 @@ function EditProductForm({ editProductData }) {
         );
         const product = productResponse.data; // Update this line
         setProduct(product);
+        setPreviewImage(product.image); // Assuming "image" is the property that contains the image URL
+
         console.log(product);
       } catch (error) {
         console.log(error);
@@ -76,7 +94,7 @@ function EditProductForm({ editProductData }) {
 
   useEffect(() => {
     if (editProductData) {
-      setName(editProductData.productName);
+      setProductName(editProductData.productName);
       setPrice(editProductData.productPrice);
       setStock(editProductData.productStock);
       setDescription(editProductData.productDesc);
@@ -114,8 +132,8 @@ function EditProductForm({ editProductData }) {
                   id="name"
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Type product name"
-                  //   value={product.name}
-                  onChange={(event) => setName(event.target.value)}
+                  value={productName || (product && product.name) || ""}
+                  onChange={(event) => setProductName(event.target.value)}
                   required
                 />
               </div>
@@ -132,7 +150,7 @@ function EditProductForm({ editProductData }) {
                   id="price"
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="RP 10.000,00"
-                  value={product.price}
+                  value={price || (product && product.price) || ""}
                   onChange={(event) => setPrice(event.target.value)}
                   required
                 />
@@ -150,7 +168,7 @@ function EditProductForm({ editProductData }) {
                   id="stock"
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="Enter product stock"
-                  value={product.stock}
+                  value={stock || (product && product.stock) || ""}
                   onChange={(event) => setStock(event.target.value)}
                   required
                 />
@@ -170,7 +188,7 @@ function EditProductForm({ editProductData }) {
                   onChange={(event) => setCategory(event.target.value)}
                   required
                 >
-                  <option value="">Select Category</option>
+                  <option value="">{product && product.category_name}</option>
                   {categories.map((category) => (
                     <option
                       key={category.id_category}
@@ -194,7 +212,7 @@ function EditProductForm({ editProductData }) {
                   rows="4"
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 resize-none"
                   placeholder="Type product description"
-                  value={product.description}
+                  value={description || (product && product.description) || ""}
                   onChange={(event) => setDescription(event.target.value)}
                   required
                 ></textarea>
@@ -215,6 +233,19 @@ function EditProductForm({ editProductData }) {
                   onChange={handleImageChange}
                   required
                 />
+                {!previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="Product Preview"
+                    className="mt-2 h-40 w-auto object-contain"
+                  />
+                ) : (
+                  <img
+                    src={`http://localhost:8000/${product.image}`}
+                    alt="Product Preview"
+                    className="mt-2 h-40 w-auto object-contain"
+                  />
+                )}
               </div>
             </div>
             <div className="mt-8 text-right sm:mt-6">

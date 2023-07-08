@@ -264,9 +264,12 @@ module.exports = {
 
   fetchProductById: async (req, res) => {
     try {
-      const idProduct = parseInt(req.params.id);
+      const idProduct = req.query.idProduct;
       const product = await query(
-        `SELECT * FROM products WHERE id_product = ${db.escape(idProduct)}`
+        `SELECT products.*, categories.category_name
+        FROM products
+        INNER JOIN categories ON products.id_category = categories.id_category
+        WHERE products.id_product = ${db.escape(idProduct)}`
       );
 
       if (product.length === 0) {
