@@ -13,7 +13,6 @@ const {
   addressRoutes,
   transactionRoutes,
   paymentRoutes,
-  userRoutes,
   adminRoutes,
 } = require("../routes");
 const { runSeed } = require("../helpers/runSeed");
