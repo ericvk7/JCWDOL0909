@@ -8,6 +8,12 @@ const {
   productRoutes,
   categoryRoutes,
   userRoutes,
+  rajaongkirRoutes,
+  opencageRoutes,
+  addressRoutes,
+  transactionRoutes,
+  paymentRoutes,
+  userRoutes,
   adminRoutes,
 } = require("../routes");
 const { runSeed } = require("../helpers/runSeed");
@@ -27,6 +33,12 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/products", productRoutes);
 app.use("/category", categoryRoutes);
+app.use("/user", userRoutes);
+app.use("/rajaOngkir", rajaongkirRoutes);
+app.use("/opencage", opencageRoutes);
+app.use("/address", addressRoutes);
+app.use("/transactions", transactionRoutes);
+app.use("/payments", paymentRoutes);
 app.use("/user", userRoutes);
 
 app.get("/api", (req, res) => {
