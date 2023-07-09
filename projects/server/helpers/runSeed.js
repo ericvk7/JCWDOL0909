@@ -10,6 +10,11 @@ exports.runSeed = async function () {
       email: "annisafirlia1@gmail.com",
       id_role: "1",
     },
+    {
+      name: "dibpy",
+      email: "dibpy13@gmail.com",
+      id_role: "2",
+    },
   ];
 
   for (const userSeed of userSeeds) {
@@ -33,7 +38,7 @@ exports.runSeed = async function () {
 
       let addAdminResult = await query(addAdminQuery);
 
-      let payload = { id: addUserResult.insertId };
+      let payload = { id: addAdminResult.insertId };
       const token = jwt.sign(payload, "six6", { expiresIn: "5m" });
       console.log(token);
 
