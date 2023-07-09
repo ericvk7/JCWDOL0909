@@ -66,16 +66,13 @@ function App() {
       <Routes>
         {/* {!adminGlobal.id && ( */}
         <>
+        </>
+        {/* )} */}
           <Route path="/user/register" element={<Register />} />
           <Route path="/user/login" element={<Login />} />
           <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
           <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
-          <Route
-            path="/user/resetPassword/:token"
-            element={<ResetPassword />}
-          />
-        </>
-        {/* )} */}
+          <Route path="/user/resetPassword/:token" element={<ResetPassword />}/>
 
         {userGlobal.id > 0 && (
           <>
@@ -91,6 +88,7 @@ function App() {
         )}
 
         <Route path="/notfound" element={<NotFound />} />
+        <Route path="/products" element={<Products />} />
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/payment/:idTransaction" element={<UploadForm />} />
         <Route path="/user/orderlist" element={<OrderList />} />
