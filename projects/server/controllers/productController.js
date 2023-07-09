@@ -31,19 +31,48 @@ module.exports = {
       success: true,
     });
   },
+
   fetchAllProducts: async (req, res) => {
     try {
-      const products = await query(`SELECT * FROM products`);
       const { category } = req.query;
+      const limit = req.body.limit;
+      const page = req.body.page;
+      const offset = (page - 1) * limit;
+      let whereClause = "";
 
       if (category) {
-        const filteredProducts = products.filter(
-          (product) => product.category === category
-        );
-        res.status(200).send(filteredProducts);
-      } else {
-        res.status(200).send(products);
+        whereClause = `where id_category = ${category}`;
       }
+
+      const products = await query(
+        `SELECT * FROM products ${whereClause} LIMIT ${limit} offset ${offset} `
+      );
+
+      const totalProducts = await query(
+        `SELECT COUNT(*) AS totalProducts FROM products `
+      );
+
+      const totalData = totalProducts[0].totalProducts;
+      const hasNext = offset + limit < totalData;
+      const hasPrevious = offset > 0;
+
+      console.log(offset);
+      console.log(totalData);
+
+      // if (category) {
+      //   const filteredProducts = products.filter(
+      //     (product) => product.category === category
+      //   );
+      //   res.status(200).send(filteredProducts);
+      // } else {
+      res.status(200).send({
+        data: products,
+        meta: {
+          count: totalData,
+          hasNext,
+          hasPrevious,
+        },
+      });
     } catch (error) {
       res.status(error.status || 500).send(error);
     }

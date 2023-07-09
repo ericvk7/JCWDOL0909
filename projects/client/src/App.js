@@ -30,6 +30,8 @@ import BlankPage from "./pages/Error/BlankPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
+import ProductForm from "./pages/Admin/Product/ProductForm";
+import EditProductForm from "./pages/Admin/Product/EditProductForm";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -52,11 +54,9 @@ function App() {
     if (userToken) {
       dispatch(checkLogin(userToken));
     } else if (adminToken) {
-      console.log("masuk");
       dispatch(checkLoginAdmin(adminToken));
     }
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
-  console.log(adminToken);
 
   return (
     <div>
@@ -64,21 +64,18 @@ function App() {
         (userGlobal.id > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
 
       <Routes>
-        {!adminGlobal.id && (
-          <>
-            <Route path="/user/register" element={<Register />} />
-            <Route path="/user/login" element={<Login />} />
-            <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
-            <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
-            <Route
-              path="/user/resetPassword/:token"
-              element={<ResetPassword />}
-            />
-            <Route path="/product" element={<Products />} />
-            <Route path="/product/:id" element={<ProductDetailPage />} />
-            <Route path="/" element={<Products />} />
-          </>
-        )}
+        {/* {!adminGlobal.id && ( */}
+        <>
+          <Route path="/user/register" element={<Register />} />
+          <Route path="/user/login" element={<Login />} />
+          <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
+          <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
+          <Route
+            path="/user/resetPassword/:token"
+            element={<ResetPassword />}
+          />
+        </>
+        {/* )} */}
 
         {userGlobal.id > 0 && (
           <>
@@ -107,6 +104,8 @@ function App() {
         <Route path="/blankPage" element={<BlankPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin/addProduct" element={<AddProductForm />} />
+        <Route path="/admin/Product" element={<ProductForm />} />
+        <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
 
