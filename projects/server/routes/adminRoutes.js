@@ -28,7 +28,9 @@ router.get("/getCategory", adminController.fetchAllCategories);
 router.post("/addCategory", verifyToken, adminController.addCategory);
 router.delete("/deleteCategory/:id", adminController.deleteCategory);
 router.patch("/editCategory/:id", verifyToken, adminController.editCategory);
-
 router.get("/getCategory/:id", adminController.fetchCategoryById);
+
+// Transactions Route
+router.get("/admin/transactions/:id", adminController.fetchTransactions);
 
 module.exports = router;

@@ -315,4 +315,24 @@ module.exports = {
       res.status(500).send(error.message || "Internal Server Error");
     }
   },
+  fetchTransactions: async (req, res) => {
+    try {
+    const transaction = await query(
+    `SELECT 
+      transaksi.id_transaction AS id_transaction,
+      transaksi.invoiceNumber AS Invoice,
+      GROUP_CONCAT(produk.name) AS ListProducts,
+      SUM(transaction_products.quantity * produk.price) AS Total,
+      transaksi.id_user AS id_user
+    FROM transactions transaksi
+    JOIN transaction_products ON transaksi.id_transaction = transaction_products.id_transaction
+    JOIN products produk ON transaction_products.id_product = produk.id_product
+    GROUP BY transaksi.id_transaction, transaksi.invoiceNumber, transaksi.id_user`
+  )
+  return res.status(200).send(branch);
+  }
+  catch (error) {
+    res.status(error.status || 500).send(error);
+  }
+},
 };
