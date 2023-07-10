@@ -106,7 +106,11 @@ module.exports = {
           SELECT COUNT(*) AS totalCount
           FROM transactions
         `;
-      if (status) {
+      if (startDate && endDate) {
+        totalCountQuery += ` WHERE transactions.date BETWEEN ${db.escape(
+          startDate
+        )} AND ${db.escape(endDate)}`;
+      } else if (status) {
         totalCountQuery += ` WHERE transactions.id_transaction_status = ${db.escape(
           status
         )}`;
