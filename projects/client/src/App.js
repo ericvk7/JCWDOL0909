@@ -16,9 +16,14 @@ import VerifyEmail from "./pages/Auth/Activation/VerifyEmail";
 import ChangePassword from "./pages/Auth/ChangePassword/ChangePassword";
 import ConfirmEmail from "./pages/Auth/ResetPassword/ConfirmEmail";
 import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword";
-import BeforeLoginNavbar from "./components/BeforeLoginNavbar";
 import Profile from "./pages/Profile/Profile";
 import ProfilePictureUpload from "./pages/Profile/ProfilePicture";
+import AddressForm from "./pages/Profile/addAddress";
+import UpdateAddress from "./pages/Profile/updateAddress";
+import BeforeLoginNavbar from "./components/BeforeLoginNavbar";
+import Transaction from "./pages/Transaction/Transaction";
+import OrderList from "./pages/Transaction/orderList";
+import UploadForm from "./pages/Transaction/uploadForm";
 import LoginAdmin from "./pages/Admin/LoginAdmin/LoginAdmin";
 import CreateAdmin from "./pages/Admin/CreateAdmin/CreateAdmin";
 import BlankPage from "./pages/Error/BlankPage";
@@ -62,18 +67,40 @@ function App() {
         (userGlobal.id > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
 
       <Routes>
-        {/* {!adminGlobal.id && ( */}
-        <>
-          <Route path="/user/register" element={<Register />} />
-          <Route path="/user/login" element={<Login />} />
-          <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
-          <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
-          <Route
-            path="/user/resetPassword/:token"
-            element={<ResetPassword />}
-          />
-        </>
-        {/* )} */}
+        {!adminGlobal.id && (
+          <>
+            <Route path="/user/register" element={<Register />} />
+            <Route path="/user/login" element={<Login />} />
+            <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
+            <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
+            <Route
+              path="/user/resetPassword/:token"
+              element={<ResetPassword />}
+            />
+            <Route path="/product" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/" element={<Products />} />
+          </>
+        )}
+
+        {userGlobal.id > 0 && (
+          <>
+            <Route path="/user/changePassword" element={<ChangePassword />} />
+            <Route path="/user/profile" element={<Profile />} />
+            <Route
+              path="/user/profilePicture"
+              element={<ProfilePictureUpload />}
+            />
+            <Route path="/user/addAddress" element={<AddressForm />} />
+            <Route path="/user/updateAddress" element={<UpdateAddress />} />
+          </>
+        )}
+
+        <Route path="/notfound" element={<NotFound />} />
+        <Route path="/transaction" element={<Transaction />} />
+        <Route path="/payment/:idTransaction" element={<UploadForm />} />
+        <Route path="/user/orderlist" element={<OrderList />} />
+        <Route path="*" element={<NotFound />} />
 
         {/* {userGlobal.id > 0 && ( */}
         <>
