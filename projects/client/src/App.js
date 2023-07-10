@@ -32,7 +32,7 @@ import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
 import ProductForm from "./pages/Admin/Product/ProductForm";
 import EditProductForm from "./pages/Admin/Product/EditProductForm";
-import AdminTransactions from "./pages/Admin/Transactions/AdminTransactions";
+import SalesReports from "./pages/Admin/Reports/SalesReports";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -107,7 +107,7 @@ function App() {
         <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
-        <Route path="/admin/transactions" element={<AdminTransactions/>} />
+        <Route path="/admin/transactions" element={<SalesReports/>} />
 
         {/* Routes for super admin  */}
       </Routes>

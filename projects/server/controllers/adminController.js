@@ -335,4 +335,15 @@ module.exports = {
     res.status(error.status || 500).send(error);
   }
 },
+fetchProductByBranchId: async (req, res) => {
+  try {
+    const idBranch = req.params.id;
+    const products = await query(
+      `SELECT * FROM products WHERE id_branch = ${db.escape(idBranch)}`
+    );
+    return res.status(200).send(products);
+  } catch (error) {
+    res.status(error.status || 500).send(error);
+  }
+},
 };

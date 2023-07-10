@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import TransactionsList from "../Transactions/TransactionsList"
+import TransactionsList from "./SalesReportsList"
 
 function TransactionsTab() {
   const [activeTab, setActiveTab] = useState("addProduct"); // Ubah nilai awal menjadi "addProduct"

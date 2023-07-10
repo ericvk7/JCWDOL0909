@@ -1,7 +1,7 @@
 import React from "react";
 import AddCategory from "../../Category/addCategory";
 import AdminLayout from "../../../components/AdminLayout";
-import TransactionsTab from "./TransactionsTab";
+import TransactionsTab from "./SalesReportsTab";
 
 function AdminTransactions() {
   return (
