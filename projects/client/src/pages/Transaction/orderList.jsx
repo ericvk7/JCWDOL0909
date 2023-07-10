@@ -98,14 +98,6 @@ function OrderList() {
           },
         }
       );
-      // },
-      // params: {
-      //   startDate: formattedStartDate,
-      //   endDate: formattedEndDate,
-      //   page: currentPage,
-      //   pageSize: pageSize,
-      //   status: selectedStatus,
-      // },
       const { totalCount } = response.data;
       setTransactions(response.data.transactions);
       setTotalPages(Math.ceil(totalCount / pageSize));

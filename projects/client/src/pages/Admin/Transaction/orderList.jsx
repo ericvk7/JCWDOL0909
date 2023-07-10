@@ -7,13 +7,13 @@ import TransactionItem from "./transactionItem";
 import Pagination from "./pagination";
 import SearchBar from "./searchBar";
 
-function OrderListAdmin() {
+function OrderList() {
   const [transactions, setTransactions] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [transactionStatus, setTransactionStatus] = useState([]);
-  const userToken = localStorage.getItem("user_token");
-  const itemsPerPage = 5;
+  const adminToken = localStorage.getItem("admin_token");
+  const pageSize = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [groupedTransactions, setGroupedTransactions] = useState({});
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -22,17 +22,23 @@ function OrderListAdmin() {
   const [endDate, setEndDate] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const navigate = useNavigate();
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchTransactions();
+  }, [startDate, endDate, currentPage, selectedStatus]);
+
+  useEffect(() => {
     fetchTransactionStatus();
-  }, [startDate, endDate]);
+  }, []);
 
   useEffect(() => {
     const filtered = Object.values(groupedTransactions).filter((group) => {
       const transactionStatusMatch =
         selectedStatus === 0 ||
-        group.items[0].id_transaction_status === selectedStatus;
+        group.items.some(
+          (item) => item.id_transaction_status === selectedStatus
+        );
       const invoiceNumberMatch =
         searchQuery === "" ||
         group.items[0].invoiceNumber.toUpperCase().includes(searchQuery);
@@ -60,6 +66,11 @@ function OrderListAdmin() {
     try {
       let formattedStartDate = null;
       let formattedEndDate = null;
+      let selectedTransactionStatus = "";
+      if (selectedStatus !== 0) {
+        selectedTransactionStatus = selectedStatus;
+      }
+
       if (startDate) {
         const startOfDayUTC = endOfDay(startDate);
         formattedStartDate = format(
@@ -74,21 +85,28 @@ function OrderListAdmin() {
       const response = await axios.get(
         "http://localhost:8000/transactions/fetchTransactions",
         {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
           params: {
             startDate: formattedStartDate,
             endDate: formattedEndDate,
+            page: currentPage,
+            pageSize: pageSize,
+            status: selectedTransactionStatus,
+          },
+
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
           },
         }
       );
-      setTransactions(response.data);
+      const { totalCount } = response.data;
+      setTransactions(response.data.transactions);
+      setTotalPages(Math.ceil(totalCount / pageSize));
     } catch (error) {
       console.error(error);
     }
   };
 
+  console.log(transactions, "transaction");
   const fetchTransactionStatus = async () => {
     try {
       const response = await axios.get(
@@ -101,7 +119,9 @@ function OrderListAdmin() {
   };
 
   const handleStatusChange = (statusId) => {
-    setSelectedStatus(parseInt(statusId));
+    const selectedStatusNumber = parseInt(statusId);
+    setSelectedStatus(selectedStatusNumber);
+    console.log(statusId);
     setCurrentPage(1);
   };
 
@@ -114,18 +134,11 @@ function OrderListAdmin() {
     }
   };
 
-  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-
   const handlePageChange = (page) => {
-    setCurrentPage(page);
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedTransactions = filteredTransactions.slice(
-    startIndex,
-    endIndex
-  );
 
   const handleSearch = (e) => {
     const query = e.target.value.toUpperCase();
@@ -141,6 +154,7 @@ function OrderListAdmin() {
     setShowCalendar(!showCalendar);
   };
 
+  console.log(currentPage, "PAGE");
   return (
     <div>
       <div className="flex justify-center mt-8">
@@ -179,7 +193,7 @@ function OrderListAdmin() {
       />
       {transactions.length > 0 ? (
         <>
-          {displayedTransactions.map((group) => (
+          {filteredTransactions.map((group) => (
             <TransactionItem
               key={group.id_transaction}
               group={group}
@@ -203,4 +217,4 @@ function OrderListAdmin() {
   );
 }
 
-export default OrderListAdmin;
+export default OrderList;

@@ -10,6 +10,7 @@ export const adminSlice = createSlice({
       name: "",
       email: "",
       id_role: "",
+      id_branch: "",
     },
   },
   reducers: {
@@ -22,6 +23,7 @@ export const adminSlice = createSlice({
         name: "",
         email: "",
         id_role: "",
+        id_branch: "",
       };
     },
   },
@@ -29,7 +31,7 @@ export const adminSlice = createSlice({
 
 export const { setAdmin, resetAdmin } = adminSlice.actions;
 export default adminSlice.reducer;
-const userToken = localStorage.getItem("user_token");
+const userToken = localStorage.getItem("admin_token");
 
 export function loginAdmin(data) {
   return async (dispatch) => {

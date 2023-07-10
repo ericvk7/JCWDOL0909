@@ -9,11 +9,7 @@ router.get(
   verifyToken,
   transactionController.fetchTransaction
 );
-router.get(
-  "/fetchTransactions",
-  verifyToken,
-  transactionController.fetchTransactions
-);
+router.get("/fetchTransactions", transactionController.fetchTransactions);
 router.get(
   "/fetchTransactionStatus",
   transactionController.fetchTransactionStatus
