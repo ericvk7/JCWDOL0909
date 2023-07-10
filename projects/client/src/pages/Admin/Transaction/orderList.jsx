@@ -7,7 +7,7 @@ import TransactionItem from "./transactionItem";
 import Pagination from "./pagination";
 import SearchBar from "./searchBar";
 
-function OrderList() {
+function OrderListAdmin() {
   const [transactions, setTransactions] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -72,7 +72,7 @@ function OrderList() {
         formattedEndDate = format(endOfDayUTC, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
       }
       const response = await axios.get(
-        "http://localhost:8000/transactions/fetchTransaction",
+        "http://localhost:8000/transactions/fetchTransactions",
         {
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -203,4 +203,4 @@ function OrderList() {
   );
 }
 
-export default OrderList;
+export default OrderListAdmin;

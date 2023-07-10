@@ -10,6 +10,11 @@ router.get(
   transactionController.fetchTransaction
 );
 router.get(
+  "/fetchTransactions",
+  verifyToken,
+  transactionController.fetchTransactions
+);
+router.get(
   "/fetchTransactionStatus",
   transactionController.fetchTransactionStatus
 );

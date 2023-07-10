@@ -18,7 +18,6 @@ import ConfirmEmail from "./pages/Auth/ResetPassword/ConfirmEmail";
 import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword";
 import BeforeLoginNavbar from "./components/BeforeLoginNavbar";
 import Transaction from "./pages/Transaction/Transaction";
-import UploadPayment from "./pages/Transaction/UploadPayment";
 import OrderList from "./pages/Transaction/orderList";
 import UploadForm from "./pages/Transaction/uploadForm";
 import Profile from "./pages/Profile/Profile";
@@ -29,7 +28,7 @@ import BlankPage from "./pages/Error/BlankPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
-import Design from "./pages/Products/design";
+import OrderListAdmin from "./pages/Admin/Transaction/orderList";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -91,7 +90,6 @@ function App() {
           </>
         )}
 
-        <Route path="/desain" element={<Design />} />
         <Route path="/notfound" element={<NotFound />} />
         <Route path="/transaction" element={<Transaction />} />
         <Route path="/payment/:idTransaction" element={<UploadForm />} />
@@ -99,7 +97,10 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
         {adminGlobal.id_role === 1 && (
-          <Route path="/admin/createAdmin" element={<CreateAdmin />} />
+          <>
+            <Route path="/admin/createAdmin" element={<CreateAdmin />} />
+            <Route path="/admin/orderlist" element={<OrderListAdmin />} />
+          </>
         )}
         {/* Routes for admin  */}
         <Route path="/admin/login" element={<LoginAdmin />} />
