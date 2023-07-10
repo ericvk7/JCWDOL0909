@@ -2,7 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { setOrderId } from "../../features/transaction/transactionSlice";
+import {
+  setOrderId,
+  setTransactionDate,
+  setTotalPrice,
+} from "../../features/transaction/transactionSlice";
 
 function Transaction() {
   const navigate = useNavigate();
@@ -17,6 +21,7 @@ function Transaction() {
 
   const shippingCost = 15000;
   const transactionDate = moment().format("DD-MM-YYYY");
+  const total = subtotal + shippingCost;
 
   const generateOrderId = () => {
     const timestamp = moment().format("YYYYMMDDHHmm");
@@ -31,7 +36,9 @@ function Transaction() {
   useEffect(() => {
     const orderId = generateOrderId();
     dispatch(setOrderId(orderId));
-  }, [dispatch]);
+    dispatch(setTransactionDate(transactionDate));
+    dispatch(setTotalPrice(total));
+  }, [dispatch, total, transactionDate]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -40,9 +47,6 @@ function Transaction() {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  // Calculate the total price
-  const total = subtotal + shippingCost;
 
   const orderId = useSelector((state) => state.transaction.orderId);
 
