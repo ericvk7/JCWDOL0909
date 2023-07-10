@@ -32,7 +32,7 @@ function ProductCard() {
   }, []);
 
   const fetchProductsData = async () => {
-    let response = await Axios.get(`http://localhost:8000/products`);
+    let response = await Axios.get(`http://localhost:8000/products/product`);
     setProductList(response.data);
   };
   console.log(cartItems);

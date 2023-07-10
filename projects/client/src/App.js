@@ -53,6 +53,9 @@ function App() {
     }
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
 
+  console.log(userGlobal.id > 0);
+  console.log(userGlobal, "userGlobal");
+
   return (
     <div>
       {shouldShowNavbar &&
@@ -84,11 +87,7 @@ function App() {
             element={<ProfilePictureUpload />}
           />
         </>
-        {/* )} */}
-
-        <Route path="/notfound" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
-
+        {/* // )} */}
         {adminGlobal.id_role === 1 && (
           <Route path="/admin/createAdmin" element={<CreateAdmin />} />
         )}
@@ -101,8 +100,10 @@ function App() {
         <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
-
         {/* Routes for super admin  */}
+
+        <Route path="/notfound" element={<NotFound />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
