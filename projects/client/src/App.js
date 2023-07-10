@@ -30,8 +30,6 @@ import BlankPage from "./pages/Error/BlankPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
-import ProductForm from "./pages/Admin/Product/ProductForm";
-import EditProductForm from "./pages/Admin/Product/EditProductForm";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -54,12 +52,10 @@ function App() {
     if (userToken) {
       dispatch(checkLogin(userToken));
     } else if (adminToken) {
+      console.log("masuk");
       dispatch(checkLoginAdmin(adminToken));
     }
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
-
-  console.log(userGlobal.id > 0);
-  console.log(userGlobal, "userGlobal");
 
   return (
     <div>
@@ -102,19 +98,6 @@ function App() {
         <Route path="/user/orderlist" element={<OrderList />} />
         <Route path="*" element={<NotFound />} />
 
-        {/* {userGlobal.id > 0 && ( */}
-        <>
-          <Route path="/product" element={<Products />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
-          <Route path="/" element={<Products />} />
-          <Route path="/user/changePassword" element={<ChangePassword />} />
-          <Route path="/user/profile" element={<Profile />} />
-          <Route
-            path="/user/profilePicture"
-            element={<ProfilePictureUpload />}
-          />
-        </>
-        {/* // )} */}
         {adminGlobal.id_role === 1 && (
           <Route path="/admin/createAdmin" element={<CreateAdmin />} />
         )}
@@ -123,14 +106,10 @@ function App() {
         <Route path="/blankPage" element={<BlankPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin/addProduct" element={<AddProductForm />} />
-        <Route path="/admin/Product" element={<ProductForm />} />
-        <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
-        {/* Routes for super admin  */}
 
-        <Route path="/notfound" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
+        {/* Routes for super admin  */}
       </Routes>
     </div>
   );

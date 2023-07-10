@@ -290,7 +290,7 @@ function OrderList() {
               >
                 <span className="sr-only">Previous</span>
                 <svg
-                  class="w-2.5 h-6"
+                  className="w-2.5 h-6"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -298,9 +298,9 @@ function OrderList() {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M5 1 1 5l4 4"
                   />
                 </svg>
@@ -333,7 +333,7 @@ function OrderList() {
               >
                 <span className="sr-only">Next</span>
                 <svg
-                  class="w-2.5 h-6"
+                  className="w-2.5 h-6"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -341,9 +341,9 @@ function OrderList() {
                 >
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="m1 9 4-4-4-4"
                   />
                 </svg>
