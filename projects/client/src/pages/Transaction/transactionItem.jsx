@@ -19,6 +19,7 @@ function TransactionItem({ group, handleOrderClick }) {
           </p>
         </div>
       </div>
+
       <div className="mb-2">
         <h3 className="text-lg font-semibold">Items</h3>
         {group.items.map((item) => (

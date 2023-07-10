@@ -4,7 +4,7 @@ module.exports = {
   fetchTransaction: async (req, res) => {
     try {
       const idUser = req.user.id;
-      const { startDate, endDate } = req.query;
+      const { startDate, endDate, page = 1, pageSize = 5, status } = req.query;
 
       let queryStr = `
         SELECT *
@@ -23,9 +23,46 @@ module.exports = {
         )} AND ${db.escape(endDate)}`;
       }
 
-      const transaction = await query(queryStr);
+      // Apply status filter
+      if (status) {
+        queryStr += ` AND transactions.id_transaction_status = ${db.escape(
+          status
+        )}`;
+      }
 
-      res.status(200).send(transaction);
+      // Add pagination
+      const offset = (page - 1) * pageSize;
+      queryStr += ` LIMIT ${offset}, ${pageSize}`;
+
+      const transactions = await query(queryStr);
+
+      // Get total count for pagination
+      let totalCountQuery = `
+        SELECT COUNT(*) AS totalCount
+        FROM transactions
+        WHERE transactions.id_user = ${db.escape(idUser)}
+      `;
+      if (status) {
+        totalCountQuery += ` AND transactions.id_transaction_status = ${db.escape(
+          status
+        )}`;
+      }
+
+      const totalCountResult = await query(totalCountQuery);
+      const totalCount = totalCountResult[0].totalCount;
+
+      res.status(200).send({ transactions, totalCount });
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
+  fetchTransactionStatus: async (req, res) => {
+    try {
+      const transactionStatus = await query(
+        `SELECT * FROM transactions_status`
+      );
+      return res.status(200).send(transactionStatus);
     } catch (error) {
       res.status(error.status || 500).send(error);
     }
@@ -54,17 +91,6 @@ module.exports = {
       const transaction = await query(queryStr);
 
       res.status(200).send(transaction);
-    } catch (error) {
-      res.status(error.status || 500).send(error);
-    }
-  },
-
-  fetchTransactionStatus: async (req, res) => {
-    try {
-      const transactionStatus = await query(
-        `SELECT * FROM transactions_status`
-      );
-      return res.status(200).send(transactionStatus);
     } catch (error) {
       res.status(error.status || 500).send(error);
     }
