@@ -6,6 +6,7 @@ import { format, endOfDay, addDays } from "date-fns";
 import TransactionItem from "./transactionItem";
 import Pagination from "./pagination";
 import SearchBar from "./searchBar";
+import AdminLayout from "../../../components/AdminLayout";
 
 function OrderList() {
   const [transactions, setTransactions] = useState([]);
@@ -156,64 +157,70 @@ function OrderList() {
 
   console.log(currentPage, "PAGE");
   return (
-    <div>
-      <div className="flex justify-center mt-8">
-        <div className="space-x-4">
-          <button
-            className={`px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold ${
-              selectedStatus === 0 ? "bg-gray-300" : ""
-            }`}
-            onClick={() => handleStatusChange(0)}
-          >
-            <span className="text-base">All</span>
-          </button>
-          {transactionStatus.map((status) => (
-            <button
-              key={status.id_transaction_status}
-              className={`px-4 py-2 rounded hover:bg-yellow-200 text-yellow-800 font-semibold ${
-                selectedStatus === status.id_transaction_status
-                  ? "bg-yellow-200"
-                  : ""
-              }`}
-              onClick={() => handleStatusChange(status.id_transaction_status)}
-            >
-              <span className="text-base">{status.status_name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-      <SearchBar
-        searchQuery={searchQuery}
-        handleSearch={handleSearch}
-        startDate={startDate}
-        endDate={endDate}
-        handleDateRangeChange={handleDateRangeChange}
-        showCalendar={showCalendar}
-        toggleCalendar={toggleCalendar}
-      />
-      {transactions.length > 0 ? (
-        <>
-          {filteredTransactions.map((group) => (
-            <TransactionItem
-              key={group.id_transaction}
-              group={group}
-              handleOrderClick={handleOrderClick}
-            />
-          ))}
-          <div className="flex justify-center mt-8 mb-10">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              handlePageChange={handlePageChange}
-            />
+    <>
+      <AdminLayout>
+        <div>
+          <div className="flex justify-center mt-8">
+            <div className="space-x-4">
+              <button
+                className={`px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold ${
+                  selectedStatus === 0 ? "bg-gray-300" : ""
+                }`}
+                onClick={() => handleStatusChange(0)}
+              >
+                <span className="text-base">All</span>
+              </button>
+              {transactionStatus.map((status) => (
+                <button
+                  key={status.id_transaction_status}
+                  className={`px-4 py-2 rounded hover:bg-yellow-200 text-yellow-800 font-semibold ${
+                    selectedStatus === status.id_transaction_status
+                      ? "bg-yellow-200"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    handleStatusChange(status.id_transaction_status)
+                  }
+                >
+                  <span className="text-base">{status.status_name}</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </>
-      ) : (
-        <div className="flex justify-center my-52">
-          <p className="text-gray-500 text-lg">No order recorded</p>
+          <SearchBar
+            searchQuery={searchQuery}
+            handleSearch={handleSearch}
+            startDate={startDate}
+            endDate={endDate}
+            handleDateRangeChange={handleDateRangeChange}
+            showCalendar={showCalendar}
+            toggleCalendar={toggleCalendar}
+          />
+          {transactions.length > 0 ? (
+            <>
+              {filteredTransactions.map((group) => (
+                <TransactionItem
+                  key={group.id_transaction}
+                  group={group}
+                  handleOrderClick={handleOrderClick}
+                />
+              ))}
+              <div className="flex justify-center mt-8 mb-10">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  handlePageChange={handlePageChange}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex justify-center my-52">
+              <p className="text-gray-500 text-lg">No order recorded</p>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </AdminLayout>
+    </>
   );
 }
 
