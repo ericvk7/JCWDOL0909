@@ -42,10 +42,18 @@ module.exports = {
         FROM transactions
         WHERE transactions.id_user = ${db.escape(idUser)}
       `;
+
       if (status) {
         totalCountQuery += ` AND transactions.id_transaction_status = ${db.escape(
           status
         )}`;
+      }
+
+      // Check if startDate and endDate are provided
+      if (startDate && endDate) {
+        totalCountQuery += ` AND transactions.date BETWEEN ${db.escape(
+          startDate
+        )} AND ${db.escape(endDate)}`;
       }
 
       const totalCountResult = await query(totalCountQuery);
@@ -79,6 +87,7 @@ module.exports = {
           INNER JOIN transaction_products ON transactions.id_transaction = transaction_products.id_transaction
           INNER JOIN products ON transaction_products.id_product = products.id_product
           INNER JOIN transactions_status ON transactions.id_transaction_status = transactions_status.id_transaction_status
+          INNER JOIN users ON transactions.id_user = users.id_user
         `;
 
       // Check if startDate and endDate are provided
