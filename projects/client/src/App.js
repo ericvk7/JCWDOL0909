@@ -30,6 +30,8 @@ import BlankPage from "./pages/Error/BlankPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
+import ProductForm from "./pages/Admin/Product/ProductForm";
+import EditProductForm from "./pages/Admin/Product/EditProductForm";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -108,6 +110,8 @@ function App() {
         <Route path="/admin/addProduct" element={<AddProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
+        <Route path="/admin/Product" element={<ProductForm />} />
+        <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
 
         {/* Routes for super admin  */}
       </Routes>

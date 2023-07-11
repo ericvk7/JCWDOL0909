@@ -51,7 +51,6 @@ const AddProduct = () => {
   useEffect(() => {
     Axios.get("http://localhost:8000/category")
       .then((response) => {
-        console.log(response.data);
         setCategories(response.data);
       })
       .catch((error) => {

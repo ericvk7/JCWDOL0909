@@ -18,18 +18,17 @@ function EditProductForm({ editProductData }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const formData = new FormData();
     formData.append("productName", name);
     formData.append("productPrice", price);
     formData.append("productStock", stock);
     formData.append("productDescription", description);
+    formData.append("file", image);
     formData.append("id_category", category);
 
     if (image) {
       formData.append("file", image);
     }
-
     try {
       const response = await Axios.patch(
         `http://localhost:8000/admin/editProduct/${id}`,
@@ -40,8 +39,6 @@ function EditProductForm({ editProductData }) {
           },
         }
       );
-      console.log(response);
-      console.log(formData);
       if (!response.data.success) {
         throw new Error(response.data.message);
       } else {
@@ -57,7 +54,6 @@ function EditProductForm({ editProductData }) {
     if (file && file instanceof Blob) {
       // Periksa apakah file adalah objek Blob
       setImage(file);
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -70,7 +66,7 @@ function EditProductForm({ editProductData }) {
     if (product && product.image) {
       setPreviewImage(`http://localhost:8000/${product.image}`);
     } else {
-      setPreviewImage("");
+      setPreviewImage(""); // Mengubah nilainya menjadi string kosong
     }
   }, [product]);
 
@@ -89,7 +85,6 @@ function EditProductForm({ editProductData }) {
         setProduct(productData);
         setPreviewImage(productData.image);
       } catch (error) {
-        console.log(error);
         alert(error.message);
       }
     };
@@ -252,7 +247,7 @@ function EditProductForm({ editProductData }) {
                 type="submit"
                 className="inline-flex items-center justify-center px-4 py-2 hover:text-black border border-transparent text-sm font-medium rounded-md text-black bg-[#EDA415] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
-                Save
+                Save{" "}
               </button>
             </div>
           </form>
