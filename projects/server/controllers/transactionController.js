@@ -74,6 +74,18 @@ module.exports = {
         await query(queryStr);
       }
 
+      // Update product stock
+      const updateProductStocks = productData.map(
+        (product) =>
+          `UPDATE products SET stock = stock - ${db.escape(
+            product.quantity
+          )} WHERE id_product = ${db.escape(product.id_product)}`
+      );
+
+      for (const queryStr of updateProductStocks) {
+        await query(queryStr);
+      }
+
       return res.status(200).send("Transaction created successfully");
     } catch (error) {
       console.log(error);
