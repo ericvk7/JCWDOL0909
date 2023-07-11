@@ -36,26 +36,47 @@ module.exports = {
       res.status(error.status || 500).send(error);
     }
   },
+  fetchTransactionShipping: async (req, res) => {
+    try {
+      const shippingData = await query(`SELECT * FROM shippings`);
+      return res.status(200).send(shippingData);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
 
   createTransaction: async (req, res) => {
     try {
       const idUser = req.user.id;
+      const { productData, invoice_number, date, id_shipping, total_price } =
+        req.body;
 
-      let getUserQuery = `SELECT * FROM users WHERE id_user=${db.escape(
+      // Insert transaction into transactions table
+      const createTransaction = `INSERT INTO transactions VALUES (null, ${db.escape(
         idUser
-      )}`;
-      let isUserExist = await query(getUserQuery);
-      if (isUserExist.length < 0) {
-        return res.status(200).send({ message: "User does not exist" });
-      }
-      const createTransaction = await query(
-        `INSERT INTO transactions VALUES (null, ${db.escape(
-          idUser
-        )}, ${db.escape(idTransaction)})`
+      )}, ${db.escape(total_price)}, ${db.escape(
+        id_shipping
+      )}, null, ${db.escape(date)}, ${db.escape(invoice_number)}, 1, null)`;
+
+      const createTransactionResult = await query(createTransaction);
+      const id_transaction = createTransactionResult.insertId;
+
+      // Insert transaction products into transaction_products table
+      const insertTransactionProducts = productData.map(
+        (product) =>
+          `INSERT INTO transaction_products
+           VALUES (null, ${db.escape(id_transaction)}, ${db.escape(
+            product.id_product
+          )}, ${db.escape(product.quantity)})`
       );
 
-      return res.status(200).send(createTransaction);
+      for (const queryStr of insertTransactionProducts) {
+        await query(queryStr);
+      }
+
+      return res.status(200).send("Transaction created successfully");
     } catch (error) {
+      console.log(error);
       res.status(error.status || 500).send(error);
     }
   },

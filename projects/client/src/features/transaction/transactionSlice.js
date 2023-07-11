@@ -17,9 +17,18 @@ const transactionSlice = createSlice({
     setTotalPrice: (state, action) => {
       state.totalPrice = action.payload;
     },
+    resetTransaction: (state) => {
+      state.orderId = null;
+      state.transactionDate = "";
+      state.totalPrice = 0;
+    },
   },
 });
 
-export const { setOrderId, setTransactionDate, setTotalPrice } =
-  transactionSlice.actions;
+export const {
+  setOrderId,
+  setTransactionDate,
+  setTotalPrice,
+  resetTransaction,
+} = transactionSlice.actions;
 export default transactionSlice.reducer;

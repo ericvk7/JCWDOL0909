@@ -1,16 +1,25 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import Axios from "axios";
 import {
   setOrderId,
   setTransactionDate,
   setTotalPrice,
+  resetTransaction,
 } from "../../features/transaction/transactionSlice";
+import { resetCart } from "../../features/cart/cartSlice";
+import Swal from "sweetalert2";
 
 function Transaction() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [shippingList, setShippingList] = useState([]);
+  const [selectedShippingId, setSelectedShippingId] = useState("");
+  const [shippingCost, setShippingCost] = useState(0);
+  const [fixedShippingCost, setFixedShippingCost] = useState(0);
+
   const cartItems = useSelector((state) => state.cart.items);
   const orderDetails = useSelector((state) => state.transaction.orderDetails);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,10 +27,23 @@ function Transaction() {
     (total, item) => total + item.price * item.quantity,
     0
   );
-
-  const shippingCost = 15000;
-  const transactionDate = moment().format("DD-MM-YYYY");
+  const userToken = localStorage.getItem("user_token");
+  // const shippingCost = 15000;
+  const transactionDate = moment().format("YYYY-MM-DD");
   const total = subtotal + shippingCost;
+  const orderId = useSelector((state) => state.transaction.orderId);
+  const idProduct = cartItems.map((item) => item.id_product);
+  const quantity = cartItems.map((item) => item.quantity);
+  const fetchShippingData = async () => {
+    try {
+      const response = await Axios.get(
+        "http://localhost:8000/transactions/fetchTransactionShipping"
+      );
+      setShippingList(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const generateOrderId = () => {
     const timestamp = moment().format("YYYYMMDDHHmm");
@@ -40,16 +62,63 @@ function Transaction() {
     dispatch(setTotalPrice(total));
   }, [dispatch, total, transactionDate]);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  useEffect(() => {
+    fetchShippingData();
+  }, []);
+
+  const handleSubmitOrder = async () => {
+    const productData = cartItems.map((item) => ({
+      id_product: item.id_product,
+      quantity: item.quantity,
+    }));
+
+    const transactionData = {
+      productData,
+      invoice_number: orderId,
+      date: transactionDate,
+      id_shipping: selectedShippingId,
+      total_price: total,
+    };
+
+    try {
+      const response = await Axios.post(
+        "http://localhost:8000/transactions/createTransaction",
+        transactionData,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: `Your order has been placed successfully with ORDER ID: ${orderId}`,
+      });
+      // setIsModalOpen(true); // Setelah berhasil mengirim data, buka modal
+      dispatch(resetCart());
+      dispatch(resetTransaction());
+      navigate("/product");
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  useEffect(() => {
+    const selectedShipping = shippingList.find(
+      (shipping) => shipping.id_shipping === selectedShippingId
+    );
+    if (selectedShipping) {
+      setFixedShippingCost(selectedShipping.shipping_cost);
+    } else {
+      setFixedShippingCost(0);
+    }
+  }, [selectedShippingId, shippingList]);
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
-  const orderId = useSelector((state) => state.transaction.orderId);
-
   return (
     <>
       <div className="flex flex-col items-center  border-b bg-white py-4 sm:flex-row sm:px-10 lg:px-20 xl:px-32">
@@ -173,10 +242,25 @@ function Transaction() {
                   alt=""
                 />
                 <div className="ml-5">
-                  <span className="mt-2 font-semibold">Fedex Delivery</span>
-                  <p className="text-slate-500 text-sm leading-6">
-                    Delivery: 2-4 Days
-                  </p>
+                  <select
+                    name="shipping"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    value={selectedShippingId}
+                    onChange={(event) =>
+                      setSelectedShippingId(event.target.value)
+                    }
+                    required
+                  >
+                    <option value="">Select Shipping Method</option>
+                    {shippingList.map((shipping) => (
+                      <option
+                        key={shipping.id_shipping}
+                        value={shipping.id_shipping}
+                      >
+                        {shipping.shipping_method} - Rp {shipping.shipping_cost}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </label>
             </div>
@@ -231,7 +315,9 @@ function Transaction() {
                 <p className="font-semibold text-gray-900">Rp {subtotal}</p>
               </div>
               <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-gray-900">Shipping</p>
+                <p className="text-sm font-medium text-gray-900">
+                  Shipping Cost
+                </p>
                 <p className="font-semibold text-gray-900">Rp {shippingCost}</p>
               </div>
             </div>
@@ -242,7 +328,7 @@ function Transaction() {
           </div>
           <button
             className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white"
-            onClick={openModal}
+            onClick={handleSubmitOrder}
           >
             Place Order
           </button>
