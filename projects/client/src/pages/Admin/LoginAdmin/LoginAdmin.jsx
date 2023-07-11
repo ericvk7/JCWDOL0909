@@ -15,11 +15,7 @@ function LoginAdmin() {
 
   useEffect(() => {
     if (adminGlobal.id > 0) {
-<<<<<<< HEAD
       navigate("/dashboard");
-=======
-      navigate("/admin/createAdmin");
->>>>>>> Features-FP-22
     }
   }, [adminGlobal, navigate]);
 
@@ -41,16 +37,9 @@ function LoginAdmin() {
               d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
             />
           </svg>
-<<<<<<< HEAD
           <h1 className="text-3xl font-bold text-[#EDA415] mt-5 pb-5">
             Admin Sign In
           </h1>
-=======
-          <h1 className="text-3xl font-bold text-[#EDA415] pb-10">Sign In</h1>
-          <h3 className="text-1xl font-semibold text-gray-500 pb-5">
-            Sign in to your account!
-          </h3>
->>>>>>> Features-FP-22
 
           <LoginAdminForm handleLoginAdmin={handleLoginAdmin} />
         </div>

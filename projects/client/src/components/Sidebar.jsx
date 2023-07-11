@@ -174,9 +174,9 @@ function Sidebar() {
             </li>
           </ul>
         </div>
+      </aside>
       </div>
-    </div>
-  );
-}
+      );
+    }
 
 export default Sidebar;

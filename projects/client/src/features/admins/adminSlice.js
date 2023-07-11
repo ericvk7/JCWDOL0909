@@ -11,12 +11,9 @@ export const adminSlice = createSlice({
       email: "",
       id_role: "",
     },
-<<<<<<< HEAD
     totalProductsSoldBranch: [],
     totalTransactionBranch: [],
     totalUsersBranch: [],
-=======
->>>>>>> Features-FP-22
   },
   reducers: {
     setAdmin: (state, action) => {
@@ -30,7 +27,6 @@ export const adminSlice = createSlice({
         id_role: "",
       };
     },
-<<<<<<< HEAD
     setTotalProductsSoldBranch: (state, action) => {
       state.totalProductsSoldBranch = action.payload;
     },
@@ -50,12 +46,6 @@ export const {
   setTotalTransactionBranch,
   setTotalUsersBranch,
 } = adminSlice.actions;
-=======
-  },
-});
-
-export const { setAdmin, resetAdmin } = adminSlice.actions;
->>>>>>> Features-FP-22
 export default adminSlice.reducer;
 const userToken = localStorage.getItem("user_token");
 
@@ -94,11 +84,7 @@ export function checkLoginAdmin(token) {
           },
         }
       );
-<<<<<<< HEAD
       console.log(response, "RESPONSE");
-=======
-
->>>>>>> Features-FP-22
       if (response.status === 200) {
         dispatch(setAdmin(response.data.data));
       } else {
@@ -111,7 +97,6 @@ export function checkLoginAdmin(token) {
     }
   };
 }
-<<<<<<< HEAD
 
 export function fetchTotalProductsSoldBranch() {
   return async (dispatch) => {
@@ -158,5 +143,3 @@ export function fetchTotalUsersBranch() {
     }
   };
 }
-=======
->>>>>>> Features-FP-22
