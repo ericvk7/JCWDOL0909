@@ -1,9 +1,26 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { db, query } = require("../database");
+<<<<<<< HEAD
 const nodemailer = require("../helpers/nodemailer");
 
 module.exports = {
+=======
+
+module.exports = {
+  fetchUser: async (req, res) => {
+    try {
+      const idParams = parseInt(req.params.id);
+
+      const users = await query(
+        `SELECT * FROM users WHERE id_admin = ${db.escape(idParams)}`
+      );
+      return res.status(200).send(users);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+>>>>>>> Features-FP-22
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -45,7 +62,11 @@ module.exports = {
   checkLoginAdmin: async (req, res) => {
     try {
       const admins = await query(
+<<<<<<< HEAD
         `SELECT * FROM admins WHERE id_admin = ${db.escape(req.user.id)}`
+=======
+        `SELECT * FROM admins WHERE id_admin = ${db.escape(req.admin.id)}`
+>>>>>>> Features-FP-22
       );
       console.log(admins);
       return res.status(200).send({
@@ -60,6 +81,7 @@ module.exports = {
       res.status(error.status || 500).send(error);
     }
   },
+<<<<<<< HEAD
   fetchAllBranch: async (req, res) => {
     try {
       const branch = await query(`SELECT * FROM branches`);
@@ -158,4 +180,6 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+=======
+>>>>>>> Features-FP-22
 };

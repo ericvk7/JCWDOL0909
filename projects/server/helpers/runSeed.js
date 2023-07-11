@@ -1,6 +1,10 @@
 const { db, query } = require("../database");
 const bcrypt = require("bcrypt");
 const nodemailer = require("../helpers/nodemailer");
+<<<<<<< HEAD
+=======
+const jwt = require("jsonwebtoken");
+>>>>>>> Features-FP-22
 
 exports.runSeed = async function () {
   console.log("run seed ...");
@@ -11,9 +15,15 @@ exports.runSeed = async function () {
       id_role: "1",
     },
     {
+<<<<<<< HEAD
       name: "dibpy",
       email: "dibpy13@gmail.com",
       id_role: "2",
+=======
+      name: "adibpy",
+      email: "adib.yadri@gmail.com",
+      id_role: "1",
+>>>>>>> Features-FP-22
     },
   ];
 

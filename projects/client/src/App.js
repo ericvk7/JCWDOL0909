@@ -52,7 +52,6 @@ function App() {
     if (userToken) {
       dispatch(checkLogin(userToken));
     } else if (adminToken) {
-      console.log("masuk");
       dispatch(checkLoginAdmin(adminToken));
     }
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
