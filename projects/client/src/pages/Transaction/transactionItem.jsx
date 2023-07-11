@@ -102,6 +102,24 @@ function TransactionItem({ group, handleOrderClick }) {
             </>
           )}
         </div>
+        <div className="flex justify-center items-center mt-4">
+          {group.items[0].id_transaction_status === 2 && (
+            <>
+              <button className="bg-yellow-200 border-2 mx-10 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded">
+                Cancel
+              </button>
+            </>
+          )}
+        </div>
+        <div className="flex justify-center items-center mt-4">
+          {group.items[0].id_transaction_status === 4 && (
+            <>
+              <button className="bg-yellow-200 border-2 mx-10 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded">
+                Confirm Order
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
