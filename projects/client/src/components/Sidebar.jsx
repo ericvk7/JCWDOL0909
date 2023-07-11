@@ -8,6 +8,8 @@ function Sidebar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const adminGlobal = useSelector((state) => state.admins.admin);
+
   return (
     <div>
       <button
@@ -136,7 +138,7 @@ function Sidebar() {
                     clip-rule="evenodd"
                   ></path>
                 </svg>
-                {userGlobal.id > 0 ? (
+                {adminGlobal.id > 0 ? (
                   <span
                     className="flex-1 ml-3 whitespace-nowrap"
                     onClick={() => {
