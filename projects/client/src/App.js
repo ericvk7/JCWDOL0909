@@ -55,6 +55,9 @@ function App() {
   }, [userToken, adminToken]); // Menambahkan dependensi userToken
   console.log(adminToken);
 
+  console.log(adminGlobal.id_role);
+  console.log(typeof adminGlobal.id_role);
+
   return (
     <div>
       {shouldShowNavbar &&
@@ -94,12 +97,10 @@ function App() {
         <Route path="/user/orderlist" element={<OrderList />} />
         <Route path="*" element={<NotFound />} />
 
-        {/* {adminGlobal.id_role === 1 && ( */}
         <>
           <Route path="/admin/createAdmin" element={<CreateAdmin />} />
           <Route path="/admin/order" element={<OrderListAdmin />} />
         </>
-        {/* )} */}
         {/* Routes for admin  */}
         <Route path="/admin/login" element={<LoginAdmin />} />
         <Route path="/blankPage" element={<BlankPage />} />

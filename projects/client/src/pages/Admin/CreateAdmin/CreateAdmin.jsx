@@ -18,11 +18,11 @@ const CreateAdmin = () => {
   const navigate = useNavigate();
   const adminGlobal = useSelector((state) => state.admins.admin);
 
-  // useEffect(() => {
-  //   if (adminGlobal.id_role === 2) {
-  //     navigate("/blankPage");
-  //   }
-  // }, [adminGlobal.id_role, navigate]);
+  useEffect(() => {
+    if (adminGlobal.id_role === 2) {
+      navigate("/notFound");
+    }
+  }, [adminGlobal.id_role, navigate]);
 
   const handleLogin = () => {
     navigate("/admin/login");
