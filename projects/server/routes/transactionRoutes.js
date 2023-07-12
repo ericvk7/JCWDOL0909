@@ -15,9 +15,12 @@ router.get(
   transactionController.fetchTransactionStatus
 );
 router.delete(
-  "/cancelTransaction",
-  verifyToken,
+  "/cancelTransaction/:id",
   transactionController.cancelTransaction
+);
+router.post(
+  "/confirmTransaction/:id",
+  transactionController.confirmTransaction
 );
 
 module.exports = router;

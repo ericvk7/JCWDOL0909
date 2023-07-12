@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Axios from "axios";
 
-function TransactionItem({ group, handleOrderClick, fetchTransaction }) {
+function TransactionItem({ group, handleOrderClick, fetchTransactions }) {
   const handleCancelTransaction = async (categoryId) => {
     const userToken = localStorage.getItem("user_token");
 
@@ -25,7 +25,7 @@ function TransactionItem({ group, handleOrderClick, fetchTransaction }) {
             },
           }
         );
-        fetchTransaction();
+        fetchTransactions();
         if (!response.data.success) {
           Swal.fire(response.data);
         } else {
