@@ -1,13 +1,13 @@
 import React from "react";
 import AddCategory from "../../Category/addCategory";
 import AdminLayout from "../../../components/AdminLayout";
-import TransactionsTab from "./SalesReportsTab";
+import TransactionTab from "./TransactionTab";
 
 function AdminTransactions() {
   return (
     <AdminLayout>
       <div>
-        <TransactionsTab />
+        <TransactionTab />
       </div>
     </AdminLayout>
   );
