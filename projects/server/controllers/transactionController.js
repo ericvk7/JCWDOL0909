@@ -76,6 +76,21 @@ module.exports = {
     }
   },
 
+  cancelTransaction: async (req, res) => {
+    try {
+      const idUser = req.user.id;
+      const transactionStatus = await query(
+        `SELECT * FROM transactions 
+        JOIN transaction_products ON transactions.id_transaction = transaction_products.id_transaction
+        WHERE transactions.id_user = ${idUser}
+        AND transactions.id_transaction_status = 2`
+      );
+      return res.status(200).send(transactionStatus);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
   fetchTransactions: async (req, res) => {
     try {
       const { startDate, endDate, page = 1, pageSize = 5, status } = req.query;

@@ -1,6 +1,42 @@
-import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import Axios from "axios";
 
-function TransactionItem({ group, handleOrderClick }) {
+function TransactionItem({ group, handleOrderClick, fetchTransaction }) {
+  const handleCancelTransaction = async (categoryId) => {
+    const userToken = localStorage.getItem("user_token");
+
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "This order will be canceled.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, cancel it!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        const response = await Axios.delete(
+          `http://localhost:8000/user/cancelTransaction/${categoryId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        fetchTransaction();
+        if (!response.data.success) {
+          Swal.fire(response.data);
+        } else {
+          Swal.fire("Success", response.data.message, "success");
+        }
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
   return (
     <div
       key={group.id_transaction}
@@ -10,7 +46,7 @@ function TransactionItem({ group, handleOrderClick }) {
         <div>
           <h3 className="text-base font-semibold">Invoice number</h3>
           <p className="text-gray-600 text-sm">
-            {group.items[0].invoiceNumber}
+            {group.items[0].invoice_number}
           </p>
         </div>
         <div className="flex items-center">
@@ -96,7 +132,12 @@ function TransactionItem({ group, handleOrderClick }) {
               >
                 Pay Now
               </button>
-              <button className="bg-yellow-200 border-2 mx-10 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded">
+              <button
+                onClick={() =>
+                  handleCancelTransaction(group.items[0].id_transaction)
+                }
+                className="bg-yellow-200 border-2 mx-10 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded"
+              >
                 Cancel
               </button>
             </>

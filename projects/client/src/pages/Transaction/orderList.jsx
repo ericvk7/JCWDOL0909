@@ -106,7 +106,6 @@ function OrderList() {
     }
   };
 
-  console.log(transactions, "transaction");
   const fetchTransactionStatus = async () => {
     try {
       const response = await axios.get(
@@ -198,6 +197,7 @@ function OrderList() {
               key={group.id_transaction}
               group={group}
               handleOrderClick={handleOrderClick}
+              fetchTransactions={fetchTransactions}
             />
           ))}
           <div className="flex justify-center mt-8 mb-10">

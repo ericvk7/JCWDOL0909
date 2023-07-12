@@ -14,5 +14,10 @@ router.get(
   "/fetchTransactionStatus",
   transactionController.fetchTransactionStatus
 );
+router.delete(
+  "/cancelTransaction",
+  verifyToken,
+  transactionController.cancelTransaction
+);
 
 module.exports = router;
