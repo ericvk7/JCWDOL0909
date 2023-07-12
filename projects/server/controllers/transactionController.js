@@ -29,7 +29,7 @@ module.exports = {
           INNER JOIN transactions_status ON transactions.id_transaction_status = transactions_status.id_transaction_status
           WHERE transactions.id_user = ${db.escape(idUser)}
           `;
-
+      // testing
       // Add pagination
       console.log(queryStr);
       const transactions = await query(queryStr);
