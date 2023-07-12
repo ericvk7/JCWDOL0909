@@ -6,6 +6,7 @@ import { format, endOfDay, addDays } from "date-fns";
 import TransactionItem from "./transactionItem";
 import Pagination from "./pagination";
 import SearchBar from "./searchBar";
+import Swal from "sweetalert2";
 
 function OrderList() {
   const [transactions, setTransactions] = useState([]);
@@ -133,6 +134,74 @@ function OrderList() {
     }
   };
 
+  const handleCancelTransaction = async (transactionId) => {
+    const userToken = localStorage.getItem("user_token");
+
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "This order will be canceled.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, cancel it!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        const response = await axios.patch(
+          `http://localhost:8000/transactions/cancelTransaction/${transactionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        fetchTransactions();
+        if (!response.data.success) {
+          Swal.fire(response.data);
+        } else {
+          Swal.fire("Success", response.data.message, "success");
+        }
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
+  const handleConfirmTransaction = async (transactionId) => {
+    const userToken = localStorage.getItem("user_token");
+
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Confirm your order.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, confirm!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        const response = await axios.patch(
+          `http://localhost:8000/transactions/confirmTransaction/${transactionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        fetchTransactions();
+        if (!response.data.success) {
+          Swal.fire(response.data);
+        } else {
+          Swal.fire("Success", response.data.message, "success");
+        }
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -197,7 +266,7 @@ function OrderList() {
               key={group.id_transaction}
               group={group}
               handleOrderClick={handleOrderClick}
-              fetchTransactions={fetchTransactions}
+              handleCancelTransaction={handleCancelTransaction}
             />
           ))}
           <div className="flex justify-center mt-8 mb-10">

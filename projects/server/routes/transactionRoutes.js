@@ -14,11 +14,8 @@ router.get(
   "/fetchTransactionStatus",
   transactionController.fetchTransactionStatus
 );
-router.delete(
-  "/cancelTransaction/:id",
-  transactionController.cancelTransaction
-);
-router.post(
+router.patch("/cancelTransaction/:id", transactionController.cancelTransaction);
+router.patch(
   "/confirmTransaction/:id",
   transactionController.confirmTransaction
 );
