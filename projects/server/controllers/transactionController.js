@@ -47,7 +47,7 @@ module.exports = {
 
       // Get total count for pagination
       let totalCountQuery = `SELECT COUNT(*) AS totalCount FROM transactions ${
-        totalWhereCountQuery ? `WHERE ${totalWhereCountQuery} AND` : "WHERE"
+        totalWhereCountQuery ? ` ${totalWhereCountQuery} AND` : "WHERE"
       } id_user = ${db.escape(idUser)}`;
       console.log(totalCountQuery);
       const totalCountResult = await query(totalCountQuery);
