@@ -21,12 +21,12 @@ function EditProductForm({ editProductData }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
-    formData.append("productName", name);
-    formData.append("productPrice", price);
-    formData.append("productStock", stock);
-    formData.append("productDescription", description);
+    formData.append("productName", product.name || name);
+    formData.append("productPrice", product.price || price);
+    formData.append("productStock", product.stock || stock);
+    formData.append("productDescription", product.description || description);
     formData.append("file", image);
-    formData.append("id_category", category);
+    formData.append("id_category", product.id_category || category);
 
     try {
       const response = await Axios.patch(
@@ -41,23 +41,23 @@ function EditProductForm({ editProductData }) {
 
       if (!response.data.success || !response.data.updatedProduct) {
         throw new Error(response.data.message);
-      } else {
-        const editedProductData = {
-          productName: name || (product && product.name) || "",
-          productPrice: price || (product && product.price) || "",
-          productStock: stock || (product && product.stock) || "",
-          productDescription:
-            description || (product && product.description) || "",
-          image: response.data.updatedProduct.image || product.image,
-          id_category: category || (product && product.id_category) || "",
-        };
-
-        editProductData(editedProductData);
-        navigate("/admin/Product");
-        Swal.fire(response.data.message);
       }
+      // const editedProductData = {
+      //   productName: name || (product && product.name) || "",
+      //   productPrice: price || (product && product.price) || "",
+      //   productStock: stock || (product && product.stock) || "",
+      //   productDescription:
+      //     description || (product && product.description) || "",
+      //   image: response.data.updatedProduct.image || product.image,
+      //   id_category: category || (product && product.id_category) || "",
+      // };
+
+      // editProductData(editedProductData);
+      // navigate("/admin/Product");
+      // Swal.fire(response.data.message);
+      alert("product updated");
     } catch (error) {
-      Swal.fire(error.message);
+      // Swal.fire(error.message);
       console.log(error);
     }
   };

@@ -294,7 +294,9 @@ module.exports = {
       const idProduct = req.params.id;
 
       const { file } = req;
+      console.log(file);
       const filepath = file ? "/" + file.filename : null;
+      console.log(filepath);
       const updateProductQuery = `
         UPDATE products SET
         name = COALESCE(${db.escape(productName)}, name),
