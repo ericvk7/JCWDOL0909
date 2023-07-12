@@ -42,33 +42,38 @@ module.exports = {
     }
   },
 
-  fetchTransactionByBranch: async (req, res) => {
-    try {
-      const idUser = req.user.id;
-      const { startDate, endDate } = req.query;
+  // fetchTransactionByBranch: async (req, res) => {
+  //   try {
+  //     const idUser = req.user.id;
+  //     const { startDate, endDate } = req.query;
 
-      let queryStr = `
-        SELECT *
-        FROM transactions
-        INNER JOIN shippings ON transactions.id_shipping = shippings.id_shipping
-        INNER JOIN transaction_products ON transactions.id_transaction = transaction_products.id_transaction
-        INNER JOIN products ON transaction_products.id_product = products.id_product
-        INNER JOIN transactions_status ON transactions.id_transaction_status = transactions_status.id_transaction_status
-        WHERE transactions.id_user = ${db.escape(idUser)}
-      `;
+  //     let queryStr = `
+  //     SELECT *
+  //     FROM (
+  //         SELECT *
+  //         FROM transactions ${queryWhereHead} ${limitStr}
+  //     ) AS transactions
+  //     INNER JOIN shippings ON transactions.id_shipping = shippings.id_shipping
+  //     INNER JOIN transaction_products ON transactions.id_transaction = transaction_products.id_transaction
+  //     INNER JOIN products ON transaction_products.id_product = products.id_product
+  //     INNER JOIN transactions_status ON transactions.id_transaction_status = transactions_status.id_transaction_status
+  //     INNER JOIN admins ON transactions.id_user = admins.id_user
+  //     WHERE admins.id_branch = ${db.escape(idBranch)}
 
-      // Check if startDate and endDate are provided
-      if (startDate && endDate) {
-        queryStr += ` AND transactions.date BETWEEN ${db.escape(
-          startDate
-        )} AND ${db.escape(endDate)}`;
-      }
+  //     `;
 
-      const transaction = await query(queryStr);
+  //     // Check if startDate and endDate are provided
+  //     if (startDate && endDate) {
+  //       queryStr += ` AND transactions.date BETWEEN ${db.escape(
+  //         startDate
+  //       )} AND ${db.escape(endDate)}`;
+  //     }
 
-      res.status(200).send(transaction);
-    } catch (error) {
-      res.status(error.status || 500).send(error);
-    }
-  },
+  //     const transaction = await query(queryStr);
+
+  //     res.status(200).send(transaction);
+  //   } catch (error) {
+  //     res.status(error.status || 500).send(error);
+  //   }
+  // },
 };

@@ -1,6 +1,10 @@
 import React from "react";
 
-function TransactionItem({ group, handleOrderClick }) {
+function TransactionItem({
+  group,
+  handleCancelTransaction,
+  handleSendTransaction,
+}) {
   return (
     <div
       key={group.id_transaction}
@@ -87,18 +91,27 @@ function TransactionItem({ group, handleOrderClick }) {
           </h3>
         </div>
         <div className="flex justify-center items-center mt-4">
-          {group.items[0].id_transaction_status === 1 && (
-            <>
-              <button
-                onClick={() => handleOrderClick(group.items[0].id_transaction)}
-                className="bg-yellow-200 border-2 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded"
-              >
-                Pay Now
-              </button>
-              <button className="bg-yellow-200 border-2 mx-10 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded">
-                Cancel
-              </button>
-            </>
+          {group.items[0].id_transaction_status === 3 && (
+            <button
+              onClick={() =>
+                handleSendTransaction(group.items[0].id_transaction)
+              }
+              className="bg-yellow-200 border-2 mx-10 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded"
+            >
+              Send Order
+            </button>
+          )}
+          {(group.items[0].id_transaction_status === 1 ||
+            group.items[0].id_transaction_status === 2 ||
+            group.items[0].id_transaction_status === 3) && (
+            <button
+              onClick={() =>
+                handleCancelTransaction(group.items[0].id_transaction)
+              }
+              className="bg-yellow-200 border-2 mx-10 hover:bg-sky-900 hover:text-white font-semibold py-1 px-2 rounded"
+            >
+              Cancel
+            </button>
           )}
         </div>
       </div>

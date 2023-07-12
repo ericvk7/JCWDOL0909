@@ -7,6 +7,7 @@ import TransactionItem from "./transactionItem";
 import Pagination from "./pagination";
 import SearchBar from "./searchBar";
 import AdminLayout from "../../../components/AdminLayout";
+import Swal from "sweetalert2";
 
 function OrderList() {
   const [transactions, setTransactions] = useState([]);
@@ -14,7 +15,7 @@ function OrderList() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [transactionStatus, setTransactionStatus] = useState([]);
   const adminToken = localStorage.getItem("admin_token");
-  const pageSize = 5;
+  const itemsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [groupedTransactions, setGroupedTransactions] = useState({});
   const [filteredTransactions, setFilteredTransactions] = useState([]);
@@ -23,26 +24,20 @@ function OrderList() {
   const [endDate, setEndDate] = useState(null);
   const [showCalendar, setShowCalendar] = useState(false);
   const navigate = useNavigate();
-  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchTransactions();
-  }, [startDate, endDate, currentPage, selectedStatus]);
-
-  useEffect(() => {
     fetchTransactionStatus();
-  }, []);
+  }, [startDate, endDate]);
 
   useEffect(() => {
     const filtered = Object.values(groupedTransactions).filter((group) => {
       const transactionStatusMatch =
         selectedStatus === 0 ||
-        group.items.some(
-          (item) => item.id_transaction_status === selectedStatus
-        );
+        group.items[0].id_transaction_status === selectedStatus;
       const invoiceNumberMatch =
         searchQuery === "" ||
-        group.items[0].invoice_number.toUpperCase().includes(searchQuery);
+        group.items[0].invoiceNumber.toUpperCase().includes(searchQuery);
       return transactionStatusMatch && invoiceNumberMatch;
     });
     setFilteredTransactions(filtered);
@@ -67,11 +62,6 @@ function OrderList() {
     try {
       let formattedStartDate = null;
       let formattedEndDate = null;
-      let selectedTransactionStatus = "";
-      if (selectedStatus !== 0) {
-        selectedTransactionStatus = selectedStatus;
-      }
-
       if (startDate) {
         const startOfDayUTC = endOfDay(startDate);
         formattedStartDate = format(
@@ -84,30 +74,23 @@ function OrderList() {
         formattedEndDate = format(endOfDayUTC, "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
       }
       const response = await axios.get(
-        "http://localhost:8000/transactions/fetchTransactions",
+        "http://localhost:8000/admin/fetchTransactionByBranch",
         {
-          params: {
-            startDate: formattedStartDate,
-            endDate: formattedEndDate,
-            page: currentPage,
-            pageSize: pageSize,
-            status: selectedTransactionStatus,
-          },
-
           headers: {
             Authorization: `Bearer ${adminToken}`,
           },
+          params: {
+            startDate: formattedStartDate,
+            endDate: formattedEndDate,
+          },
         }
       );
-      const { totalCount } = response.data;
-      setTransactions(response.data.transactions);
-      setTotalPages(Math.ceil(totalCount / pageSize));
+      setTransactions(response.data);
     } catch (error) {
       console.error(error);
     }
   };
 
-  console.log(transactions, "transaction");
   const fetchTransactionStatus = async () => {
     try {
       const response = await axios.get(
@@ -120,26 +103,22 @@ function OrderList() {
   };
 
   const handleStatusChange = (statusId) => {
-    const selectedStatusNumber = parseInt(statusId);
-    setSelectedStatus(selectedStatusNumber);
-    console.log(statusId);
+    setSelectedStatus(parseInt(statusId));
     setCurrentPage(1);
   };
 
-  const handleOrderClick = async (transactionId) => {
-    try {
-      setSelectedOrder(transactionId);
-      navigate(`/payment/${transactionId}`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
 
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
+    setCurrentPage(page);
   };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedTransactions = filteredTransactions.slice(
+    startIndex,
+    endIndex
+  );
 
   const handleSearch = (e) => {
     const query = e.target.value.toUpperCase();
@@ -155,72 +134,128 @@ function OrderList() {
     setShowCalendar(!showCalendar);
   };
 
-  console.log(currentPage, "PAGE");
+  const handleCancelTransaction = async (transactionId) => {
+    const adminToken = localStorage.getItem("admin_token");
+
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "This order will be canceled.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, cancel it!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        const response = await axios.patch(
+          `http://localhost:8000/admin/cancelTransaction/${transactionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${adminToken}`,
+            },
+          }
+        );
+        fetchTransactions();
+        if (!response.data.success) {
+          Swal.fire(response.data);
+        } else {
+          Swal.fire("Success", response.data.message, "success");
+        }
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
+  const handleSendTransaction = async (transactionId) => {
+    const userToken = localStorage.getItem("user_token");
+
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "Confirm user order.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, confirm!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        const response = await axios.patch(
+          `http://localhost:8000/admin/sendTransaction/${transactionId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+            },
+          }
+        );
+        fetchTransactions();
+        if (!response.data.success) {
+          Swal.fire(response.data);
+        } else {
+          Swal.fire("Success", response.data.message, "success");
+        }
+      }
+    } catch (error) {
+      Swal.fire("Error", error.message, "error");
+    }
+  };
+
   return (
-    <>
-      <AdminLayout>
-        <div>
-          <div className="flex justify-center mt-8">
-            <div className="space-x-4">
+    <AdminLayout>
+      <div>
+        <div className="flex justify-center mt-8">
+          <div className="space-x-4">
+            <button
+              className={`px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold ${
+                selectedStatus === 0 ? "bg-gray-300" : ""
+              }`}
+              onClick={() => handleStatusChange(0)}
+            >
+              <span className="text-base">All</span>
+            </button>
+            {transactionStatus.map((status) => (
               <button
-                className={`px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold ${
-                  selectedStatus === 0 ? "bg-gray-300" : ""
+                key={status.id_transaction_status}
+                className={`px-4 py-2 rounded hover:bg-yellow-200 text-yellow-800 font-semibold ${
+                  selectedStatus === status.id_transaction_status
+                    ? "bg-yellow-200"
+                    : ""
                 }`}
-                onClick={() => handleStatusChange(0)}
+                onClick={() => handleStatusChange(status.id_transaction_status)}
               >
-                <span className="text-base">All</span>
+                <span className="text-base">{status.status_name}</span>
               </button>
-              {transactionStatus.map((status) => (
-                <button
-                  key={status.id_transaction_status}
-                  className={`px-4 py-2 rounded hover:bg-yellow-200 text-yellow-800 font-semibold ${
-                    selectedStatus === status.id_transaction_status
-                      ? "bg-yellow-200"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    handleStatusChange(status.id_transaction_status)
-                  }
-                >
-                  <span className="text-base">{status.status_name}</span>
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
-          <SearchBar
-            searchQuery={searchQuery}
-            handleSearch={handleSearch}
-            startDate={startDate}
-            endDate={endDate}
-            handleDateRangeChange={handleDateRangeChange}
-            showCalendar={showCalendar}
-            toggleCalendar={toggleCalendar}
-          />
-          {transactions.length > 0 ? (
-            <>
-              {filteredTransactions.map((group) => (
-                <TransactionItem
-                  key={group.id_transaction}
-                  group={group}
-                  handleOrderClick={handleOrderClick}
-                />
-              ))}
-              <div className="flex justify-center mt-8 mb-10">
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  handlePageChange={handlePageChange}
-                />
-              </div>
-            </>
-          ) : (
-            <div className="flex justify-center my-52">
-              <p className="text-gray-500 text-lg">No order recorded</p>
-            </div>
-          )}
         </div>
-      </AdminLayout>
-    </>
+        <SearchBar
+          searchQuery={searchQuery}
+          handleSearch={handleSearch}
+          startDate={startDate}
+          endDate={endDate}
+          handleDateRangeChange={handleDateRangeChange}
+          showCalendar={showCalendar}
+          toggleCalendar={toggleCalendar}
+        />
+        {displayedTransactions.map((group) => (
+          <TransactionItem
+            key={group.id_transaction}
+            group={group}
+            handleCancelTransaction={handleCancelTransaction}
+            handleSendTransaction={handleSendTransaction}
+          />
+        ))}
+        <div className="flex justify-center mt-8 mb-10">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+          />
+        </div>
+      </div>
+    </AdminLayout>
   );
 }
 
