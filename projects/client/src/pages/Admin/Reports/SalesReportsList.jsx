@@ -3,7 +3,7 @@ import Axios from "axios";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 
-function TransactionsList() {
+function SalesReportsList() {
   const adminToken = localStorage.getItem("admin_token");
   const dispatch = useDispatch();
   const [transactions, setTransactions] = useState([]);
@@ -300,4 +300,4 @@ function TransactionsList() {
   );
 }
 
-export default TransactionsList;
+export default SalesReportsList;
