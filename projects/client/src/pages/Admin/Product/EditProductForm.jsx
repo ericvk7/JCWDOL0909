@@ -1,10 +1,12 @@
 import AdminLayout from "../../../components/AdminLayout";
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function EditProductForm({ editProductData }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -26,9 +28,6 @@ function EditProductForm({ editProductData }) {
     formData.append("file", image);
     formData.append("id_category", category);
 
-    if (image) {
-      formData.append("file", image);
-    }
     try {
       const response = await Axios.patch(
         `http://localhost:8000/admin/editProduct/${id}`,
@@ -39,20 +38,33 @@ function EditProductForm({ editProductData }) {
           },
         }
       );
-      if (!response.data.success) {
+
+      if (!response.data.success || !response.data.updatedProduct) {
         throw new Error(response.data.message);
       } else {
-        alert(response.data.message);
+        const editedProductData = {
+          productName: name || (product && product.name) || "",
+          productPrice: price || (product && product.price) || "",
+          productStock: stock || (product && product.stock) || "",
+          productDescription:
+            description || (product && product.description) || "",
+          image: response.data.updatedProduct.image || product.image,
+          id_category: category || (product && product.id_category) || "",
+        };
+
+        editProductData(editedProductData);
+        navigate("/admin/Product");
+        Swal.fire(response.data.message);
       }
     } catch (error) {
-      console.error(error.message);
+      Swal.fire(error.message);
+      console.log(error);
     }
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file && file instanceof Blob) {
-      // Periksa apakah file adalah objek Blob
       setImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -66,7 +78,7 @@ function EditProductForm({ editProductData }) {
     if (product && product.image) {
       setPreviewImage(`http://localhost:8000/${product.image}`);
     } else {
-      setPreviewImage(""); // Mengubah nilainya menjadi string kosong
+      setPreviewImage("");
     }
   }, [product]);
 
@@ -83,7 +95,7 @@ function EditProductForm({ editProductData }) {
         );
         const productData = productResponse.data;
         setProduct(productData);
-        setPreviewImage(productData.image);
+        setPreviewImage(`http://localhost:8000/${productData.image}`);
       } catch (error) {
         alert(error.message);
       }
@@ -97,8 +109,9 @@ function EditProductForm({ editProductData }) {
       setName(editProductData.productName);
       setPrice(editProductData.productPrice);
       setStock(editProductData.productStock);
-      setDescription(editProductData.productDesc);
+      setDescription(editProductData.productDescription);
       setCategory(editProductData.id_category);
+      setPreviewImage(editProductData.image);
     }
   }, [editProductData]);
 
@@ -181,14 +194,14 @@ function EditProductForm({ editProductData }) {
                 <select
                   name="category"
                   className="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  value={category}
+                  value={category || (product && product.id_category) || ""}
                   onChange={(event) => setCategory(event.target.value)}
                 >
                   <option value="">{product && product.category_name}</option>
                   {categories.map((category) => (
                     <option
                       key={category.id_category}
-                      value={category.id_category}
+                      value={category.id_category.toString()}
                     >
                       {category.category_name}
                     </option>
@@ -247,7 +260,7 @@ function EditProductForm({ editProductData }) {
                 type="submit"
                 className="inline-flex items-center justify-center px-4 py-2 hover:text-black border border-transparent text-sm font-medium rounded-md text-black bg-[#EDA415] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
-                Save{" "}
+                Save
               </button>
             </div>
           </form>

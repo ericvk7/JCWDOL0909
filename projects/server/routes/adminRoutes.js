@@ -20,7 +20,12 @@ router.post(
   adminController.addProduct
 );
 router.get("/product/:id", adminController.fetchProductById);
-router.patch("/editProduct/:id", verifyToken, adminController.editProduct);
+router.patch(
+  "/editProduct/:id",
+  verifyToken,
+  upload.single("file"),
+  adminController.editProduct
+);
 router.delete("/deleteProduct/:id", adminController.deleteProduct);
 
 // Category Route

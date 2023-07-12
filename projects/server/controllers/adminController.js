@@ -293,25 +293,33 @@ module.exports = {
       } = req.body;
       const idProduct = req.params.id;
 
+      const { file } = req;
+      const filepath = file ? "/" + file.filename : null;
       const updateProductQuery = `
         UPDATE products SET
         name = COALESCE(${db.escape(productName)}, name),
         price = COALESCE(${db.escape(productPrice)}, price),
         stock = COALESCE(${db.escape(productStock)}, stock),
+        image = COALESCE(${db.escape(filepath)}, image),
         description = COALESCE(${db.escape(productDescription)}, description),
         id_category = COALESCE(${db.escape(id_category)}, id_category)
         WHERE id_product = ${db.escape(idProduct)}
       `;
-
+      console.log(updateProductQuery);
       const result = await query(updateProductQuery);
 
       if (result.affectedRows === 0) {
         return res.status(404).send("Product not found");
       }
 
-      res.status(200).send("Product Updated Successfully");
+      return res.status(200).send({
+        data: result,
+        message: "Product updated successfully!",
+        updatedImage: filepath, // Menggunakan nama properti "updatedImage" untuk menghindari kebingungan dengan properti "image" di objek "productData" yang dikirim sebagai respons.
+        success: true,
+      });
     } catch (error) {
-      console.error(error);
+      console.log(error);
       res.status(500).send(error.message || "Internal Server Error");
     }
   },
