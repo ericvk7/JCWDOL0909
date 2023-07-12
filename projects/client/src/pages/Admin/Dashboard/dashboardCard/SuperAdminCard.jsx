@@ -1,63 +1,72 @@
 import React, { useEffect } from 'react';
 import ApexCharts from 'apexcharts';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTotalProductsSoldBranch, fetchTotalTransactionBranch, fetchTotalUsersBranch } from '../../../../features/admins/adminSlice';
+import { fetchTotalRevenueByBranch } from '../../../../features/admins/adminSlice';
 
 function SuperAdminCard() {
 
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const dispatch = useDispatch()
-  const totalProductsSoldBranch = useSelector((state) => state.admins.totalProductsSoldBranch)
-  const totalTransactionBranch = useSelector((state) => state.admins.totalTransactionBranch)
-  const totalUsersBranch = useSelector((state) => state.admins.totalUsersBranch)
-  const productSeries = totalProductsSoldBranch
-  .map((item) => item.total_sold);
-  const transactionSeries = totalTransactionBranch
-  .map((item) => item.total_transactions);
-  const userSeries = totalUsersBranch
-  .map((item) => item.total_user);
+  const totalRevenueByBranch = useSelector((state) => state.admins.totalRevenueByBranch)
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  
+  const months = totalRevenueByBranch.reduce((months, item) => {
+    const date = new Date(item.Date);
+    const monthIndex = date.getMonth();
+    const monthName = monthNames[monthIndex];
+  
+    if (!months.includes(monthName)) {
+      months.push(monthName);
+    }
+  
+    return months;
+  }, []);
+  
+console.log(months)  
+  
+  
+  useEffect(() => {
+    dispatch(fetchTotalRevenueByBranch());
+  }, [dispatch]);
+  
+  console.log(totalRevenueByBranch)
+  
+  useEffect(() => {
+    const formatRevenue = (revenue) => {
+      if (revenue >= 1000000) {
+        return `${(revenue / 1000000).toFixed(1)}M`;
+      } else if (revenue >= 1000) {
+        return `${(revenue / 1000).toFixed(0)}K`;
+      } else {
+        return `${revenue}`;
+      }
+    };
+    let branchData = {}
+    totalRevenueByBranch.forEach(item => {
+      const { Branch, Revenue } = item;
+      if (!branchData[Branch]) {
+        branchData[Branch] = [];
+      }
+      branchData[Branch].push(Number(Revenue));
+    });
+  
+    const series = Object.entries(branchData).map(([branch, revenueData]) => ({
+      name: branch,
+      data: revenueData,
+    }));
 
-  
-  
-  useEffect(() => {
-    dispatch(fetchTotalProductsSoldBranch());
-  }, [dispatch]);
-  
-  useEffect(() => {
-    dispatch(fetchTotalTransactionBranch());
-  }, [dispatch]);
+    const maxRevenue = Math.max(...totalRevenueByBranch.map((item) => Number(item.Revenue)));
 
-  
-  useEffect(() => {
-    dispatch(fetchTotalUsersBranch());
-  }, [dispatch]);
-  
-  console.log('Jumlah: ', userSeries)
- 
-  useEffect(() => {
     const lineChartOptions = {
-      series: [
-        {
-          name: "Branch A",
-          data: [28, 29, 33, 36, 32, 32, 33, 35, 29, 28, 34, 35]
-        },
-        {
-          name: "Branch B",
-          data: [28, 39, 34, 20, 31, 23, 37, 25, 30, 36, 22, 38]
-        },
-        {
-          name: "Branch C",
-          data: [28, 32, 37, 21, 30, 22, 35, 26, 23, 33, 39, 24]
-        },
-        {
-          name: "Branch D",
-          data: [28, 22, 33, 37, 35, 26, 20, 38, 21, 23, 39, 30]
-        }
-      ],
+      series: series,
       chart: {
         height: 350,
         type: 'line',
+        width: "100%",
         dropShadow: {
           enabled: true,
           color: '#000',
@@ -77,12 +86,13 @@ function SuperAdminCard() {
       '#4682B4', '#DAA520', '#AFEEEE', '#6A5ACD', '#FF8C00', '#2E8B57', '#F4A460', '#ADD8E6', '#9370DB', '#F5DEB3'],
       dataLabels: {
         enabled: true,
+        formatter: (value, { seriesIndex, dataPointIndex, w }) => formatRevenue(value),
       },
       stroke: {
         curve: 'smooth'
       },
       title: {
-        text: 'Total Product sold by Branch',
+        text: 'Total Revenue by Branch',
         align: 'left'
       },
       grid: {
@@ -96,17 +106,20 @@ function SuperAdminCard() {
         size: 1
       },
       xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+        categories: months,
         title: {
           text: `${currentYear}`,
         }
       },
       yaxis: {
         title: {
-          text: 'Total Products'
+          text: 'Revenue'
         },
         min: 5,
-        max: 40
+        max: maxRevenue + (10%maxRevenue),
+        labels: {
+          formatter: (value) => formatRevenue(value),
+        },
       },
       legend: {
         position: 'top',
@@ -117,163 +130,23 @@ function SuperAdminCard() {
       }
     };
 
-    const lineChart = new ApexCharts(document.querySelector("#lineChart"), lineChartOptions);
-    lineChart.render();
+    if (totalRevenueByBranch.length > 0) {
+      const lineChart = new ApexCharts(document.querySelector("#lineChart"), lineChartOptions);
+      lineChart.render();
+  
+      // Cleanup chart on component unmount
+      return () => {
+        lineChart.destroy();
+      };
+    }
+  }, [totalRevenueByBranch, currentYear]); // Empty dependency array to ensure useEffect runs only once
 
-    // Cleanup chart on component unmount
-    return () => {
-      lineChart.destroy();
-    };
-  }, []); // Empty dependency array to ensure useEffect runs only once
-
-  useEffect(() => {
-    const columnChartOptions = {
-      series: [{
-        name: "Transactions",
-        data: transactionSeries,
-      }],
-      chart: {
-        height: 350,
-        type: 'bar',
-      },
-      plotOptions: {
-        bar: {
-          borderRadius: 10,
-          dataLabels: {
-            position: 'top', // top, center, bottom
-          },
-        },
-      },
-      dataLabels: {
-        enabled: true,
-        formatter: function (val) {
-          return val + ' transactions';
-        },
-        offsetY: -20,
-        style: {
-          fontSize: '12px',
-          colors: ['#304758'],
-        },
-      },
-      xaxis: {
-        categories: ['Branch A', 'Branch B', 'Branch C', 'Branch D'],
-        position: 'top',
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-        crosshairs: {
-          fill: {
-            type: 'gradient',
-            gradient: {
-              colorFrom: '#D8E3F0',
-              colorTo: '#BED1E6',
-              stops: [0, 100],
-              opacityFrom: 0.4,
-              opacityTo: 0.5,
-            },
-          },
-        },
-        tooltip: {
-          enabled: true,
-        },
-      },
-      yaxis: {
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
-        labels: {
-          show: false,
-          formatter: function (val) {
-            return val;
-          },
-        },
-      },
-      title: {
-        text: `Total Transaction in ${currentYear}`,
-        floating: true,
-        offsetY: 330,
-        align: 'center',
-        style: {
-          color: '#444',
-        },
-      },
-    };
-
-    const columnChart = new ApexCharts(document.querySelector('#columnChart'), columnChartOptions);
-    columnChart.render();
-
-    return () => {
-      columnChart.destroy();
-    };
-  }, []);
-
-  useEffect(() => {
-    const donutChartOptions = {
-      series: [44, 55, 41, 17],
-      chart: {
-        height: 350,
-        type: 'donut',
-      },
-      plotOptions: {
-        pie: {
-          startAngle: -90,
-          endAngle: 270
-        }
-      },
-      dataLabels: {
-        enabled: true,
-        formatter: function(val, opts) {
-          return opts.w.globals.series[opts.seriesIndex] + ' users';
-        }
-      },
-      fill: {
-        type: 'gradient',
-      },
-      legend: {
-        formatter: function(val, opts) {
-          // Manually input legend labels here
-          const legendLabels = ['Branch A', 'Branch B', 'Branch C', 'Branch D'];
-          return legendLabels[opts.seriesIndex];
-        }
-      },
-      title: {
-        text: 'Total Users'
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }]
-    };
-
-    const donutChart = new ApexCharts(document.querySelector('#donutChart'), donutChartOptions);
-    donutChart.render();
-
-    return () => {
-      donutChart.destroy();
-    };
-  }, []);
+  
 
   return (
     <div>
       <div className='p-6 mx-4 bg-white border-2 rounded-lg shadow-md
-    ' id="lineChart" />
-      <div className='p-6 mx-4 bg-white border-2 rounded-lg shadow-md
-    ' id="columnChart" />
-      <div className='p-6 mx-4 bg-white border-2 rounded-lg shadow-md
-    ' id="donutChart" />
+    ' id="lineChart"></div>
     </div>
   );
 }

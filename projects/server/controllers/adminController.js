@@ -127,39 +127,18 @@ module.exports = {
       return res.status(500).send({ message: "Internal server error" });
     }
   },
-  totalProductsSoldBranch: async (req, res) => {
-    try {
-      const totals = await query(
-        `SELECT transactions.id_branch, SUM(transaction_products.quantity) AS total_sold FROM transactions JOIN transaction_products ON transactions.id_transaction = transaction_products.id_transaction_product GROUP BY transactions.id_branch;`
-      );
-      return res.status(200).send(totals);
-    } catch (error) {
-      console.error(
-        "Error occurred while calculating total transactions per branch:",
-        error
-      );
-      res.status(500).send("Internal Server Error");
-    }
-  },
-  totalTransactionsBranch: async (req, res) => {
+  totalRevenueByBranch: async (req, res) => {
     try {
       // Query to fetch the total transactions per branch
       const totals = await query(
-        "SELECT id_branch, COUNT(id_transaction) AS total_transactions FROM transactions GROUP BY id_branch"
-      );
-      return res.status(200).send(totals);
-    } catch (error) {
-      console.error(
-        "Error occurred while calculating total transactions per branch:",
-        error
-      );
-      res.status(500).send("Internal Server Error");
-    }
-  },
-  totalUsersBranch: async (req, res) => {
-    try {
-      const totals = await query(
-        "SELECT transactions.id_branch, COUNT(transactions.id_user) AS total_user FROM transactions GROUP BY transactions.id_branch;"
+        `SELECT b.location AS Branch, t.Revenue, t.date AS Date
+         FROM branches b
+         INNER JOIN (
+          SELECT id_branch, DATE_FORMAT(date, '%Y-%m') AS month, SUM(total_price) AS Revenue, MAX(date) AS date
+          FROM transactions
+          GROUP BY id_branch, month
+        ) t ON t.id_branch = b.id_branch
+        ORDER BY b.location, t.date`
       );
       return res.status(200).send(totals);
     } catch (error) {
