@@ -1,62 +1,83 @@
-import React, { useState } from "react";
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
-const userToken = localStorage.getItem("user_token");
+import Swal from "sweetalert2";
+
+const adminToken = localStorage.getItem("admin_token");
+
+const validationSchema = Yup.object().shape({
+  categoryName: Yup.string().required("Category Name is required"),
+});
 
 function AddCategory() {
-  const [category, setCategory] = useState({
-    name: "",
-  });
-
-  const addCategory = () => {
+  const addCategory = (values, { resetForm }) => {
     axios
       .post(
-        "http://localhost:8001/category",
+        "http://localhost:8000/admin/addCategory",
         {
-          categoryName: category.name,
+          categoryName: values.categoryName,
         },
         {
           headers: {
-            Authorization: `Bearer ${userToken}`,
+            Authorization: `Bearer ${adminToken}`,
           },
         }
       )
-
       .then((response) => {
         console.log(response.data);
+        Swal.fire(response.data.message);
+        resetForm(); // Reset the form after successful submission
       })
       .catch((error) => {
         console.log(error);
+        Swal.fire({
+          icon: "error",
+          text: "Category already exists!",
+        });
       });
   };
 
   return (
-    <div className="container mx-auto py-12">
-      <form className="max-w-md mx-auto">
-        <div className="mb-4">
-          <label
-            htmlFor="categoryName"
-            className="block text-gray-700 font-bold mb-2"
+    <section className="p-6 mx-4 bg-white border-2 rounded-lg shadow-md mt-2">
+      <div>
+        <div className="container mx-auto pt-52 py-12">
+          <Formik
+            initialValues={{ categoryName: "" }}
+            validationSchema={validationSchema}
+            onSubmit={addCategory}
           >
-            Name:
-          </label>
-          <input
-            type="text"
-            id="categoryName"
-            name="categoryName"
-            value={category.categoryName}
-            onChange={(e) => setCategory({ ...category, name: e.target.value })}
-            className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+            <Form className="max-w-md mx-auto">
+              <div className="mb-4">
+                <label
+                  htmlFor="categoryName"
+                  className="block mb-2 text-md text-black font-bold"
+                >
+                  Category Name
+                </label>
+                <Field
+                  type="text"
+                  id="categoryName"
+                  name="categoryName"
+                  className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                />
+                <ErrorMessage
+                  name="categoryName"
+                  component="div"
+                  className="text-red-500"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-[#EDA415] hover:bg-red-200 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Add Category
+              </button>
+            </Form>
+          </Formik>
         </div>
-        <button
-          type="button"
-          onClick={addCategory}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Add Category
-        </button>
-      </form>
-    </div>
+      </div>
+    </section>
   );
 }
 

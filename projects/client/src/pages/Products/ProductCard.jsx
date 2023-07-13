@@ -1,134 +1,187 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, increaseQuantity } from "../features/cart/cartSlice";
+import { addItem, increaseQuantity } from "../../features/cart/cartSlice";
 import Axios from "axios";
-
-import { Input, Select, Button } from "@chakra-ui/react";
+import { FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa";
+import ProductList from "./productList";
+import Pagination from "./pagination";
+import CategoryList from "./categoryList";
+import SearchBar from "./searchBar";
+import { handleAddToCart, handleProductClick } from "./handleProduct";
 
 function ProductCard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [products, setProductList] = useState([]);
   const cartItems = useSelector((state) => state.cart.items);
+  const userGlobal = useSelector((state) => state.users.user);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [sort, setSort] = useState("lowPrice");
+  const [selectedCategory, setSelectedCategory] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
-  const fetchProductsData = async () => {
-    let response = await Axios.get(`http://localhost:8001/product/product`);
-    setProductList(response.data);
-  };
-
-  const handleAddToCart = (product) => {
-    const existingItem = cartItems.find(
-      (item) => item.id_product === product.id_product
-    );
-    if (existingItem) {
-      dispatch(increaseQuantity(product.id_product));
-    } else {
-      dispatch(addItem({ ...product, quantity: 1 }));
-    }
-    alert("berhasil menambahkan ke keranjang");
-  };
-
-  const [search, setSearch] = useState(``);
-  const [sort, setSort] = useState(`newest`);
-
-  const renderList = () => {
-    return products
-      .filter((product) => {
-        return search.toLowerCase() === ""
-          ? product
-          : product.product_name.toLowerCase().includes(search);
+  useEffect(() => {
+    Axios.get("http://localhost:8000/category")
+      .then((response) => {
+        setCategories(response.data);
       })
-      .map((product) => {
-        return (
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <img
-              src={`http://localhost:8001/${product.product_img}`}
-              alt={product.product_name}
-              className="w-full h-48 object-cover"
-            />
-
-            <div key={product.id_product} className="p-4">
-              <h2 className="text-lg font-medium">{product.product_name}</h2>
-              <p className="text-lg font-medium text-gray-800">
-                {product.product_price.toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                })}
-              </p>
-              <p className="text-gray-600 text-sm mt-2">
-                {product.product_desc}
-              </p>
-
-              <Button
-                onClick={() => handleAddToCart(product)}
-                variant="solid"
-                colorScheme="pink"
-              >
-                Buy
-              </Button>
-            </div>
-          </div>
-        );
+      .catch((error) => {
+        console.log(error);
       });
-  };
+  }, []);
 
   useEffect(() => {
     fetchProductsData();
   }, []);
 
-  useEffect(() => {
-    if (sort === "newest") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => a.id_product - b.id_product)
-      );
-    } else if (sort === "lowPrice") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => a.product_price - b.product_price)
-      );
-    } else if (sort === "highPrice") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => b.product_price - a.product_price)
-      );
-    } else if (sort === "desc") {
-      setProductList((prev) =>
-        [...prev].sort((a, b) => a.product_name - b.product_name)
-      );
-    } else {
-      setProductList((prev) => [...prev].sort());
+  const fetchProductsData = async () => {
+    try {
+      const response = await Axios.get("http://localhost:8000/products");
+      setProducts(response.data);
+    } catch (error) {
+      console.log(error);
     }
-  }, [sort]);
+  };
+
+  const handleAddToCartClick = (product) => {
+    handleAddToCart(
+      navigate,
+      product,
+      userGlobal,
+      cartItems,
+      dispatch,
+      addItem,
+      increaseQuantity
+    );
+  };
+
+  //line 41-45 dispatch ke redux ganti jgn dispatch ke redux tp set item ke local storage
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleSort = (value) => {
+    setSort(value);
+  };
+
+  const handleProductClickAction = (product) => {
+    handleProductClick(product, navigate);
+  };
+
+  const filteredProducts =
+    selectedCategory === 0
+      ? products
+      : products.filter((p) => p.id_category === selectedCategory);
+
+  const filteredProductsBySearchTerm = filteredProducts.filter((p) =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedProducts = [...filteredProductsBySearchTerm].sort((a, b) => {
+    if (sort === "lowPrice") {
+      return a.price - b.price;
+    } else if (sort === "highPrice") {
+      return b.price - a.price;
+    } else if (sort === "aToZ") {
+      return a.name.localeCompare(b.name);
+    } else if (sort === "zToA") {
+      return b.name.localeCompare(a.name);
+    }
+  });
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const productsOnPage = sortedProducts.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
 
   return (
-    <div className="w-full mx-auto">
-      <p className="text-2xl font-sans text-amber-500">PRODUCT LIST</p>
-      <Input
-        placeholder="Search..."
-        onChange={(name) => setSearch(name.target.value)}
+    <div className="w-full mx-auto ">
+      <CategoryList
+        categories={categories}
+        handleCategoryChange={handleCategoryChange}
       />
-      <Select placeholder="Sorted By" onChange={(e) => setSort(e.target.value)}>
-        <option value="newest">Newest</option>
-        <option value="lowPrice">Lowest Price</option>
-        <option value="highPrice">Highest Price</option>
-        <option value="asc">A-Z</option>
-        <option value="desc">Z-A</option>
-      </Select>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {renderList()}
+      <SearchBar handleSearchChange={handleSearchChange} />
+
+      <div className="mb-4 mt-5 lg:mx-10">
+        <div className="flex mb-5">
+          <button
+            className={`mr-2 py-2 px-4 rounded hover:bg-yellow-200 ${
+              sort === "lowPrice" ? "bg-[#EDA415]  text-white" : "bg-gray-200"
+            }`}
+            onClick={() => handleSort("lowPrice")}
+          >
+            <span>&#x2191;</span>
+          </button>
+          <button
+            className={`py-2 px-4 rounded hover:bg-yellow-200 ${
+              sort === "highPrice" ? "bg-[#EDA415] text-white" : "bg-gray-200"
+            }`}
+            onClick={() => handleSort("highPrice")}
+          >
+            <span>&#x2193;</span>
+          </button>
+          <button
+            className={`ml-6 mr-2 py-2 px-4 rounded hover:bg-yellow-200 ${
+              sort === "aToZ" ? "bg-[#EDA415] text-white" : "bg-gray-200"
+            }`}
+            onClick={() => handleSort("aToZ")}
+          >
+            <FaSortAlphaDown
+              className={`sort-icon ${sort === "aToZ" ? "text-white" : ""}`}
+            />
+          </button>
+          <button
+            className={`py-2 px-4 rounded hover:bg-yellow-200 ${
+              sort === "zToA" ? "bg-[#EDA415] text-white" : "bg-gray-200"
+            }`}
+            onClick={() => handleSort("zToA")}
+          >
+            <FaSortAlphaUp
+              className={`sort-icon ${sort === "zToA" ? "text-white" : ""}`}
+            />
+          </button>
+        </div>
+        <ProductList
+          products={productsOnPage}
+          handleProductClick={handleProductClickAction}
+          handleAddToCart={handleAddToCartClick}
+        />
       </div>
-      <div className="items-center hidden space-x-8 lg:flex">
-        <Button
-          variant="solid"
-          colorScheme="pink"
-          onClick={() => {
-            navigate("/product/addproduct");
-          }}
-        >
-          add new product
-        </Button>
-      </div>
+      <Pagination
+        className="justify-center"
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+        handlePreviousPage={handlePreviousPage}
+        handleNextPage={handleNextPage}
+      />
     </div>
   );
 }
-
 export default ProductCard;

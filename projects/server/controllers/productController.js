@@ -2,18 +2,44 @@ const { db, query } = require("../database");
 
 module.exports = {
   addProduct: async (req, res) => {
-    const { productName, productPrice, productDesc, id_category } = req.body;
+    const {
+      productName,
+      productPrice,
+      productStock,
+      productDesc,
+      id_category,
+    } = req.body;
 
-    const idusers = req.user.id;
+    const id_admin = req.user.id;
 
     const { file } = req;
     const filepath = file ? "/" + file.filename : null;
 
-    let addProductQuery = `INSERT INTO product VALUES (null, ${db.escape(
+    if (!file) {
+      return res.status(400).send({ message: "Please upload a file." });
+    }
+
+    // Pengecekan tipe file
+    if (file.mimetype !== "image/jpeg" && file.mimetype !== "image/png") {
+      return res
+        .status(400)
+        .send({ message: "Please choose a JPEG or PNG file." });
+    }
+
+    // Pengecekan ukuran file
+    if (file.size > 1024 * 1024) {
+      return res
+        .status(400)
+        .send({ message: "File size should not exceed 1MB." });
+    }
+
+    let addProductQuery = `INSERT INTO products VALUES (null, ${db.escape(
       productName
-    )}, ${db.escape(productPrice)}, ${db.escape(productDesc)}, ${db.escape(
+    )}, ${db.escape(productPrice)}, ${db.escape(productStock)}, ${db.escape(
+      filepath
+    )}, ${db.escape(productDesc)}, ${db.escape(
       id_category
-    )}, ${db.escape(filepath)},true,${db.escape(idusers)})`;
+    )},null,null,${db.escape(id_admin)})`;
     let addProductResult = await query(addProductQuery);
 
     return res.status(200).send({
@@ -23,95 +49,70 @@ module.exports = {
       success: true,
     });
   },
+
   fetchAllProducts: async (req, res) => {
     try {
-      const products = await query(`SELECT * FROM product`);
-      return res.status(200).send(products);
+      const products = await query(`SELECT * FROM products`);
+      const { category } = req.query;
+
+      if (category) {
+        const filteredProducts = products.filter(
+          (product) => product.category === category
+        );
+        res.status(200).send(filteredProducts);
+      } else {
+        res.status(200).send(products);
+      }
     } catch (error) {
       res.status(error.status || 500).send(error);
     }
   },
   fetchProductsByCategory: async (req, res) => {
     try {
-      const idParams = parseInt(req.params.id);
+      const idParams = parseInt(req.query.id);
 
-      const users = await query(
+      const product = await query(
         `SELECT * FROM product WHERE id_category = ${db.escape(idParams)}`
       );
-      return res.status(200).send(users);
+      return res.status(200).send(product);
     } catch (error) {
       res.status(error.status || 500).send(error);
     }
   },
-  // fetchAllProducts: async (req, res) => {
-  //   try {
-  //     const products = await query(`SELECT * FROM product`);
-  //     return res.status(200).send(products);
-  //   } catch (error) {
-  //     res.status(error.status || 500).send(error);
-  //   }
-  // },
-  // fetchProduct: async (req, res) => {
-  //   try {
-  //     const idParams = parseInt(req.params.id);
-  //     if (req.product.id !== idParams) {
-  //       return res.status(400).send("tidak ada product tersebut");
-  //     }
-  //     const product = await query(
-  //       `SELECT * FROM product WHERE id_product = ${db.escape(idParams)}`
-  //     );
-  //     return res.status(200).send(product);
-  //   } catch (error) {
-  //     res.status(error.status || 500).send(error);
-  //   }
-  // },
 
-  // fetchProduct: async (req, res) => {
-  //   try {
-  //     const idParams = parseInt(req.params.id);
-  //     if (req.product.id !== idParams) {
-  //       return res.status(400).send("tidak ada product tersebut");
-  //     }
-  //     const product = await query(
-  //       `SELECT * FROM product WHERE id_product = ${db.escape(idParams)}`
-  //     );
-  //     return res.status(200).send(product);
-  //   } catch (error) {
-  //     res.status(error.status || 500).send(error);
-  //   }
-  // },
-  // filterProductsByName: async (req, res) => {
-  //   try {
-  //     const nameParams = toString(req.params.product_name);
-  //     if (req.product.product_name != nameParams) {
-  //       return res.status(400).send("tidak ada product tersebut");
-  //     }
-  //     const filterProductsByName = await query(
-  //       `SELECT * FROM product where product_name = ${db.escape(nameParams)}`
-  //     );
+  fetchProduct: async (req, res) => {
+    try {
+      const idParams = parseInt(req.params.id);
 
-  //     return res.status(200).send(filterProductsByName);
-  //   } catch (error) {
-  //     res.status(error.status || 500).send(error);
-  //   }
-  // },
-  // sortAscProducts: async (req, res) => {
-  //   try {
-  //     const sortAscProducts = await query(`SELECT * FROM product order by asc`);
+      const product = await query(
+        `SELECT * FROM products WHERE id_product = ${db.escape(idParams)}`
+      );
 
-  //     return res.status(200).send(sortAscProducts);
-  //   } catch (error) {
-  //     res.status(error.status || 500).send(error);
-  //   }
-  // },
-  // sortDscProducts: async (req, res) => {
-  //   try {
-  //     const sortDscProducts = await query(
-  //       `SELECT * FROM product order by desc`
-  //     );
+      if (product.length === 0) {
+        return res.status(404).send("Product not found");
+      }
 
-  //     return res.status(200).send(sortDscProducts);
-  //   } catch (error) {
-  //     res.status(error.status || 500).send(error);
-  //   }
+      return res.status(200).send(product[0]);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
+  createTransaction: async (req, res) => {
+    try {
+      const idParams = parseInt(req.params.id);
+
+      const product = await query(
+        `SELECT * FROM products WHERE id_product = ${db.escape(idParams)}`
+      );
+
+      if (product.length === 0) {
+        return res.status(404).send("Product not found");
+      }
+
+      return res.status(200).send(product[0]);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
 };
