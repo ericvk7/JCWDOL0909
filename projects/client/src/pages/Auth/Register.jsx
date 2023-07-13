@@ -18,7 +18,6 @@ function Register() {
 
   const registerUser = async (value) => {
     let response = await Axios.post("http://localhost:8001/auth/", value);
-    console.log(response);
   };
 
   return (

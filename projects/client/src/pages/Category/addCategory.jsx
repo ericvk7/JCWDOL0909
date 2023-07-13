@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import Axios from "axios";
 import Swal from "sweetalert2";
 
 const adminToken = localStorage.getItem("admin_token");
@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
 
 function AddCategory() {
   const addCategory = (values, { resetForm }) => {
-    axios
+    Axios
       .post(
         "http://localhost:8000/admin/addCategory",
         {
