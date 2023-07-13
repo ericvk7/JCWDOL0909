@@ -11,9 +11,7 @@ export const adminSlice = createSlice({
       email: "",
       id_role: "",
     },
-    totalProductsSoldBranch: [],
-    totalTransactionBranch: [],
-    totalUsersBranch: [],
+    totalRevenueByBranch: [],
   },
   reducers: {
     setAdmin: (state, action) => {
@@ -27,25 +25,14 @@ export const adminSlice = createSlice({
         id_role: "",
       };
     },
-    setTotalProductsSoldBranch: (state, action) => {
-      state.totalProductsSoldBranch = action.payload;
-    },
-    setTotalTransactionBranch: (state, action) => {
-      state.totalTransactionBranch = action.payload;
-    },
-    setTotalUsersBranch: (state, action) => {
-      state.totalUsersBranch = action.payload;
+    setTotalRevenueByBranch: (state, action) => {
+      state.totalRevenueByBranch = action.payload;
     },
   },
 });
 
-export const {
-  setAdmin,
-  resetAdmin,
-  setTotalProductsSoldBranch,
-  setTotalTransactionBranch,
-  setTotalUsersBranch,
-} = adminSlice.actions;
+export const { setAdmin, resetAdmin, setTotalRevenueByBranch } =
+  adminSlice.actions;
 export default adminSlice.reducer;
 const userToken = localStorage.getItem("user_token");
 
@@ -98,48 +85,19 @@ export function checkLoginAdmin(token) {
   };
 }
 
-export function fetchTotalProductsSoldBranch() {
+export function fetchTotalRevenueByBranch() {
   return async (dispatch) => {
     try {
       const response = await Axios.get(
-        "http://localhost:8000/admin/totalproductssoldbranch"
+        "http://localhost:8000/admin/totalrevenuebybranch"
       );
-      dispatch(setTotalProductsSoldBranch(response.data));
-      console.log("fetchTotalProductsSoldBranch successful");
+      dispatch(setTotalRevenueByBranch(response.data));
+      console.log("fetchTotalRevenueByBranch successful");
     } catch (error) {
       console.log(
         "Failed to fetch Total Products Sold by Branch: ",
         error.message
       );
-    }
-  };
-}
-
-export function fetchTotalTransactionBranch() {
-  return async (dispatch) => {
-    try {
-      const response = await Axios.get(
-        "http://localhost:8000/admin/totaltransactionsbranch"
-      );
-      dispatch(setTotalTransactionBranch(response.data));
-    } catch (error) {
-      console.log(
-        "Failed to fetch Total Transactions by Branch: ",
-        error.message
-      );
-    }
-  };
-}
-
-export function fetchTotalUsersBranch() {
-  return async (dispatch) => {
-    try {
-      const response = await Axios.get(
-        "http://localhost:8000/admin/totalusersbranch"
-      );
-      dispatch(setTotalUsersBranch(response.data));
-    } catch (error) {
-      console.log("Failed to fetch Total Users by Branch: ", error.message);
     }
   };
 }
