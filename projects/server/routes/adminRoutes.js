@@ -32,5 +32,6 @@ router.get("/getCategory/:id", adminController.fetchCategoryById);
 
 // Transactions Route
 router.get("/admin/transactions/:id", adminController.fetchTransactions);
+router.get("/salesreports/product/:id", adminController.fetchProductTableByBranchId);
 
 module.exports = router;

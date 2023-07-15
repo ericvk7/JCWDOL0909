@@ -335,13 +335,40 @@ module.exports = {
     res.status(error.status || 500).send(error);
   }
 },
-fetchProductByBranchId: async (req, res) => {
+fetchProductTableByBranchId: async (req, res) => {
   try {
     const idBranch = req.params.id;
-    const products = await query(
-      `SELECT * FROM products WHERE id_branch = ${db.escape(idBranch)}`
-    );
-    return res.status(200).send(products);
+
+    const table = `
+      SELECT
+        t.id_branch,
+        t.id_transaction,
+        p.name,
+        p.price,
+        SUM(tp.quantity) AS total_sold,
+        SUM(tp.quantity * p.price) AS total_revenue,
+        MAX(t.date) AS lastdate_order
+      FROM
+        transactions t
+      JOIN
+        transaction_products tp ON t.id_transaction = tp.id_transaction
+      JOIN
+        products p ON tp.id_product = p.id_product
+      WHERE
+        t.id_branch = ?
+      GROUP BY
+        t.id_branch,
+        t.id_transaction,
+        p.name,
+        p.price;
+    `;
+
+    db.query(table, [idBranch], (err, result) => {
+      if (err) {
+        throw err;
+      }
+      res.status(200).json(result);
+    });
   } catch (error) {
     res.status(error.status || 500).send(error);
   }
