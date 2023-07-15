@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import Swal from "sweetalert2";
 
 const AddProduct = () => {
   const [name, setName] = useState("");
@@ -13,8 +14,6 @@ const AddProduct = () => {
 
   const HandleSubmit = async (event) => {
     event.preventDefault();
-    console.log(category);
-
     const formData = new FormData();
     formData.append("productName", name);
     formData.append("productPrice", price);
@@ -35,12 +34,12 @@ const AddProduct = () => {
       );
 
       if (!response.data.success) {
-        throw new Error(response.data.message);
+        Swal.fire(response.data.message);
       } else {
-        alert(response.data.message);
+        Swal.fire("Success", response.data.message, "success");
       }
     } catch (error) {
-      console.error(error.message);
+      Swal.fire("Error", error.response.data.message, "error");
     }
   };
 
@@ -51,7 +50,6 @@ const AddProduct = () => {
   useEffect(() => {
     Axios.get("http://localhost:8000/category")
       .then((response) => {
-        console.log(response.data);
         setCategories(response.data);
       })
       .catch((error) => {

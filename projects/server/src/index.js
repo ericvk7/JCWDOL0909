@@ -14,6 +14,7 @@ const {
   transactionRoutes,
   paymentRoutes,
   adminRoutes,
+  stockRoutes,
 } = require("../routes");
 const { runSeed } = require("../helpers/runSeed");
 
@@ -38,7 +39,7 @@ app.use("/opencage", opencageRoutes);
 app.use("/address", addressRoutes);
 app.use("/transactions", transactionRoutes);
 app.use("/payments", paymentRoutes);
-app.use("/user", userRoutes);
+app.use("/stock", stockRoutes);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
@@ -51,15 +52,6 @@ app.get("/api/greetings", (req, res, next) => {
 });
 
 // ===========================
-
-// not found
-// app.use((req, res, next) => {
-//   if (req.path.includes("/api/")) {
-//     res.status(404).send("Not found !");
-//   } else {
-//     next();
-//   }
-// });
 
 // error
 app.use((err, req, res, next) => {

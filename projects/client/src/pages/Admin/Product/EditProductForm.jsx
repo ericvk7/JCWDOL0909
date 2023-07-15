@@ -1,10 +1,13 @@
 import AdminLayout from "../../../components/AdminLayout";
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import EditProductSection from "./EditProductSection";
 
 function EditProductForm({ editProductData }) {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -18,17 +21,13 @@ function EditProductForm({ editProductData }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const formData = new FormData();
-    formData.append("productName", name);
-    formData.append("productPrice", price);
-    formData.append("productStock", stock);
-    formData.append("productDescription", description);
-    formData.append("id_category", category);
-
-    if (image) {
-      formData.append("file", image);
-    }
+    formData.append("productName", name || product.name);
+    formData.append("productPrice", price || product.price);
+    formData.append("productStock", stock || product.stock);
+    formData.append("productDescription", description || product.description);
+    formData.append("file", image);
+    formData.append("id_category", category || product.id_category);
 
     try {
       const response = await Axios.patch(
@@ -40,24 +39,33 @@ function EditProductForm({ editProductData }) {
           },
         }
       );
-      console.log(response);
-      console.log(formData);
-      if (!response.data.success) {
+
+      if (!response.data.success || !response.data.updatedProduct) {
         throw new Error(response.data.message);
-      } else {
-        alert(response.data.message);
       }
+      const editedProductData = {
+        productName: name || (product && product.name) || "",
+        productPrice: price || (product && product.price) || "",
+        productStock: stock || (product && product.stock) || "",
+        productDescription:
+          description || (product && product.description) || "",
+        image: response.data.updatedProduct.image || product.image,
+        id_category: category || (product && product.id_category) || "",
+      };
+
+      editProductData(editedProductData);
+      navigate("/admin/Product");
+      Swal.fire(response.data.message);
     } catch (error) {
-      console.error(error.message);
+      Swal.fire(error.message);
+      console.log(error);
     }
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file && file instanceof Blob) {
-      // Periksa apakah file adalah objek Blob
       setImage(file);
-
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
@@ -87,9 +95,8 @@ function EditProductForm({ editProductData }) {
         );
         const productData = productResponse.data;
         setProduct(productData);
-        setPreviewImage(productData.image);
+        setPreviewImage(`http://localhost:8000/${productData.image}`);
       } catch (error) {
-        console.log(error);
         alert(error.message);
       }
     };
@@ -102,8 +109,9 @@ function EditProductForm({ editProductData }) {
       setName(editProductData.productName);
       setPrice(editProductData.productPrice);
       setStock(editProductData.productStock);
-      setDescription(editProductData.productDesc);
+      setDescription(editProductData.productDescription);
       setCategory(editProductData.id_category);
+      setPreviewImage(editProductData.image);
     }
   }, [editProductData]);
 
@@ -258,6 +266,23 @@ function EditProductForm({ editProductData }) {
           </form>
         </div>
       </section>
+      <EditProductSection
+        handleSubmit={handleSubmit}
+        name={name}
+        setName={setName}
+        price={price}
+        setPrice={setPrice}
+        stock={stock}
+        setStock={setStock}
+        category={category}
+        setCategory={setCategory}
+        description={description}
+        setDescription={setDescription}
+        categories={categories}
+        product={product}
+        previewImage={previewImage}
+        handleImageChange={handleImageChange}
+      />
     </AdminLayout>
   );
 }

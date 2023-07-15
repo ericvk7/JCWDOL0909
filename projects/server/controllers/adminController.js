@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { db, query } = require("../database");
 const nodemailer = require("../helpers/nodemailer");
+const moment = require("moment");
 
 module.exports = {
   login: async (req, res) => {
@@ -24,6 +25,10 @@ module.exports = {
       let payload = {
         id: isEmailExist[0].id_admin,
         id_branch: isEmailExist[0].id_branch,
+<<<<<<< HEAD
+=======
+        name: isEmailExist[0].name,
+>>>>>>> Development
       };
       const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
       return res.status(200).send({
@@ -35,6 +40,7 @@ module.exports = {
           id_branch: isEmailExist[0].id_branch,
           email: isEmailExist[0].email,
           name: isEmailExist[0].name,
+          id_branch: isEmailExist[0].id_branch,
         },
         success: true,
       });
@@ -48,7 +54,6 @@ module.exports = {
       const admins = await query(
         `SELECT * FROM admins WHERE id_admin = ${db.escape(req.user.id)}`
       );
-      console.log(admins);
       return res.status(200).send({
         data: {
           id: admins[0].id_admin,
@@ -105,10 +110,11 @@ module.exports = {
         success: true,
       });
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return res.status(500).send({ message: "Internal server error" });
     }
   },
+<<<<<<< HEAD
   addProduct: async (req, res) => {
     try {
       const {
@@ -373,4 +379,82 @@ fetchProductTableByBranchId: async (req, res) => {
     res.status(error.status || 500).send(error);
   }
 },
+=======
+  fetchTransactionByBranch: async (req, res) => {
+    try {
+      const idAdmin = req.user.id;
+      const admin = await query(
+        `SELECT * FROM admins WHERE id_admin = ${db.escape(idAdmin)}`
+      );
+      const { startDate, endDate, page = 1, pageSize = 5, status } = req.query;
+      const offset = (page - 1) * pageSize;
+      const limitStr = ` LIMIT ${offset}, ${pageSize}`;
+      let queryWhereHead = "";
+      if (startDate && endDate) {
+        queryWhereHead += ` AND transactions.date BETWEEN ${db.escape(
+          startDate
+        )} AND ${db.escape(endDate)}`;
+      }
+      if (status) {
+        queryWhereHead += ` AND transactions.id_transaction_status = ${db.escape(
+          status
+        )}`;
+      }
+      let queryStr = `
+        SELECT * FROM transactions AS t
+        INNER JOIN shippings ON t.id_shipping = shippings.id_shipping
+        INNER JOIN transaction_products ON t.id_transaction = transaction_products.id_transaction
+        INNER JOIN products ON transaction_products.id_product = products.id_product
+        INNER JOIN transactions_status ON t.id_transaction_status = transactions_status.id_transaction_status
+        INNER JOIN users ON t.id_user = users.id_user  
+        WHERE products.id_branch = ${db.escape(
+          admin[0].id_branch
+        )}${queryWhereHead}
+        ${limitStr};
+      `;
+      const transactions = await query(queryStr);
+      let totalCountQuery = `
+        SELECT COUNT(*) AS totalCount FROM transactions AS t
+        INNER JOIN transaction_products ON t.id_transaction = transaction_products.id_transaction
+        INNER JOIN products ON transaction_products.id_product = products.id_product
+        WHERE products.id_branch = ${db.escape(
+          admin[0].id_branch
+        )}${queryWhereHead};
+      `;
+      const totalCountResult = await query(totalCountQuery);
+      const totalCount = totalCountResult[0].totalCount;
+      res.status(200).send({ transactions, totalCount });
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
+  cancelTransaction: async (req, res) => {
+    try {
+      const idTransaction = parseInt(req.params.id);
+      await query(
+        `UPDATE transactions
+        SET id_transaction_status = 6
+        WHERE id_transaction = ${db.escape(idTransaction)};`
+      );
+      return res.status(200).send("Transaction has been canceled.");
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+
+  sendTransaction: async (req, res) => {
+    try {
+      const idTransaction = parseInt(req.params.id);
+      await query(
+        `UPDATE transactions
+        SET id_transaction_status = 4
+        WHERE id_transaction = ${db.escape(idTransaction)};`
+      );
+      return res.status(200).send("Order will be sent to the user.");
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
+>>>>>>> Development
 };

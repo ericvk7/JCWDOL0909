@@ -12,18 +12,18 @@ const validationSchema = Yup.object().shape({
 
 function AddCategory() {
   const addCategory = (values, { resetForm }) => {
-    axios
-      .post(
-        "http://localhost:8000/admin/addCategory",
-        {
-          categoryName: values.categoryName,
+    const adminToken = localStorage.getItem("admin_token");
+    Axios.post(
+      "http://localhost:8000/admin/addCategory",
+      {
+        categoryName: values.categoryName,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
-        }
-      )
+      }
+    )
       .then((response) => {
         console.log(response.data);
         Swal.fire(response.data.message);

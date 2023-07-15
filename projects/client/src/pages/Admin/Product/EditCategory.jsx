@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
+import { FaTimes, FaCheck, FaEdit } from "react-icons/fa";
 
 function EditCategory() {
   const [categories, setCategories] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editValue, setEditValue] = useState("");
   const [editCategoryId, setEditCategoryId] = useState(null);
-
   const adminToken = localStorage.getItem("admin_token");
-
   const dispatch = useDispatch();
 
   const handleDeleteCategory = async (categoryId) => {
@@ -53,8 +52,6 @@ function EditCategory() {
 
   const handleSaveEdit = async (categoryId) => {
     try {
-      console.log(categoryId);
-      // Make the API call to update the category with the new name
       const response = await Axios.patch(
         `http://localhost:8000/admin/editCategory/${categoryId}`,
         {
@@ -92,7 +89,6 @@ function EditCategory() {
       console.log(error);
     }
   };
-
   const renderList = () => {
     if (categories.length === 0) {
       return (
@@ -130,7 +126,6 @@ function EditCategory() {
             <span>{category.category_name}</span>
           )}
         </td>
-
         <td className="flex items-center px-6 py-4 space-x-3">
           {editMode && category.id_category === editCategoryId ? (
             <>
@@ -138,23 +133,9 @@ function EditCategory() {
                 className="flex p-2.5 bg-green-500 rounded-xl hover:rounded-3xl hover:bg-green-600 transition-all duration-300 text-white"
                 onClick={() => handleSaveEdit(category.id_category)}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <FaCheck className="h-6 w-6" />
                 <span className="ml-2">Save</span>
               </button>
-
               <button
                 className="flex p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white"
                 onClick={() => setEditMode(false)}
@@ -173,6 +154,7 @@ function EditCategory() {
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
+                <FaTimes className="h-6 w-6" />
                 <span className="ml-2">Cancel</span>
               </button>
             </>
@@ -204,6 +186,8 @@ function EditCategory() {
                 <span className="ml-2">Edit</span>
               </button>
 
+                <FaEdit className="h-6 w-6" />
+                <span className="ml-2">Edit</span>
               <button
                 className="flex p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white"
                 onClick={() => handleDeleteCategory(category.id_category)}
@@ -222,6 +206,7 @@ function EditCategory() {
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
+                <FaTimes className="h-6 w-6" />
                 <span className="ml-2">Delete</span>
               </button>
             </>

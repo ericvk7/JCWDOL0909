@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Register from "./pages/Auth/Register/Register";
 import Products from "./pages/Products/Product";
 import Login from "./pages/Auth/Login/Login";
 import { checkLogin } from "./features/users/userSlice";
 import { checkLoginAdmin } from "./features/admins/adminSlice";
 import { useDispatch, useSelector } from "react-redux";
-import AddProduct from "./pages/Products/addProduct";
 import AddCategory from "./pages/Category/addCategory";
-import Cart from "./pages/Cart/Cart";
 import NotFound from "./pages/Error/NotFound";
 import Navbar from "./components/Navbar";
 import ProductDetailPage from "./pages/Products/ProductDetail";
@@ -30,9 +28,11 @@ import BlankPage from "./pages/Error/BlankPage";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import AddProductForm from "./pages/Admin/Product/AddProductForm";
 import AddCategoryForm from "./pages/Admin/Product/AddCategoryForm";
+import OrderListAdmin from "./pages/Admin/Transaction/orderListAdmin";
 import ProductForm from "./pages/Admin/Product/ProductForm";
 import EditProductForm from "./pages/Admin/Product/EditProductForm";
-import SalesReports from "./pages/Admin/Reports/SalesReports";
+import OrderListBranchAdmin from "./pages/Admin/BranchTransaction/orderList";
+import Home from "./pages/Home/Home";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -49,7 +49,7 @@ function App() {
     location.pathname !== "/user/verifyEmail/:token" &&
     location.pathname !== "/blankPage" &&
     location.pathname !== "/dashboard" &&
-    !location.pathname.startsWith("/admin"); // Menambahkan kondisi untuk routes admin
+    !location.pathname.startsWith("/admin");
 
   useEffect(() => {
     if (userToken) {
@@ -57,7 +57,7 @@ function App() {
     } else if (adminToken) {
       dispatch(checkLoginAdmin(adminToken));
     }
-  }, [userToken, adminToken]); // Menambahkan dependensi userToken
+  }, [userToken, adminToken]);
 
   return (
     <div>
@@ -65,15 +65,21 @@ function App() {
         (userGlobal.id > 0 ? <Navbar /> : <BeforeLoginNavbar />)}
 
       <Routes>
-        {/* {!adminGlobal.id && ( */}
-        <>
-        </>
-        {/* )} */}
-          <Route path="/user/register" element={<Register />} />
-          <Route path="/user/login" element={<Login />} />
-          <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
-          <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
-          <Route path="/user/resetPassword/:token" element={<ResetPassword />}/>
+        {!adminGlobal.id && (
+          <>
+            <Route path="/user/register" element={<Register />} />
+            <Route path="/user/login" element={<Login />} />
+            <Route path="/user/verifyEmail/:token" element={<VerifyEmail />} />
+            <Route path="/user/confirmEmail" element={<ConfirmEmail />} />
+            <Route
+              path="/user/resetPassword/:token"
+              element={<ResetPassword />}
+            />
+            <Route path="/product" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/" element={<Home />} />
+          </>
+        )}
 
         {userGlobal.id > 0 && (
           <>
@@ -84,7 +90,7 @@ function App() {
               element={<ProfilePictureUpload />}
             />
             <Route path="/user/addAddress" element={<AddressForm />} />
-            <Route path="/user/updateAddress" element={<UpdateAddress />} />
+            <Route path="/address/:id" element={<UpdateAddress />} />
           </>
         )}
 
@@ -96,7 +102,10 @@ function App() {
         <Route path="*" element={<Products />} />
 
         {adminGlobal.id_role === 1 && (
-          <Route path="/admin/createAdmin" element={<CreateAdmin />} />
+          <>
+            <Route path="/admin/createAdmin" element={<CreateAdmin />} />
+            <Route path="/admin/order" element={<OrderListAdmin />} />
+          </>
         )}
         {/* Routes for admin  */}
         <Route path="/admin/login" element={<LoginAdmin />} />
@@ -107,7 +116,9 @@ function App() {
         <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
         <Route path="/admin/addCategory" element={<AddCategoryForm />} />
         <Route path="/category/addCategory" element={<AddCategory />} />
-        <Route path="/admin/transactions" element={<SalesReports/>} />
+        <Route path="/admin/Product" element={<ProductForm />} />
+        <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
+        <Route path="/branch-admin/order" element={<OrderListBranchAdmin />} />
 
         {/* Routes for super admin  */}
       </Routes>
