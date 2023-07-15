@@ -49,5 +49,6 @@ router.get(
 );
 router.patch("/cancelTransaction/:id", adminController.cancelTransaction);
 router.patch("/sendTransaction/:id", adminController.sendTransaction);
+router.get("/fetchreports", adminController.fetchReports);
 
 module.exports = router;

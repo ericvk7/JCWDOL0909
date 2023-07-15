@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import Axios from "axios";
 import Swal from "sweetalert2";
 
 const adminToken = localStorage.getItem("admin_token");

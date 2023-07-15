@@ -25,10 +25,7 @@ module.exports = {
       let payload = {
         id: isEmailExist[0].id_admin,
         id_branch: isEmailExist[0].id_branch,
-<<<<<<< HEAD
-=======
         name: isEmailExist[0].name,
->>>>>>> Development
       };
       const token = jwt.sign(payload, "six6", { expiresIn: "4h" });
       return res.status(200).send({
@@ -114,7 +111,6 @@ module.exports = {
       return res.status(500).send({ message: "Internal server error" });
     }
   },
-<<<<<<< HEAD
   addProduct: async (req, res) => {
     try {
       const {
@@ -323,8 +319,8 @@ module.exports = {
   },
   fetchTransactions: async (req, res) => {
     try {
-    const transaction = await query(
-    `SELECT 
+      const transaction = await query(
+        `SELECT 
       transaksi.id_transaction AS id_transaction,
       transaksi.invoiceNumber AS Invoice,
       GROUP_CONCAT(produk.name) AS ListProducts,
@@ -334,52 +330,13 @@ module.exports = {
     JOIN transaction_products ON transaksi.id_transaction = transaction_products.id_transaction
     JOIN products produk ON transaction_products.id_product = produk.id_product
     GROUP BY transaksi.id_transaction, transaksi.invoiceNumber, transaksi.id_user`
-  )
-  return res.status(200).send(branch);
-  }
-  catch (error) {
-    res.status(error.status || 500).send(error);
-  }
-},
-fetchProductTableByBranchId: async (req, res) => {
-  try {
-    const idBranch = req.params.id;
+      );
+      return res.status(200).send(branch);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
 
-    const table = `
-      SELECT
-        t.id_branch,
-        t.id_transaction,
-        p.name,
-        p.price,
-        SUM(tp.quantity) AS total_sold,
-        SUM(tp.quantity * p.price) AS total_revenue,
-        MAX(t.date) AS lastdate_order
-      FROM
-        transactions t
-      JOIN
-        transaction_products tp ON t.id_transaction = tp.id_transaction
-      JOIN
-        products p ON tp.id_product = p.id_product
-      WHERE
-        t.id_branch = ?
-      GROUP BY
-        t.id_branch,
-        t.id_transaction,
-        p.name,
-        p.price;
-    `;
-
-    db.query(table, [idBranch], (err, result) => {
-      if (err) {
-        throw err;
-      }
-      res.status(200).json(result);
-    });
-  } catch (error) {
-    res.status(error.status || 500).send(error);
-  }
-},
-=======
   fetchTransactionByBranch: async (req, res) => {
     try {
       const idAdmin = req.user.id;
@@ -456,5 +413,32 @@ fetchProductTableByBranchId: async (req, res) => {
       res.status(error.status || 500).send(error);
     }
   },
->>>>>>> Development
+  fetchReports: async (req, res) => {
+    try {
+      const reports = await query(
+        `SELECT
+        t.id_branch,
+        t.id_transaction,
+        p.name,
+        p.price,
+        SUM(tp.quantity) AS total_sold,
+        SUM(tp.quantity * p.price) AS total_revenue,
+        MAX(t.date) AS lastdate_order
+      FROM
+        transactions t
+      JOIN
+        transaction_products tp ON t.id_transaction = tp.id_transaction
+      JOIN
+        products p ON tp.id_product = p.id_product
+      GROUP BY
+        t.id_branch,
+        t.id_transaction,
+        p.name,
+        p.price`
+      );
+      return res.status(200).send(reports);
+    } catch (error) {
+      res.status(error.status || 500).send(error);
+    }
+  },
 };

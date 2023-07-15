@@ -69,7 +69,7 @@ export function checkLoginAdmin(token) {
         }
       );
       console.log(response, "RESPONSE");
-      if (response.status === 200) {
+      if (response) {
         dispatch(setAdmin(response.data.data));
       } else {
         throw new Error("Failed to check login status.");

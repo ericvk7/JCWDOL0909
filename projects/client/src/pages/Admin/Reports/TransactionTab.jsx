@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SalesReportsList from "./SalesReportsList"
 import OrderList from "../../Transaction/orderList";
+import AdminLayout from "../../../components/AdminLayout";
 
 function TransactionsTab() {
   const [activeTab, setActiveTab] = useState("addProduct"); // Ubah nilai awal menjadi "addProduct"
@@ -13,6 +14,7 @@ function TransactionsTab() {
   const dispatch = useDispatch();
 
   return (
+    <AdminLayout>
     <>
       <section className="p-6 mx-4 bg-white border-2 rounded-lg shadow-md">
         <div className="border-b border-gray-200 dark:border-gray-700">
@@ -89,6 +91,7 @@ function TransactionsTab() {
       )}
       {/* Render other pages for different tabs */}
     </>
+    </AdminLayout>
   );
 }
 

@@ -33,6 +33,7 @@ import ProductForm from "./pages/Admin/Product/ProductForm";
 import EditProductForm from "./pages/Admin/Product/EditProductForm";
 import OrderListBranchAdmin from "./pages/Admin/BranchTransaction/orderList";
 import Home from "./pages/Home/Home";
+import TransactionsTab from "./pages/Admin/Reports/TransactionTab";
 
 function App() {
   const userGlobal = useSelector((state) => state.users.user);
@@ -119,6 +120,7 @@ function App() {
         <Route path="/admin/Product" element={<ProductForm />} />
         <Route path="/admin/edit-product/:id" element={<EditProductForm />} />
         <Route path="/branch-admin/order" element={<OrderListBranchAdmin />} />
+        <Route path="/branch-admin/transaction" element={<TransactionsTab />} />
 
         {/* Routes for super admin  */}
       </Routes>

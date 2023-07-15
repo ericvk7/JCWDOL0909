@@ -82,7 +82,7 @@ function SalesReportsList() {
   };
 
   const renderTransactionTable = () => {
-    let filteredTransactions = transactions.filter(
+   {/*  let filteredTransactions = transactions.filter(
       (transaction) => transaction.category === "transaction"
     );
 
@@ -122,11 +122,11 @@ function SalesReportsList() {
         <td className="px-6 py-4">{transaction.totalSales}</td>
         <td className="px-6 py-4">{transaction.transactionDate}</td>
       </tr>
-    ));
+    )); */}
   };
 
   const renderUserTable = () => {
-    let filteredTransactions = transactions.filter(
+    {/* let filteredTransactions = transactions.filter(
       (transaction) => transaction.category === "user"
     );
 
@@ -167,7 +167,7 @@ function SalesReportsList() {
         <td className="px-6 py-4">{transaction.totalSales}</td>
         <td className="px-6 py-4">{transaction.lastOrderDate}</td>
       </tr>
-    ));
+    )); */}
   };
 
   return (
