@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
 import Swal from "sweetalert2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchReport, setReport } from "../../../features/admins/adminSlice";
 
 function SalesReportsList() {
   const adminToken = localStorage.getItem("admin_token");
   const dispatch = useDispatch();
-  const [transactions, setTransactions] = useState([]);
+  const [reports, setReports] = useState([]);
   const [filter, setFilter] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [sortType, setSortType] = useState("");
 
-  const fetchTransactionsData = async () => {
-    try {
-      const response = await Axios.get("");
-      setTransactions(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  console.log()
 
   useEffect(() => {
-    fetchTransactionsData();
-  }, []);
+    const fetchData = async () => {
+      try {
+        const data = await dispatch(fetchReport());
+        setReports(data)
+      } catch (error) {
+        console.log('Error fetching report data:', error.message);
+      }
+    };
+    fetchData();
+  }, [dispatch]);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -37,27 +39,29 @@ function SalesReportsList() {
   };
 
   const renderProductTable = () => {
-    let filteredTransactions = transactions.filter(
-      (transaction) => transaction.category === "product"
+    let filteredReports = reports.filter(
+      (report) => report.name
     );
 
     if (selectedDate) {
-      filteredTransactions = filteredTransactions.filter(
-        (transaction) => transaction.date === selectedDate
+      filteredReports = filteredReports.filter(
+        (report) => report.lastdate_order.slice(0, 10) === selectedDate
       );
     }
 
     if (sortType === "date") {
-      filteredTransactions.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
+      filteredReports.sort((a, b) => {
+        const dateA = new Date(a.lastdate_order);
+        const dateB = new Date(b.lastdate_order);
         return dateB - dateA;
       });
     } else if (sortType === "sales") {
-      filteredTransactions.sort((a, b) => b.totalSales - a.totalSales);
+      filteredReports.sort((a, b) => b.total_sold - a.total_sold);
     }
 
-    if (filteredTransactions.length === 0) {
+    console.log(filteredReports)
+
+    if (filteredReports.length === 0) {
       return (
         <tr>
           <td colSpan="5" className="px-6 py-4 text-center">
@@ -67,16 +71,16 @@ function SalesReportsList() {
       );
     }
 
-    return filteredTransactions.map((transaction) => (
+    return filteredReports.map((report) => (
       <tr
-        key={transaction.id_transaction}
+        key={report.name}
         className="border-b bg-blue-200 border-gray-700 hover:bg-blue-300 lg:text-lg"
       >
-        <td className="px-6 py-4">{transaction.productName}</td>
-        <td className="px-6 py-4">{transaction.price}</td>
-        <td className="px-6 py-4">{transaction.quantitySold}</td>
-        <td className="px-6 py-4">{transaction.totalSales}</td>
-        <td className="px-6 py-4">{transaction.lastPurchaseDate}</td>
+        <td className="px-6 py-4">{report.name}</td>
+        <td className="px-6 py-4">{report.price}</td>
+        <td className="px-6 py-4">{parseInt(report.total_sold)}</td>
+      <td className="px-6 py-4">{parseInt(report.total_revenue)}</td>
+        <td className="px-6 py-4">{report.lastdate_order}</td>
       </tr>
     ));
   };

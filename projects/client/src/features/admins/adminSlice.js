@@ -12,6 +12,7 @@ export const adminSlice = createSlice({
       id_role: "",
       id_branch: "",
     },
+    report: [],
   },
   reducers: {
     setAdmin: (state, action) => {
@@ -26,10 +27,13 @@ export const adminSlice = createSlice({
         id_branch: "",
       };
     },
+    setReport: (state, action) => {
+      state.report = action.payload;
+    },
   },
 });
 
-export const { setAdmin, resetAdmin } = adminSlice.actions;
+export const { setAdmin, resetAdmin, setReport } = adminSlice.actions;
 export default adminSlice.reducer;
 const userToken = localStorage.getItem("admin_token");
 
@@ -76,6 +80,21 @@ export function checkLoginAdmin(token) {
       }
     } catch (error) {
       console.log("Error checking login status:", error.message);
+    }
+  };
+}
+
+export function fetchReport() {
+  return async (dispatch) => {
+    try {
+      const response = await Axios.get(
+        "http://localhost:8000/admin/fetchreports"
+      );
+      dispatch(setReport(response.data));
+      console.log("fetchReport successful");
+      return response.data;
+    } catch (error) {
+      console.log("Failed to fetch Report: ", error.message);
     }
   };
 }
